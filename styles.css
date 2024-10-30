@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white; /* Couleur de fond du header */
+    color: black; /* Couleur du texte, peut être ajustée si nécessaire */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel : ajoute une ombre au header */
+}
+
+.logo img {
+    height: 50px; /* Ajustez la taille du logo selon vos préférences */
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    margin: 0 15px;
+}
+
+.navbar ul li a {
+    color: black; /* Couleur des liens, peut être ajustée */
+    text-decoration: none;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle .bar {
+    height: 3px;
+    width: 25px;
+    background-color: black; /* Couleur des barres du menu hamburger */
+    margin: 4px 0;
+}
+
+/* Styles pour les écrans mobiles */
+@media (max-width: 768px) {
+    .navbar {
+        display: none; /* Masque le menu principal sur mobile */
+    }
+
+    .menu-toggle {
+        display: flex; /* Affiche le menu hamburger */
+    }
+
+    .mobile-menu {
+        display: none; /* Masque le menu mobile par défaut */
+        position: absolute;
+        top: 50px; /* Ajustez en fonction de la hauteur du header */
+        right: 0;
+        background-color: white; /* Couleur de fond du menu mobile */
+        width: 200px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .mobile-menu ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .mobile-menu ul li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc; /* Couleur de la bordure */
+    }
+
+    .mobile-menu ul li a {
+        color: black; /* Couleur des liens dans le menu mobile */
+        text-decoration: none;
+    }
+}
