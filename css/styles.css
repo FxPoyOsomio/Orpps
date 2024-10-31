@@ -286,26 +286,34 @@ h1, h2, h3 {
 
 .user-logo {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
-    display: inline-block; /* Permet de s'ajuster aux dimensions de son contenu */
-    width: 50px; /* Définit une largeur fixe pour l'ensemble du logo */
+    display: inline-block; /* Permet au conteneur de s'ajuster à son contenu */
     height: 50px; /* Définit une hauteur fixe pour l'ensemble du logo */
     overflow: hidden; /* Assure que rien ne dépasse du conteneur */
     cursor: pointer; /* Change le curseur au survol */
 }
 
-.user-logo__hat,
-.user-logo__mustache {
-    width: 100%; /* Assure que les images prennent la largeur complète du conteneur */
+.user-logo__hat {
+    position: absolute; /* Positionne le chapeau en haut du conteneur */
+    top: 0; /* Aligne le chapeau en haut */
+    left: 50%; /* Centre horizontalement */
+    transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
+    width: auto; /* Permet à l'image de garder sa largeur naturelle */
     height: auto; /* Maintient le rapport d'aspect */
-    display: block; /* Affiche chaque image comme un bloc */
+    max-height: 50%; /* S'assure que le chapeau ne dépasse pas la moitié du conteneur */
 }
 
 .user-logo__mustache {
-    position: absolute; /* Positionne la moustache par rapport au conteneur .user-logo */
-    bottom: 0; /* Positionne la moustache en bas du conteneur */
+    position: absolute; /* Positionne la moustache en bas du conteneur */
+    bottom: 0; /* Aligne la moustache en bas */
+    left: 50%; /* Centre horizontalement */
+    transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
+    width: auto; /* Permet à l'image de garder sa largeur naturelle */
+    height: auto; /* Maintient le rapport d'aspect */
+    max-height: 50%; /* S'assure que la moustache ne dépasse pas la moitié du conteneur */
     transform-origin: bottom center; /* Centre la rotation en bas de l'image */
     transition: transform 0.3s ease; /* Ajoute une transition douce */
 }
+
 
 
 /* Ajout d'un effet de survol */
