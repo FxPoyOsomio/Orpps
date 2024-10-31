@@ -236,6 +236,17 @@ h1, h2, h3 {
     z-index: 1000; /* Assurer que le header est au-dessus du contenu */
 }
 
+/* Container qui limite la largeur du contenu interne */
+.header .container {
+    max-width: 980px;
+    width: 100%; /* S'assure que le container prend 100% de l'espace disponible */
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .header__logo img {
     height: 50px;
 }
