@@ -271,6 +271,11 @@ h1, h2, h3 {
     box-sizing: border-box;
 }
 
+.header__logo a {
+    display: inline-block;
+    margin-right: 10px; /* Espace entre les logos */
+}
+
 .header__logo img {
     height: 50px;
 }
