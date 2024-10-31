@@ -224,7 +224,6 @@ h1, h2, h3 {
 
 
 
-
 /* --- Style de base pour le header --- */
 .header {
     display: flex;
@@ -303,14 +302,15 @@ h1, h2, h3 {
 /* --- Media Query pour Mobile --- */
 @media (max-width: 768px) {
     .header__nav {
-        display: none;
+        display: none; /* Cacher la nav par défaut sur mobile */
     }
 
     .header__burger {
-        display: flex;
+        display: flex; /* Afficher le burger */
     }
 
     .header__overlay {
-        display: flex;
+        display: flex; /* Afficher l'overlay */
     }
-}
+} 
+
