@@ -269,17 +269,7 @@ h1, h2, h3 {
     height: 50px;
 }
 
-.header__nav ul {
-    display: flex;
-    list-style: none;
-    gap: 20px;
-}
 
-.header__nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
 
 /* Styles pour le menu burger */
 .header__burger {
@@ -397,23 +387,6 @@ h1, h2, h3 {
 }
 
 
-/* Couleur par défaut des liens */
-.header__nav a, .header__mobile-nav a {
-    color: #333; /* Couleur de texte par défaut */
-    transition: color 0.3s; /* Transition pour les changements de couleur */
-}
-
-/* Couleur au survol */
-.header__nav a:hover, .header__mobile-nav a:hover {
-    color: #CB6863; /* Couleur de survol */
-}
-
-/* Couleur active (appliquée par JavaScript) */
-.header__nav a.active, .header__mobile-nav a.active {
-    color: #CB6863; /* Couleur active */
-}
-
-
 
 
 
@@ -447,10 +420,6 @@ h1, h2, h3 {
 
 /* Afficher le menu burger lorsque la largeur de la fenêtre est inférieure à 768px */
 @media (max-width: 768px) {
-    .header__nav {
-        display: none; /* Cacher la nav par défaut sur mobile */
-    }
-
     .header__burger {
         display: flex; /* Afficher le burger */
     }
@@ -462,15 +431,11 @@ h1, h2, h3 {
 
 /* Afficherafficher la navigation normale sur les écrans plus larges */
 @media (min-width: 769px) {
-    .header__nav {
-        display: flex; /* Afficher la navigation normale */
-    }
-
     .header__burger {
-        display: none; /* Masquer le burger menu */
+        display: flex; /* Masquer le burger menu */
     }
 
     .header__overlay {
-        display: none; /* Afficher l'overlay */
+        display: flex; /* Afficher l'overlay */
     }
 }
