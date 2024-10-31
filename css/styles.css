@@ -313,6 +313,25 @@ h1, h2, h3 {
     }
 }
 
+.user-logo:hover .user-logo__hat {
+    animation: lift 0.8s infinite; /* Ajoute une animation pour le chapeau */
+}
+
+/* Ajoutez une nouvelle animation pour le mouvement du chapeau */
+@keyframes lift {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0); /* Position initiale */
+    }
+    40% {
+        transform: translateY(-10px); /* Lève le chapeau */
+    }
+    60% {
+        transform: translateY(-5px); /* Légèrement plus bas après la levée */
+    }
+}
+
+
+
 .orpps-logo {
     height: 50px; /* Définit une hauteur fixe pour l'image Orpps */
     display: block; /* Permet au lien de s'ajuster correctement */
