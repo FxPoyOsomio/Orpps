@@ -360,6 +360,11 @@ h1, h2, h3 {
     cursor: pointer;
 }
 
+/* Au survol du burger, changer la couleur des barres */
+.header__burger:hover > span {
+    background-color: #CB6863; /* Couleur des barres au survol */
+}
+
 .header__burger > span {
     position: relative;
     display: block;
