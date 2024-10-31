@@ -251,6 +251,9 @@ h1, h2, h3 {
     font-weight: bold;
 }
 
+
+
+
 /* Styles du menu burger */
 .header__burger {
     display: flex;
@@ -271,13 +274,13 @@ h1, h2, h3 {
 /* Styles pour le menu lorsqu'il est actif */
 #overlayMenu {
     display: none; /* Masquer le menu par défaut */
-    position: fixed;
-    top: 0;
+    position: absolute; /* Modifier la position ici */
+    top: 70px; /* Ajuste en fonction de la hauteur de ton header */
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
+    background-color: rgba(255, 255, 255, 1); /* Fond blanc pour le menu */
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Ombre pour le menu */
+    z-index: 999; /* Assurer que le menu est au-dessus du contenu */
 }
 
 /* Styles pour le menu lorsqu'il est actif */
