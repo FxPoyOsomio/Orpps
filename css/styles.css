@@ -272,6 +272,7 @@ h1, h2, h3 {
 }
 
 
+
 .header__logo {
     display: flex; /* Utilisation de flex pour centrer le contenu */
     align-items: center; /* Centre verticalement les enfants */
@@ -329,6 +330,13 @@ h1, h2, h3 {
     display: flex; /* Permet au lien de s'ajuster correctement */
     align-items: center; /* Centre verticalement */
 }
+
+.orpps-logo img {
+    height: 100%; /* Assure que l'image prend toute la hauteur du conteneur */
+    width: auto; /* Permet à l'image de garder son rapport d'aspect */
+}
+
+
 
 
 /* Styles pour le menu burger */
