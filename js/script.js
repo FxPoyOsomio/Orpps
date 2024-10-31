@@ -1,6 +1,14 @@
-const mobileMenu = document.getElementById('mobile-menu');
-const mobileMenuContainer = document.querySelector('.mobile-menu');
+document.addEventListener("DOMContentLoaded", () => {
+    const burgerMenu = document.getElementById("burgerMenu");
+    const overlayMenu = document.getElementById("overlayMenu");
 
-mobileMenu.addEventListener('click', () => {
-    mobileMenuContainer.style.display = mobileMenuContainer.style.display === 'block' ? 'none' : 'block';
+    burgerMenu.addEventListener("click", () => {
+        overlayMenu.classList.toggle("active");
+    });
+
+    overlayMenu.addEventListener("click", (event) => {
+        if (event.target === overlayMenu) {
+            overlayMenu.classList.remove("active");
+        }
+    });
 });

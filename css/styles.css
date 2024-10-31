@@ -1,83 +1,82 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-header {
+/* --- Style de base pour le header --- */
+.header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: white; /* Couleur de fond du header */
-    color: black; /* Couleur du texte, peut être ajustée si nécessaire */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel : ajoute une ombre au header */
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.logo img {
-    height: 50px; /* Ajustez la taille du logo selon vos préférences */
+.header__logo img {
+    height: 50px;
 }
 
-.navbar ul {
-    list-style: none;
+.header__nav ul {
     display: flex;
-    margin: 0;
-    padding: 0;
+    list-style: none;
+    gap: 20px;
 }
 
-.navbar ul li {
-    margin: 0 15px;
-}
-
-.navbar ul li a {
-    color: black; /* Couleur des liens, peut être ajustée */
+.header__nav a {
     text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
 
-.menu-toggle {
+.header__burger {
     display: none;
-    flex-direction: column;
-    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 24px;
 }
 
-.menu-toggle .bar {
-    height: 3px;
-    width: 25px;
-    background-color: black; /* Couleur des barres du menu hamburger */
-    margin: 4px 0;
+.header__overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
 }
 
-/* Styles pour les écrans mobiles */
+.header__mobile-nav {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.header__mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.header__mobile-nav a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* --- Media Query pour Mobile --- */
 @media (max-width: 768px) {
-    .navbar {
-        display: none; /* Masque le menu principal sur mobile */
+    .header__nav {
+        display: none;
     }
 
-    .menu-toggle {
-        display: flex; /* Affiche le menu hamburger */
+    .header__burger {
+        display: block;
+        cursor: pointer;
     }
 
-    .mobile-menu {
-        display: none; /* Masque le menu mobile par défaut */
-        position: absolute;
-        top: 50px; /* Ajustez en fonction de la hauteur du header */
-        right: 0;
-        background-color: white; /* Couleur de fond du menu mobile */
-        width: 200px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .mobile-menu ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .mobile-menu ul li {
-        padding: 10px;
-        border-bottom: 1px solid #ccc; /* Couleur de la bordure */
-    }
-
-    .mobile-menu ul li a {
-        color: black; /* Couleur des liens dans le menu mobile */
-        text-decoration: none;
+    .header__overlay {
+        display: flex;
     }
 }
