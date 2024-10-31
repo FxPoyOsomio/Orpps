@@ -2,43 +2,25 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Site de Recettes</title>
-    <link rel="icon" href="Ressources_Web/Logos_Orpps/Orpps_favicon.png" type="image/png"> <!-- Lien vers le favicon -->
-    <link rel="stylesheet" href="styles.css"> <!-- Lien vers le fichier CSS -->
+    <title>Page d'accueil</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="Ressources_Web/Logos_Orpps/Orpps_logo.png" alt="Logo Orpps"> <!-- Ajout du logo -->
-        </div>
-        <nav class="navbar">
-            <ul>
-                <li><a href="#recettes">Recettes</a></li>
-                <li><a href="#planification">Planification</a></li>
-                <li><a href="#course">Course</a></li>
-            </ul>
-        </nav>
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-    </header>
 
-    <div class="mobile-menu">
-        <ul>
-            <li><a href="#recettes">Recettes</a></li>
-            <li><a href="#planification">Planification</a></li>
-            <li><a href="#course">Course</a></li>
-        </ul>
-    </div>
+<!-- Inclusion du header -->
+<div id="header">
+    <!-- Le contenu du header sera injecté ici -->
+</div>
 
-    <main>
-        <h1>Bienvenue sur mon site de recettes</h1>
-        <!-- Contenu de la page -->
-    </main>
+<script src="js/script.js"></script>
+<script>
+    // Injecter le header directement en HTML si nécessaire
+    fetch("components/header.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header").innerHTML = data;
+        });
+</script>
 
-    <script src="script.js"></script> <!-- Lien vers le fichier JavaScript -->
 </body>
 </html>
