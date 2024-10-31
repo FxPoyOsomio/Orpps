@@ -12,21 +12,22 @@ document.addEventListener("DOMContentLoaded", () => {
             // Accéder aux éléments du header
             const burgerMenu = document.getElementById("burgerMenu");
             const overlayMenu = document.getElementById("overlayMenu");
+            const header = document.querySelector(".header");
             console.log("burgerMenu:", burgerMenu);
             console.log("overlayMenu:", overlayMenu);
 
             if (burgerMenu && overlayMenu) {
                 // Gestion du clic sur le menu burger
                 burgerMenu.addEventListener("click", () => {
-                    burgerMenu.classList.toggle("active");
-                    overlayMenu.classList.toggle("active");
+                    header.classList.toggle("modal-burger-open"); // Modifie le header pour ajouter la classe d'animation
+                    overlayMenu.classList.toggle("active"); // Affiche ou cache l'overlay
                     console.log("Burger menu clicked, overlay active:", overlayMenu.classList.contains("active"));
                 });
 
                 // Gestion du clic en dehors du menu pour le fermer
                 overlayMenu.addEventListener("click", (event) => {
                     if (event.target === overlayMenu) {
-                        burgerMenu.classList.remove("active");
+                        header.classList.remove("modal-burger-open");
                         overlayMenu.classList.remove("active");
                         console.log("Overlay clicked, menu closed");
                     }
