@@ -307,3 +307,20 @@ h1, h2, h3 {
         display: flex;
     }
 }
+
+/* Styles par défaut pour le menu burger */
+#overlayMenu {
+    display: none; /* Masquer le menu par défaut */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+}
+
+/* Styles pour le menu lorsqu'il est actif */
+#overlayMenu.active {
+    display: block; /* Afficher le menu lorsque actif */
+}
