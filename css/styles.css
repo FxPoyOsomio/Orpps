@@ -273,21 +273,19 @@ h1, h2, h3 {
 
 
 .header__logo {
-    height: 50px; /* Définit une hauteur fixe pour le logo */
     display: flex; /* Utilisation de flex pour centrer le contenu */
     align-items: center; /* Centre verticalement les enfants */
     justify-content: center; /* Centre horizontalement les enfants */
+    height: 50px; /* Définit une hauteur fixe pour le conteneur */
 }
 
 .user-logo {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
     display: inline-block; /* Permet au conteneur de s'ajuster à son contenu */
     height: 50px; /* Définit une hauteur fixe pour l'ensemble du logo */
-    width: 100%; /* Ajoutez une largeur fixe pour le conteneur */
     overflow: hidden; /* Assure que rien ne dépasse du conteneur */
     cursor: pointer; /* Change le curseur au survol */
 }
-
 
 .user-logo__hat,
 .user-logo__mustache {
@@ -326,8 +324,11 @@ h1, h2, h3 {
     }
 }
 
-
-
+.orpps-logo {
+    height: 50px; /* Définit une hauteur de 50px pour l'image Orpps */
+    display: flex; /* Permet au lien de s'ajuster correctement */
+    align-items: center; /* Centre verticalement */
+}
 
 
 /* Styles pour le menu burger */
