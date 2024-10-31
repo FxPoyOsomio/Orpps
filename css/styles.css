@@ -254,7 +254,7 @@ h1, h2, h3 {
 
 /* Styles du menu burger */
 .header__burger {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
@@ -365,7 +365,12 @@ h1, h2, h3 {
     transform: translateY(-8px) rotate(-45deg); /* Déplacement vers le haut et rotation */
 }
 
-/* --- Media Query pour Mobile --- */
+
+
+
+
+
+/* Afficher le menu burger lorsque la largeur de la fenêtre est inférieure à 768px */
 @media (max-width: 768px) {
     .header__nav {
         display: none; /* Cacher la nav par défaut sur mobile */
@@ -380,3 +385,17 @@ h1, h2, h3 {
     }
 } 
 
+/* Afficherafficher la navigation normale sur les écrans plus larges */
+@media (min-width: 769px) {
+    .header__nav {
+        display: flex; /* Afficher la navigation normale */
+    }
+
+    .header__burger {
+        display: none; /* Masquer le burger menu */
+    }
+
+    .header__overlay {
+        display: none; /* Afficher l'overlay */
+    }
+}
