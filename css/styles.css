@@ -239,6 +239,7 @@ h1, h2, h3 {
     top: 0;          /* Positionne l'en-tête tout en haut */
     left: 0;         /* Aligne l'en-tête à gauche */
     width: 100%;     /* Fait en sorte que l'en-tête prenne toute la largeur */
+    max-width: 980px;
     z-index: 1000;   /* Assure que l'en-tête est au-dessus des autres éléments */
     transition: height 0.3s ease; /* Transition pour l'agrandissement */
     box-sizing: border-box;
@@ -259,7 +260,8 @@ h1, h2, h3 {
     max-width: 980px;
     width: 100%; /* S'assure que le container prend 100% de l'espace disponible */
     margin: 0 auto;
-    padding: 0 35px;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 .header__logo img {
