@@ -287,15 +287,17 @@ h1, h2, h3 {
 .user-logo {
     position: relative;
     display: inline-block;
-    cursor: pointer; /* Ajoute un curseur pour indiquer le survol */
+    width: auto; /* Permet d’ajuster la taille automatiquement */
+    height: auto; /* Ajuste la hauteur pour inclure les images */
+    cursor: pointer;
 }
 
 .user-logo__hat,
 .user-logo__mustache {
     position: absolute;
-    left: 0;
     width: 100%;
 }
+
 
 .user-logo__hat {
     top: 0;
@@ -304,7 +306,7 @@ h1, h2, h3 {
 .user-logo__mustache {
     top: 50%;
     transform: translateY(-10%);
-    transform-origin: bottom center; /* Centre de rotation au bas de l'image */
+    transform-origin: bottom center;
 }
 
 /* Animation de rebond et de rotation pour user-logo__mustache au survol de user-logo */
