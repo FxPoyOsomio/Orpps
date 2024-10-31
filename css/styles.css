@@ -1,3 +1,230 @@
+/* --- Ajout des polices depuis la racine /assets/fonts/ --- */
+@font-face {
+    font-family: 'Caviar Dreams';
+    src: url('/Orpps/assets/fonts/CaviarDreams.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Caviar Dreams';
+    font-weight: bold;
+    src: url('/Orpps/assets/fonts/CaviarDreams_Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Caviar Dreams';
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/CaviarDreams_Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Caviar Dreams';
+    font-weight: bold;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/CaviarDreams_BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    src: url('/Orpps/assets/fonts/MontserratAlternates-Light.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    src: url('/Orpps/assets/fonts/MontserratAlternates-Regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: medium;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-Medium.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: semi-bold;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-SemiBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: bold;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-Bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: extra-bold;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-ExtraBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: extra-light;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-ExtraLight.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat Alternates';
+    font-weight: thin;
+    src: url('/Orpps/assets/fonts/MontserratAlternates-Thin.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/Orpps/assets/fonts/Montserrat-Black.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: bold;
+    src: url('/Orpps/assets/fonts/Montserrat-Bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: extra-bold;
+    src: url('/Orpps/assets/fonts/Montserrat-ExtraBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: extra-light;
+    src: url('/Orpps/assets/fonts/Montserrat-ExtraLight.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: light;
+    src: url('/Orpps/assets/fonts/Montserrat-Light.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: medium;
+    src: url('/Orpps/assets/fonts/Montserrat-Medium.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/Orpps/assets/fonts/Montserrat-Regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: semi-bold;
+    src: url('/Orpps/assets/fonts/Montserrat-SemiBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-weight: thin;
+    src: url('/Orpps/assets/fonts/Montserrat-Thin.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url('/Orpps/assets/fonts/SourceSansPro-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: black;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-BlackItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: bold;
+    src: url('/Orpps/assets/fonts/SourceSansPro-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: bold;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: extra-light;
+    src: url('/Orpps/assets/fonts/SourceSansPro-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: extra-light;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-ExtraLightItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: light;
+    src: url('/Orpps/assets/fonts/SourceSansPro-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: light;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url('/Orpps/assets/fonts/SourceSansPro-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: semi-bold;
+    src: url('/Orpps/assets/fonts/SourceSansPro-Semibold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: semi-bold;
+    font-style: italic;
+    src: url('/Orpps/assets/fonts/SourceSansPro-SemiboldItalic.ttf') format('truetype');
+}
+
+
+
+
+
+
+
+/* --- Style de base pour les balise simple --- */
+body {
+    font-family: 'Caviar Dreams', sans-serif; /* Utilise Caviar Dreams comme police principale */
+}
+
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif; /* Utilise Montserrat pour les titres */
+}
+
+.bold-text {
+    font-family: 'Caviar Dreams', sans-serif;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
 /* --- Style de base pour le header --- */
 .header {
     display: flex;
