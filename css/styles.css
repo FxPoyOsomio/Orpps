@@ -287,6 +287,7 @@ h1, h2, h3 {
 .user-logo {
     position: relative;
     display: inline-block;
+    cursor: pointer; /* Ajoute un curseur pour indiquer le survol */
 }
 
 .user-logo__hat,
@@ -304,9 +305,9 @@ h1, h2, h3 {
     top: 50%;
     transform: translateY(-10%);
     transform-origin: bottom center; /* Centre de rotation au bas de l'image */
-    transition: transform 0.2s ease-out;
 }
 
+/* Animation de rebond et de rotation pour user-logo__mustache au survol de user-logo */
 .user-logo:hover .user-logo__mustache {
     animation: bounceRotate 0.8s ease-out forwards;
 }
