@@ -286,16 +286,15 @@ h1, h2, h3 {
 
 .user-logo {
     position: relative;
-    display: inline-block;
-    width: auto; /* Permet d’ajuster la taille automatiquement */
-    height: auto; /* Ajuste la hauteur pour inclure les images */
-    cursor: pointer;
+    display: inline-block; /* Permet à l'élément de s'ajuster aux dimensions de son contenu */
+    cursor: pointer; /* Change le curseur au survol */
 }
 
 .user-logo__hat,
 .user-logo__mustache {
-    position: absolute;
-    width: 100%;
+    max-width: 100%; /* Fait en sorte que l'image ne dépasse pas la largeur du conteneur */
+    height: auto; /* Maintient le rapport d'aspect */
+    display: block; /* Affiche chaque image comme un bloc */
 }
 
 
@@ -304,9 +303,9 @@ h1, h2, h3 {
 }
 
 .user-logo__mustache {
-    top: 50%;
-    transform: translateY(-10%);
-    transform-origin: bottom center;
+    margin-top: -50%; /* Ajustez ce pourcentage pour positionner la moustache par-dessus le chapeau */
+    transform-origin: bottom center; /* Centre la rotation en bas de l'image */
+    transition: transform 0.3s ease; /* Ajoute une transition douce */
 }
 
 /* Animation de rebond et de rotation pour user-logo__mustache au survol de user-logo */
