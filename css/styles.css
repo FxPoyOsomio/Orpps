@@ -272,40 +272,30 @@ h1, h2, h3 {
 }
 
 
-
 .header__logo {
-    display: flex; /* Utilisation de flex pour centrer le contenu */
+    display: flex; /* Utilise flexbox pour aligner les éléments */
     align-items: center; /* Centre verticalement les enfants */
-    justify-content: center; /* Centre horizontalement les enfants */
-    height: 50px; /* Définit une hauteur fixe pour le conteneur */
+    height: 50px; /* Hauteur fixe pour le conteneur */
 }
 
 .user-logo {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
-    display: inline-block; /* Permet au conteneur de s'ajuster à son contenu */
-    height: 50px; /* Définit une hauteur fixe pour l'ensemble du logo */
-    overflow: hidden; /* Assure que rien ne dépasse du conteneur */
-    cursor: pointer; /* Change le curseur au survol */
+    height: 50px; /* Hauteur fixe pour l'ensemble du logo */
+    overflow: hidden; /* Cache tout débordement */
+    display: flex; /* Utilisation de flex pour centrer le contenu */
+    flex-direction: column; /* Aligne les enfants en colonne */
+    justify-content: center; /* Centre verticalement */
 }
 
 .user-logo__hat,
 .user-logo__mustache {
-    position: absolute; /* Positionne les images par rapport au conteneur */
-    left: 50%; /* Centre horizontalement */
-    transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
     width: auto; /* Permet à l'image de garder sa largeur naturelle */
-    height: auto; /* Maintient le rapport d'aspect */
-    max-height: 50%; /* Assure que les images ne dépassent pas la moitié du conteneur */
-}
-
-.user-logo__hat {
-    top: 0; /* Aligne le chapeau en haut */
+    max-height: 50%; /* Limite la hauteur maximale à 50% */
 }
 
 .user-logo__mustache {
-    bottom: 0; /* Aligne la moustache en bas */
-    transform-origin: bottom center; /* Centre la rotation en bas de l'image */
     transition: transform 0.3s ease; /* Ajoute une transition douce */
+    transform-origin: bottom center; /* Centre la rotation en bas de l'image */
 }
 
 /* Ajout d'un effet de survol */
@@ -326,15 +316,17 @@ h1, h2, h3 {
 }
 
 .orpps-logo {
-    height: 50px; /* Définit une hauteur de 50px pour l'image Orpps */
+    height: 50px; /* Définit une hauteur fixe pour l'image Orpps */
     display: flex; /* Permet au lien de s'ajuster correctement */
     align-items: center; /* Centre verticalement */
+    margin-left: 10px; /* Ajoute un espace entre le logo utilisateur et le logo Orpps */
 }
 
 .orpps-logo img {
     height: 100%; /* Assure que l'image prend toute la hauteur du conteneur */
     width: auto; /* Permet à l'image de garder son rapport d'aspect */
 }
+
 
 
 
