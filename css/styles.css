@@ -300,7 +300,7 @@ h1, h2, h3 {
 
 /* Ajout d'un effet de survol */
 .user-logo:hover .user-logo__mustache {
-    animation: bounce 0.8s infinite; /* Animation au survol */
+    animation: bounce 1.5s infinite; /* Animation au survol */
 }
 
 @keyframes bounce {
@@ -316,7 +316,7 @@ h1, h2, h3 {
 }
 
 .user-logo:hover .user-logo__hat {
-    animation: lift 0.8s infinite; /* Ajoute une animation pour le chapeau */
+    animation: lift 1.5s infinite; /* Ajoute une animation pour le chapeau */
 }
 
 /* Ajoutez une nouvelle animation pour le mouvement du chapeau */
