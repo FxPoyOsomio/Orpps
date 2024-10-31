@@ -221,6 +221,12 @@ h1, h2, h3 {
 
 
 
+:root {
+    --page-max-width: 980px;
+}
+
+
+
 
 
 
@@ -248,7 +254,7 @@ h1, h2, h3 {
 
 /* Container qui limite la largeur du contenu interne */
 .header .container {
-    max-width: 980px;
+    max-width: var(--page-max-width);
     width: 100%; /* S'assure que le container prend 100% de l'espace disponible */
     margin: 0 auto;
     padding: 0;
@@ -258,7 +264,7 @@ h1, h2, h3 {
 }
 
 .container {
-    max-width: 980px;
+    max-width: var(--page-max-width);
     width: 100%; /* S'assure que le container prend 100% de l'espace disponible */
     margin: 0 auto;
     padding: 0 15px;
@@ -332,6 +338,7 @@ h1, h2, h3 {
     flex-direction: column; /* Disposer les éléments verticalement */
     padding: 15px; /* Espacement interne */
     background-color: rgba(255, 255, 255, 1); /* Fond blanc */
+    max-width: var(--page-max-width);
 }
 
 .header__mobile-nav ul {
