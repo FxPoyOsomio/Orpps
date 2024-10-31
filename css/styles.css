@@ -244,8 +244,10 @@ h1, h2, h3 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: -webki;
     z-index: 1000;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 
