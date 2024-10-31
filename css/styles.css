@@ -247,6 +247,13 @@ h1, h2, h3 {
     justify-content: space-between;
 }
 
+.container {
+    max-width: 980px;
+    width: 100%; /* S'assure que le container prend 100% de l'espace disponible */
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
 .header__logo img {
     height: 50px;
 }
