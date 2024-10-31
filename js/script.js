@@ -2,34 +2,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
 
-    burgerMenu.addEventListener("click", () => {
-        overlayMenu.classList.toggle("active"); // Ajoute ou retire la classe "active"
-    });
+    if (burgerMenu && overlayMenu) { // Vérifie que les éléments existent
+        // Gestion du clic sur le menu burger
+        burgerMenu.addEventListener("click", () => {
+            overlayMenu.classList.toggle("active"); // Ajouter ou retirer la classe "active"
+        });
 
-    overlayMenu.addEventListener("click", (event) => {
-        if (event.target === overlayMenu) {
-            overlayMenu.classList.remove("active"); // Retire la classe "active" si l'utilisateur clique en dehors du menu
-        }
-    });
+        // Gestion du clic en dehors du menu pour le fermer
+        overlayMenu.addEventListener("click", (event) => {
+            if (event.target === overlayMenu) {
+                overlayMenu.classList.remove("active"); // Retirer la classe "active"
+            }
+        });
+    } else {
+        console.error("Element(s) not found:", { burgerMenu, overlayMenu });
+    }
+
+    // Charger le header
+    fetch("../components/header.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header").innerHTML = data;
+        });
+
+    // Charger le footer
+    fetch("../components/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("footer").innerHTML = data;
+        });
 });
-
-// Charger le header
-console.log("Chargement du header...");
-fetch("/Orpps/components/header.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById("header").innerHTML = data;
-        console.log("Header chargé avec succès.");
-    })
-    .catch(error => console.error("Erreur de chargement du header :", error));
-
-
-// Charger le footer
-fetch("/Orpps/components/footer.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById("footer").innerHTML = data;
-        console.log("Footer chargé avec succès.");
-    })
-    .catch(error => console.error("Erreur de chargement du footer :", error));
-
