@@ -206,7 +206,7 @@
 body {
     font-family: 'Caviar Dreams', sans-serif; /* Utilise Caviar Dreams comme police principale */
     margin: 0;
-    padding-top: 80px;
+    padding-top: 100px;
 }
 
 h1, h2, h3 {
@@ -241,6 +241,7 @@ h1, h2, h3 {
     width: 100%;     /* Fait en sorte que l'en-tête prenne toute la largeur */
     z-index: 1000;   /* Assure que l'en-tête est au-dessus des autres éléments */
     transition: height 0.3s ease; /* Transition pour l'agrandissement */
+    box-sizing: border-box;
 }
 
 /* Container qui limite la largeur du contenu interne */
