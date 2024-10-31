@@ -16,16 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Charger le header
-    fetch("/components/header.html")
+    console.log("Chargement du header...");
+    fetch("https://fxpoyosomio.github.io/Orpps/components/header.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("header").innerHTML = data;
-        });
+            console.log("Header chargé avec succès.");
+        })
+        .catch(error => console.error("Erreur de chargement du header :", error));
+    
 
     // Charger le footer
-    fetch("/components/footer.html")
+    fetch("https://fxpoyosomio.github.io/Orpps/components/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("footer").innerHTML = data;
-        });
+            console.log("Footer chargé avec succès.");
+        })
+        .catch(error => console.error("Erreur de chargement du footer :", error));
 });
