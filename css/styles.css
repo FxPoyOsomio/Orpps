@@ -227,13 +227,15 @@ h1, h2, h3 {
 /* --- Style de base pour le header --- */
 .header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column; /* Changez la direction en colonne */
+    align-items: flex-start; /* Alignez le contenu à gauche */
+    justify-content: center;
     padding: 15px 20px;
     background-color: #ffffff;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; /* Ajouté pour le positionnement relatif */
-    z-index: 1000; /* Assurer que le header est au-dessus du contenu */
+    position: relative;
+    z-index: 1000;
+    transition: height 0.3s ease; /* Transition pour l'agrandissement */
 }
 
 /* Container qui limite la largeur du contenu interne */
@@ -272,12 +274,12 @@ h1, h2, h3 {
 
 /* Styles du menu burger */
 .header__burger {
-    display: none;
+    display: none; /* Masquer par défaut */
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
-    width: 30px; /* Largeur du burger */
-    height: 20px; /* Hauteur totale */
+    width: 30px;
+    height: 20px;
 }
 
 .bar {
@@ -308,7 +310,7 @@ h1, h2, h3 {
 
 
 
-/* Styles pour le menu mobile */
+/* --- Styles pour le menu mobile --- */
 .header__mobile-nav {
     display: none; /* Masquer par défaut */
     flex-direction: column; /* Disposer les éléments verticalement */
@@ -343,7 +345,10 @@ h1, h2, h3 {
     display: flex; /* Afficher le menu lorsque actif */
 }
 
-
+/* --- Agrandissement du header --- */
+.header.expanded {
+    height: auto; /* Permet au header de s'agrandir automatiquement */
+}
 
 
 
