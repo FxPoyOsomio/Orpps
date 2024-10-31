@@ -272,7 +272,7 @@ h1, h2, h3 {
 /* Styles pour le menu lorsqu'il est actif */
 #overlayMenu {
     display: none; /* Masquer le menu par défaut */
-    position: absolute; /* Position absolue par rapport à son parent (header) */
+    position: relative; /* Position absolue par rapport à son parent (header) */
     top: 100%; /* Positionné juste en dessous du header */
     left: 0;
     width: 100%;
