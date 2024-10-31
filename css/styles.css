@@ -283,9 +283,11 @@ h1, h2, h3 {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
     display: inline-block; /* Permet au conteneur de s'ajuster à son contenu */
     height: 50px; /* Définit une hauteur fixe pour l'ensemble du logo */
+    width: 100%; /* Ajoutez une largeur fixe pour le conteneur */
     overflow: hidden; /* Assure que rien ne dépasse du conteneur */
     cursor: pointer; /* Change le curseur au survol */
 }
+
 
 .user-logo__hat,
 .user-logo__mustache {
@@ -294,7 +296,7 @@ h1, h2, h3 {
     transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
     width: auto; /* Permet à l'image de garder sa largeur naturelle */
     height: auto; /* Maintient le rapport d'aspect */
-    max-height: 50%; /* S'assure que les images ne dépassent pas la hauteur du conteneur */
+    max-height: 50%; /* Assure que les images ne dépassent pas la moitié du conteneur */
 }
 
 .user-logo__hat {
