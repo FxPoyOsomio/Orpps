@@ -272,9 +272,12 @@ h1, h2, h3 {
 }
 
 
-
-
-
+.header__logo {
+    height: 50px; /* Définit une hauteur fixe pour le logo */
+    display: flex; /* Utilisation de flex pour centrer le contenu */
+    align-items: center; /* Centre verticalement les enfants */
+    justify-content: center; /* Centre horizontalement les enfants */
+}
 
 .user-logo {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
@@ -284,29 +287,25 @@ h1, h2, h3 {
     cursor: pointer; /* Change le curseur au survol */
 }
 
-.user-logo__hat {
-    position: absolute; /* Positionne le chapeau en haut du conteneur */
-    top: 0; /* Aligne le chapeau en haut */
+.user-logo__hat,
+.user-logo__mustache {
+    position: absolute; /* Positionne les images par rapport au conteneur */
     left: 50%; /* Centre horizontalement */
     transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
     width: auto; /* Permet à l'image de garder sa largeur naturelle */
     height: auto; /* Maintient le rapport d'aspect */
-    max-height: 50%; /* S'assure que le chapeau ne dépasse pas la moitié du conteneur */
+    max-height: 50%; /* S'assure que les images ne dépassent pas la hauteur du conteneur */
+}
+
+.user-logo__hat {
+    top: 0; /* Aligne le chapeau en haut */
 }
 
 .user-logo__mustache {
-    position: absolute; /* Positionne la moustache en bas du conteneur */
     bottom: 0; /* Aligne la moustache en bas */
-    left: 50%; /* Centre horizontalement */
-    transform: translateX(-50%); /* Ajuste le positionnement pour centrer */
-    width: auto; /* Permet à l'image de garder sa largeur naturelle */
-    height: auto; /* Maintient le rapport d'aspect */
-    max-height: 50%; /* S'assure que la moustache ne dépasse pas la moitié du conteneur */
     transform-origin: bottom center; /* Centre la rotation en bas de l'image */
     transition: transform 0.3s ease; /* Ajoute une transition douce */
 }
-
-
 
 /* Ajout d'un effet de survol */
 .user-logo:hover .user-logo__mustache {
