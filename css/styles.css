@@ -280,6 +280,27 @@ h1, h2, h3 {
     height: 50px;
 }
 
+.user-logo {
+    position: relative;
+    display: inline-block;
+}
+
+.user-logo__hat,
+.user-logo__mustache {
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
+.user-logo__hat {
+    top: 0; /* Positionnement pour la partie supérieure */
+}
+
+.user-logo__mustache {
+    top: 50%; /* Ajustez selon le positionnement voulu pour la partie inférieure */
+    transform: translateY(-10%); /* Ajustez la valeur pour affiner l'alignement */
+}
+
 
 
 /* Styles pour le menu burger */
