@@ -286,6 +286,50 @@ h1, h2, h3 {
     display: block; /* Afficher le menu lorsque actif */
 }
 
+
+
+
+
+/* Styles pour le menu mobile */
+.header__mobile-nav {
+    display: none; /* Masquer par défaut */
+    flex-direction: column; /* Disposer les éléments verticalement */
+    padding: 15px; /* Espacement interne */
+    background-color: rgba(255, 255, 255, 1); /* Fond blanc */
+}
+
+.header__mobile-nav ul {
+    list-style: none; /* Pas de puces */
+    padding: 0; /* Pas de padding par défaut */
+}
+
+.header__mobile-nav li {
+    margin: 10px 0; /* Espacement entre les éléments de la liste */
+}
+
+.header__mobile-nav a {
+    text-decoration: none; /* Pas de soulignement */
+    color: #333; /* Couleur du texte */
+    font-weight: bold; /* Gras */
+    font-size: 18px; /* Taille de police */
+    transition: color 0.3s; /* Transition pour la couleur */
+}
+
+/* Changement de couleur au survol */
+.header__mobile-nav a:hover {
+    color: #007BFF; /* Changez cette couleur selon vos préférences */
+}
+
+/* Afficher le menu mobile lorsque actif */
+#overlayMenu.active .header__mobile-nav {
+    display: flex; /* Afficher le menu lorsque actif */
+}
+
+
+
+
+
+
 /* --- Animation du menu burger lors du clic --- */
 .active .bar1 {
     transform: translateY(8px) rotate(45deg); /* Déplacement vers le bas et rotation */
