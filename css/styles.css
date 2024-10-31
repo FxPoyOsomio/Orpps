@@ -308,24 +308,20 @@ h1, h2, h3 {
 }
 
 
-/* Animation de rebond et de rotation pour user-logo__mustache au survol de user-logo */
+/* Ajout d'un effet de survol */
 .user-logo:hover .user-logo__mustache {
-    animation: bounceRotate 0.8s ease-out forwards;
+    animation: bounce 0.6s infinite; /* Animation au survol */
 }
 
-/* Animation de rebond et de rotation */
-@keyframes bounceRotate {
-    0%, 100% {
-        transform: translateY(-10%) rotate(0deg);
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) rotate(0deg); /* Position normale */
     }
-    25% {
-        transform: translateY(-20%) rotate(-15deg);
+    40% {
+        transform: translateY(-10px) rotate(-10deg); /* Légère rotation vers le haut */
     }
-    50% {
-        transform: translateY(-10%) rotate(15deg);
-    }
-    75% {
-        transform: translateY(-15%) rotate(-10deg);
+    60% {
+        transform: translateY(-5px) rotate(10deg); /* Légère rotation vers le bas */
     }
 }
 
