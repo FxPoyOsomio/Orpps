@@ -280,6 +280,10 @@ h1, h2, h3 {
     height: 50px;
 }
 
+
+
+
+
 .user-logo {
     position: relative;
     display: inline-block;
@@ -293,13 +297,37 @@ h1, h2, h3 {
 }
 
 .user-logo__hat {
-    top: 0; /* Positionnement pour la partie supérieure */
+    top: 0;
 }
 
 .user-logo__mustache {
-    top: 50%; /* Ajustez selon le positionnement voulu pour la partie inférieure */
-    transform: translateY(-10%); /* Ajustez la valeur pour affiner l'alignement */
+    top: 50%;
+    transform: translateY(-10%);
+    transform-origin: bottom center; /* Centre de rotation au bas de l'image */
+    transition: transform 0.2s ease-out;
 }
+
+.user-logo:hover .user-logo__mustache {
+    animation: bounceRotate 0.8s ease-out forwards;
+}
+
+/* Animation de rebond et de rotation */
+@keyframes bounceRotate {
+    0%, 100% {
+        transform: translateY(-10%) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-20%) rotate(-15deg);
+    }
+    50% {
+        transform: translateY(-10%) rotate(15deg);
+    }
+    75% {
+        transform: translateY(-15%) rotate(-10deg);
+    }
+}
+
+
 
 
 
