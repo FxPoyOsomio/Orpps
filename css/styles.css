@@ -330,6 +330,28 @@ h1, h2, h3 {
 
 
 
+/* Couleur par défaut des liens */
+.header__nav a, .header__mobile-nav a {
+    color: #333; /* Couleur de texte par défaut */
+    transition: color 0.3s; /* Transition pour les changements de couleur */
+}
+
+/* Couleur au survol */
+.header__nav a:hover, .header__mobile-nav a:hover {
+    color: #CB6863; /* Couleur de survol */
+}
+
+/* Couleur active (appliquée par JavaScript) */
+.header__nav a.active, .header__mobile-nav a.active {
+    color: #CB6863; /* Couleur active */
+}
+
+
+
+
+
+
+
 /* --- Animation du menu burger lors du clic --- */
 .active .bar1 {
     transform: translateY(8px) rotate(45deg); /* Déplacement vers le bas et rotation */

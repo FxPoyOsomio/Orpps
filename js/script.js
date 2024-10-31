@@ -34,6 +34,24 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 console.error("Elements not found:", { burgerMenu, overlayMenu });
             }
+
+            // Gérer le changement de couleur des liens dans le header et le menu mobile
+            const navLinks = document.querySelectorAll('.header__nav a, .header__mobile-nav a');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Supprimer la classe active de tous les liens
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+
+                    // Ajouter la classe active au lien cliqué
+                    this.classList.add('active');
+
+                    // Retirer la classe active après 1 seconde
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 1000);
+                });
+            });
         })
         .catch(error => console.error("Error loading header:", error));
 
