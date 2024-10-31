@@ -232,23 +232,20 @@ h1, h2, h3 {
 
 
 
-/* --- Style de base pour le header --- */
+/* --- Header Styles --- */
 .header {
     display: flex;
-    flex-direction: column; /* Changez la direction en colonne */
+    flex-direction: column; /* Changer pour une colonne */
     align-items: center; /* Centre le contenu horizontalement */
     justify-content: center;
     padding: 15px 20px;
     background-color: #ffffff;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    position: fixed; /* Fixe l'en-tête en haut de la page */
-    top: 0;          /* Positionne l'en-tête tout en haut */
-    left: 0;         /* Aligne l'en-tête à gauche */
-    width: 100%;     /* Fait en sorte que l'en-tête prenne toute la largeur */
-    margin: 0 auto;   /* Centre le header horizontalement */
-    z-index: 1000;   /* Assure que l'en-tête est au-dessus des autres éléments */
-    transition: height 0.3s ease; /* Transition pour l'agrandissement */
-    box-sizing: border-box; /* Pour inclure le padding et la bordure dans la largeur totale */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 
@@ -272,6 +269,8 @@ h1, h2, h3 {
 }
 
 
+
+
 .header__logo {
     display: flex; /* Utilise flexbox pour aligner les éléments */
     align-items: center; /* Centre verticalement les enfants */
@@ -281,26 +280,25 @@ h1, h2, h3 {
 .user-logo {
     position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
     height: 50px; /* Hauteur fixe pour l'ensemble du logo */
-    overflow: hidden; /* Cache tout débordement */
-    display: flex; /* Utilisation de flex pour centrer le contenu */
-    flex-direction: column; /* Aligne les enfants en colonne */
-    justify-content: center; /* Centre verticalement */
+    display: block; /* Utilisation de flex pour centrer le contenu */
+    width: 42px;
 }
 
 .user-logo__hat,
 .user-logo__mustache {
-    width: auto; /* Permet à l'image de garder sa largeur naturelle */
-    max-height: 50%; /* Limite la hauteur maximale à 50% */
+    width: 100%; /* Permet à l'image de garder sa largeur naturelle */
+    height: auto; /* Limite la hauteur maximale à 50% */
+    display: block;
 }
 
 .user-logo__mustache {
-    transition: transform 0.3s ease; /* Ajoute une transition douce */
+    transition: transform 0.8s ease; /* Ajoute une transition douce */
     transform-origin: bottom center; /* Centre la rotation en bas de l'image */
 }
 
 /* Ajout d'un effet de survol */
 .user-logo:hover .user-logo__mustache {
-    animation: bounce 0.6s infinite; /* Animation au survol */
+    animation: bounce 0.8s infinite; /* Animation au survol */
 }
 
 @keyframes bounce {
@@ -317,7 +315,7 @@ h1, h2, h3 {
 
 .orpps-logo {
     height: 50px; /* Définit une hauteur fixe pour l'image Orpps */
-    display: flex; /* Permet au lien de s'ajuster correctement */
+    display: block; /* Permet au lien de s'ajuster correctement */
     align-items: center; /* Centre verticalement */
     margin-left: 10px; /* Ajoute un espace entre le logo utilisateur et le logo Orpps */
 }
