@@ -285,28 +285,28 @@ h1, h2, h3 {
 
 
 .user-logo {
-    position: relative;
-    display: inline-block; /* Permet à l'élément de s'ajuster aux dimensions de son contenu */
+    position: relative; /* Permet de positionner les enfants par rapport à ce conteneur */
+    display: inline-block; /* Permet de s'ajuster aux dimensions de son contenu */
+    width: 50px; /* Définit une largeur fixe pour l'ensemble du logo */
+    height: 50px; /* Définit une hauteur fixe pour l'ensemble du logo */
+    overflow: hidden; /* Assure que rien ne dépasse du conteneur */
     cursor: pointer; /* Change le curseur au survol */
 }
 
 .user-logo__hat,
 .user-logo__mustache {
-    max-width: 100%; /* Fait en sorte que l'image ne dépasse pas la largeur du conteneur */
+    width: 100%; /* Assure que les images prennent la largeur complète du conteneur */
     height: auto; /* Maintient le rapport d'aspect */
     display: block; /* Affiche chaque image comme un bloc */
 }
 
-
-.user-logo__hat {
-    top: 0;
-}
-
 .user-logo__mustache {
-    margin-top: -50%; /* Ajustez ce pourcentage pour positionner la moustache par-dessus le chapeau */
+    position: absolute; /* Positionne la moustache par rapport au conteneur .user-logo */
+    bottom: 0; /* Positionne la moustache en bas du conteneur */
     transform-origin: bottom center; /* Centre la rotation en bas de l'image */
     transition: transform 0.3s ease; /* Ajoute une transition douce */
 }
+
 
 /* Animation de rebond et de rotation pour user-logo__mustache au survol de user-logo */
 .user-logo:hover .user-logo__mustache {
