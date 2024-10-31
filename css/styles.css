@@ -297,7 +297,6 @@ h1, h2, h3 {
     left: 0;
     width: 100%;
     background-color: rgba(255, 255, 255, 1); /* Fond blanc pour le menu */
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Ombre pour le menu */
     z-index: 999; /* Assurer que le menu est au-dessus du contenu */
 }
 
@@ -350,7 +349,25 @@ h1, h2, h3 {
     height: auto; /* Permet au header de s'agrandir automatiquement */
 }
 
+.header__overlay {
+    position: absolute;
+    top: 0; /* Commence en haut */
+    left: 0;
+    right: 0;
+    height: 100%; /* Prend toute la hauteur */
+    background-color: rgba(0, 0, 0, 0.7); /* Couleur d'arrière-plan avec transparence */
+    transform: translateY(-100%); /* Masquer l'overlay hors de la vue */
+    transition: transform 0.3s ease; /* Transition pour l'animation */
+    opacity: 0; /* Masquer par défaut */
+    pointer-events: none; /* Empêche les clics lorsque masqué */
+}
 
+/* Afficher l'overlay lorsque actif */
+#overlayMenu.active {
+    transform: translateY(0); /* Glisse dans la vue */
+    opacity: 1; /* Rendre visible */
+    pointer-events: auto; /* Activer les événements de clic */
+}
 
 
 /* Couleur par défaut des liens */
