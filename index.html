@@ -2,25 +2,26 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Page d'accueil</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orpps - Accueil</title>
+    <link rel="icon" href="/assets/images/logos_orpps/orpps_favicon.png" type="image/png">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
-<!-- Inclusion du header -->
-<div id="header">
-    <!-- Le contenu du header sera injecté ici -->
-</div>
+    <!-- Inclure le header -->
+    <div id="header"></div>
+    
+    <!-- Contenu de la page -->
+    <main>
+        <h1>Bienvenue sur Orpps</h1>
+        <p>Explorez nos recettes et gérez votre planification et vos courses.</p>
+    </main>
 
-<script src="js/script.js"></script>
-<script>
-    // Injecter le header directement en HTML si nécessaire
-    fetch("components/header.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-        });
-</script>
+    <!-- Inclure le footer -->
+    <div id="footer"></div>
 
+    <!-- Scripts -->
+    <script src="/js/script.js"></script>
 </body>
 </html>
