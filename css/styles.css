@@ -350,14 +350,14 @@ h1, h2, h3 {
 }
 
 .header__overlay {
-    position: absolute;
+    position: fixed;
     top: 0; /* Commence en haut */
     left: 0;
     right: 0;
     height: 100%; /* Prend toute la hauteur */
     background-color: rgba(0, 0, 0, 0.7); /* Couleur d'arrière-plan avec transparence */
     transform: translateY(-100%); /* Masquer l'overlay hors de la vue */
-    transition: transform 0.3s ease; /* Transition pour l'animation */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Transition pour l'animation */
     opacity: 0; /* Masquer par défaut */
     pointer-events: none; /* Empêche les clics lorsque masqué */
 }

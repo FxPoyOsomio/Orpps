@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // Accéder aux éléments du header
             const burgerMenu = document.getElementById("burgerMenu");
             const overlayMenu = document.getElementById("overlayMenu");
-            const header = document.querySelector(".header"); // Sélectionnez le header
             console.log("burgerMenu:", burgerMenu);
             console.log("overlayMenu:", overlayMenu);
 
@@ -21,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 burgerMenu.addEventListener("click", () => {
                     burgerMenu.classList.toggle("active");
                     overlayMenu.classList.toggle("active");
-                    header.classList.toggle("active"); // Ajout de cette ligne
                     console.log("Burger menu clicked, overlay active:", overlayMenu.classList.contains("active"));
                 });
 
@@ -30,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (event.target === overlayMenu) {
                         burgerMenu.classList.remove("active");
                         overlayMenu.classList.remove("active");
-                        header.classList.remove("active"); // Ajout de cette ligne
                         console.log("Overlay clicked, menu closed");
                     }
                 });
