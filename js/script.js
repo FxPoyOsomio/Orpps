@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Charger le header
     console.log("Chargement du header...");
-    fetch("https://fxpoyosomio.github.io/Orpps/components/header.html")
+    fetch("/Orpps/components/header.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("header").innerHTML = data;
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     // Charger le footer
-    fetch("https://fxpoyosomio.github.io/Orpps/components/footer.html")
+    fetch("/Orpps/components/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("footer").innerHTML = data;
