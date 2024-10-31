@@ -12,13 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (burgerMenu && overlayMenu) {
                 // Gestion du clic sur le menu burger
                 burgerMenu.addEventListener("click", () => {
-                    overlayMenu.classList.toggle("active"); // Ajouter ou retirer la classe "active"
+                    burgerMenu.classList.toggle("active"); // Ajouter ou retirer la classe "active"
+                    overlayMenu.classList.toggle("active"); // Ajouter ou retirer la classe "active" sur le menu
                 });
 
                 // Gestion du clic en dehors du menu pour le fermer
                 overlayMenu.addEventListener("click", (event) => {
                     if (event.target === overlayMenu) {
-                        overlayMenu.classList.remove("active"); // Retirer la classe "active"
+                        burgerMenu.classList.remove("active"); // Retirer la classe "active"
+                        overlayMenu.classList.remove("active"); // Retirer la classe "active" sur le menu
                     }
                 });
             } else {

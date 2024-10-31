@@ -251,64 +251,24 @@ h1, h2, h3 {
     font-weight: bold;
 }
 
+/* Styles du menu burger */
 .header__burger {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 30px; /* Largeur du burger */
+    height: 20px; /* Hauteur totale */
 }
 
-.header__overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    align-items: center;
-    justify-content: center;
+.bar {
+    height: 4px; /* Hauteur des barres */
+    width: 100%;
+    background-color: #333; /* Couleur des barres */
+    transition: all 0.3s ease; /* Transition pour l'animation */
 }
 
-.header__mobile-nav {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.header__mobile-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.header__mobile-nav a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 10px 0;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* --- Media Query pour Mobile --- */
-@media (max-width: 768px) {
-    .header__nav {
-        display: none;
-    }
-
-    .header__burger {
-        display: block;
-        cursor: pointer;
-    }
-
-    .header__overlay {
-        display: flex;
-    }
-}
-
-/* Styles par défaut pour le menu burger */
+/* Styles pour le menu lorsqu'il est actif */
 #overlayMenu {
     display: none; /* Masquer le menu par défaut */
     position: fixed;
@@ -323,4 +283,32 @@ h1, h2, h3 {
 /* Styles pour le menu lorsqu'il est actif */
 #overlayMenu.active {
     display: block; /* Afficher le menu lorsque actif */
+}
+
+/* --- Animation du menu burger lors du clic --- */
+.active .bar1 {
+    transform: translateY(8px) rotate(45deg); /* Déplacement vers le bas et rotation */
+}
+
+.active .bar2 {
+    opacity: 0; /* Masquer la barre du milieu */
+}
+
+.active .bar3 {
+    transform: translateY(-8px) rotate(-45deg); /* Déplacement vers le haut et rotation */
+}
+
+/* --- Media Query pour Mobile --- */
+@media (max-width: 768px) {
+    .header__nav {
+        display: none;
+    }
+
+    .header__burger {
+        display: flex;
+    }
+
+    .header__overlay {
+        display: flex;
+    }
 }
