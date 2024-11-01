@@ -341,3 +341,9 @@ input {
         margin-right: auto;
     }
 }
+@media (max-width: 450px) {
+    .recette_ingredients-items{
+        grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+}
