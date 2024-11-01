@@ -223,19 +223,22 @@ h1, h2, h3 {
 
 :root {
     --page-max-width: 1240px; /* Valeur par défaut pour les grands écrans */
+    --page-margin: 20px auto;
 }
 
 /* Styles pour les écrans de taille mobile */
 @media (max-width: 450px) {
     :root {
         --page-max-width: 100%; /* 100% de la largeur pour mobile */
+        --page-margin: 20px auto;
     }
 }
 
 /* Styles pour les tablettes */
 @media (min-width: 451px) and (max-width: 980px) {
     :root {
-        --page-max-width: 450px; /* 450px pour les petits écrans */
+        --page-max-width: 100%; /* 450px pour les petits écrans */
+        --page-margin: 20px auto;
     }
 }
 
@@ -243,6 +246,7 @@ h1, h2, h3 {
 @media (min-width: 981px) and (max-width: 1240px) {
     :root {
         --page-max-width: 980px; /* 980px pour les écrans intermédiaires */
+        --page-margin: 20px auto;
     }
 }
 
@@ -250,6 +254,7 @@ h1, h2, h3 {
 @media (min-width: 1241px) {
     :root {
         --page-max-width: 1240px; /* 1240px pour les grands écrans */
+        --page-margin: 20px auto;
     }
 }
 
