@@ -35,8 +35,6 @@
                     </div>
                 </div>                
             </div>
-            <button class="bring-button" data-items="Pommes, Bananes, Lait" data-name="Ma recette">Ajouter à Bring!</button>
-
             <div class="section-ingredient">
                 <div class="section-ingredient-container">
                     <div class="titre-section-container" style="padding:0 0 0 15px">
@@ -507,7 +505,7 @@
 <!-- script pour forcer le nom du button bring! et l'image // Utilisation d'un polling pour vérifier si l'element à changer existe ou pas  -->
 <!-- Script pour forcer le nom du bouton Bring! et remplacer l'image -->
 <!-- Script pour forcer le nom du bouton Bring! et remplacer l'image -->
-<!--<script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkElement = setInterval(function() {
             const textElement = document.querySelector('.bring-import-text-light');
@@ -516,45 +514,11 @@
             if (textElement) {
                 console.log("Text element found.");
                 textElement.textContent = 'Courses sur Bring!';
-            }
-    
-            if (imageElement) {
-                console.log("Image element found.");
-                imageElement.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#CB6863" width="26px" height="26px">
-                        <style type="text/css"> .st0{fill:#CB6863;} </style>
-                        <g>
-                            <path class="st0" d="M512,182.161c0-12.088-4.164-23.909-11.996-33.389c-9.964-12.046-24.792-19.027-40.42-19.027H349.003 c-2.382-8.597-7.88-15.895-15.245-20.56l-0.133-66.82l-0.017-0.124c-0.283-13.546-7.797-25.892-19.71-32.323 c-5.582-3.016-11.763-4.532-17.895-4.532c-6.697,0-13.429,1.832-19.377,5.423l-0.016-0.025l-65.146,37.538l-0.216,0.15 c-15.696,9.78-25.725,26.492-27.041,44.919l-0.033,0.624v35.764c-20.844,0.1-40.904,7.864-56.366,21.826l-108.732,98.21 C6.732,260.969,0,276.639,0,292.726c0,5.839,0.883,11.763,2.732,17.511L54.499,472.9c6.381,20.077,25.008,33.714,46.085,33.714 h230.092c25.208,0,49.45-9.706,67.711-27.083l66.995-63.813c8.714-8.314,14.628-19.11,16.911-30.939l0.066-0.383l28.841-193.054 h-0.033C511.701,188.3,512,185.227,512,182.161z"/>
-                        </g>
-                    </svg>`);
                 clearInterval(checkElement);
             }
         }, 500); // Vérification toutes les 500 ms
     });
-</script>-->
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const checkImageElement = setInterval(function() {
-            const imageElement = document.querySelector('.bring-import-image-light img');
-    
-            if (imageElement) {
-                console.log("Image element found.");
-                imageElement.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#CB6863" width="26px" height="26px">
-                        <style type="text/css"> .st0{fill:#CB6863;} </style>
-                        <g>
-                            <path class="st0" d="M512,182.161c0-12.088-4.164-23.909-11.996-33.389c-9.964-12.046-24.792-19.027-40.42-19.027H349.003 c-2.382-8.597-7.88-15.895-15.245-20.56l-0.133-66.82l-0.017-0.124c-0.283-13.546-7.797-25.892-19.71-32.323 c-5.582-3.016-11.763-4.532-17.895-4.532c-6.697,0-13.429,1.832-19.377,5.423l-0.016-0.025l-65.146,37.538l-0.216,0.15 c-15.696,9.78-25.725,26.492-27.041,44.919l-0.033,0.624v35.764c-20.844,0.1-40.904,7.864-56.366,21.826l-108.732,98.21 C6.732,260.969,0,276.639,0,292.726c0,5.839,0.883,11.763,2.732,17.511L54.499,472.9c6.381,20.077,25.008,33.714,46.085,33.714 h230.092c25.208,0,49.45-9.706,67.711-27.083l66.995-63.813c8.714-8.314,14.628-19.11,16.911-30.939l0.066-0.383l28.841-193.054 h-0.033C511.701,188.3,512,185.227,512,182.161z"/>
-                        </g>
-                    </svg>`);
-                clearInterval(checkImageElement);
-            } else {
-                console.log("Image element not found yet.");
-            }
-        }, 500); // Vérification toutes les 500 ms
-    });
-    </script>
+</script>
     
 
 
