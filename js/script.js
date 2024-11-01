@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 burgerMenu.addEventListener("click", () => {
                     header.classList.toggle("modal-burger-open"); // Modifie le header pour ajouter la classe d'animation
                     overlayMenu.classList.toggle("active"); // Affiche ou cache l'overlay
+                    burgerMenu.classList.toggle("active"); // Ajoute la classe "active" au menu burger
                     console.log("Burger menu clicked, overlay active:", overlayMenu.classList.contains("active"));
                 });
 
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (event.target === overlayMenu) {
                         header.classList.remove("modal-burger-open");
                         overlayMenu.classList.remove("active");
+                        burgerMenu.classList.remove("active"); // Retire la classe "active" du menu burger
                         console.log("Overlay clicked, menu closed");
                     }
                 });

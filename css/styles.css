@@ -365,6 +365,11 @@ h1, h2, h3 {
     background-color: #CB6863; /* Couleur des barres au survol */
 }
 
+/* Transition de couleur lors de l'activation */
+.header__burger.active > span {
+    background-color: #000; /* Couleur des barres lorsque le menu est actif */
+}
+
 .header__burger > span {
     position: relative;
     display: block;
