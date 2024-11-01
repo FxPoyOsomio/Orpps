@@ -8,34 +8,27 @@ p { font-weight: 200; font-size: 16px;}*/
 
 .page-container {
     /*width: 100%; /* Assure que le conteneur utilise toute la largeur disponible jusqu'à max-width */
-}
-
-
-
-.marge-page {
-    margin: var(--page-margin);
     max-width: var(--page-max-width);
 }
+
+
 
 
 .titre-recette {
     text-align: center; /* Centre le texte */
     font-weight: bold; /* Rend le texte en gras */
     padding: 50px 0 50px 0;
-    margin: var(--page-margin);
-    max-width: var(--page-max-width);
+    width: 100%;
 }
 .ingredients {
     /*width: 100%;*/
     padding: 0 35px;
-    margin: var(--page-margin);
-    max-width: var(--page-max-width);
+    width: 100%;
 }
 .preparations {
     /*width: 100%;*/
     padding: 0 50px 0 50px;
-    margin: var(--page-margin);
-    max-width: var(--page-max-width);
+    width: 100%;
 }
 
 
