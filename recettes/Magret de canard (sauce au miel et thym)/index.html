@@ -503,5 +503,19 @@
 
 <script src="/Orpps/js/script.js"></script> <!-- Incluez votre fichier JS ici -->
 
+<!-- script pour forcer le nom du button bring! -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sélectionner l'élément avec la classe 'bring-import-text-light'
+        const element = document.querySelector('.bring-import-text-light');
+        
+        // Vérifier si l'élément existe pour éviter les erreurs
+        if (element) {
+            // Remplacer le texte
+            element.textContent = 'liste de course pour bring';
+        }
+    });
+    </script>
+
 </body>
 </html>
