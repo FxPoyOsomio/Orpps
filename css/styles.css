@@ -464,7 +464,7 @@ h1, h2, h3 {
 
 /* Changement de couleur au survol */
 .header__nav a:hover {
-    color: #007BFF; /* Changez cette couleur selon vos préférences */
+    color: #CB6863; /* Changez cette couleur selon vos préférences */
 }
 
 /* Afficher le menu mobile lorsque actif */
