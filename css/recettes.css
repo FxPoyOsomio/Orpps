@@ -11,10 +11,6 @@ p { font-weight: 200; font-size: 16px;}*/
 }
 
 
-:root {
-    --page-margin: 20px auto;
-}
-
 
 .marge-page {
     margin: var(--page-margin);
