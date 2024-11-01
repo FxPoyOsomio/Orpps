@@ -243,13 +243,17 @@ input {
 /* Styles pour le conteneur */
 .bring-container {
     text-align: center; /* Centrer le bouton si nécessaire */
-    padding: 0 35px 0 0;
 }
 
 /* Personnalisation du lien bring en FORÇANT le style css importer par le js */
 
 #bring-import-container a {
     /*pour l'instant rien */
+}
+.bring-import-link-light {
+    min-width: unset !important;
+    max-width: unset !important;
+    width: 195px !important;
 }
 .bring-import-button-light {
     background-color: #ffffff !important;
@@ -343,7 +347,7 @@ input {
         margin-right: auto;
     }
     .portion-bring-conteneur {
-        margin-right: 15px;
+        margin-right: unset;
     }
 }
 @media (max-width: 450px) {
