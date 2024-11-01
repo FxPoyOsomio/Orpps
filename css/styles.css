@@ -369,7 +369,7 @@ h1, h2, h3 {
     height: 50px; /* Définit une hauteur fixe pour l'image Orpps */
     display: block; /* Permet au lien de s'ajuster correctement */
     align-items: center; /* Centre verticalement */
-    margin-left: 10px; /* Ajoute un espace entre le logo utilisateur et le logo Orpps */
+    margin-left: 20px; /* Ajoute un espace entre le logo utilisateur et le logo Orpps */
 }
 
 .orpps-logo img {
