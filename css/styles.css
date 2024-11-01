@@ -497,6 +497,9 @@ h1, h2, h3 {
 .header__nav a:hover {
     color: #CB6863; /* Changez cette couleur selon vos préférences */
 }
+.header__nav a:hover svg {
+    fill: #CB6863;
+}
 
 /* Afficher le menu mobile lorsque actif */
 #overlayMenu.active .header__nav {
@@ -534,7 +537,7 @@ h1, h2, h3 {
     width: 20px; /* Largeur de l'icône */
     height: 20px; /* Hauteur de l'icône */
     margin-right: 10px; /* Marge à droite pour espacer le texte */
-    fill: #CB6863; /* Couleur de remplissage par défaut */
+    fill: #000; /* Couleur de remplissage par défaut */
 }
 
 
