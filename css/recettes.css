@@ -40,33 +40,6 @@ p { font-weight: 200; font-size: 16px;}*/
 
 
 
-.titre-section-container {
-    display: flex;
-    align-items: center; /* Centre verticalement les éléments */
-    padding: 0 5px 35px 5px;
-}
-
-.titre-section-image {
-    height: 45px; /* Hauteur de l'image (svg ici) */
-    width: 45px; /* Largeur de l'image (svg ici) */
-}
-
-.titre-section-titre_border {
-    display: flex ;
-    align-items: center; /* Centre verticalement les éléments */
-    width :100%;
-}
-
-.titre-section-title {
-    margin: 0 18px; /* Marge à gauche et à droite du texte */
-    flex-grow: 1; /* Permet au texte de prendre l'espace restant */
-}
-
-.titre-section-border {
-    border-bottom: 2px solid rgba(63, 55, 53, .23); /* Bordure en bas */
-    width: 100%; /* S'étend sur toute la largeur */
-}
-
 
 
 
@@ -100,22 +73,50 @@ ul {
     padding: 0 0 50px 0;
 }
 
+
+
+
+.titre-section-container {
+    display: flex;
+    align-items: center;
+    padding: 0 5px 35px;
+}
+
+.titre-section-image {
+    width: 45px;
+    height: 45px;
+}
+
+.titre-section-titre_border {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.titre-section-title {
+    margin: 0 18px;
+    flex-grow: 1;
+}
+
+.titre-section-border {
+    border-bottom: 2px solid rgba(63, 55, 53, 0.23);
+    width: 100%;
+}
+
 .portion-control {
     display: flex;
-    align-items: center; /* Centre verticalement les enfants */
-    justify-content: space-between;
+    align-items: center;
     min-width: 200px;
     max-width: 280px;
     height: 40px;
     background-color: #fff;
-    border: 1px solid rgba(63, 55, 53, .23);
+    border: 1px solid rgba(63, 55, 53, 0.23);
     border-radius: 8px;
-    overflow: hidden; /* Cache tout débordement */
     color: #CB6863;
     font-family: 'Open Sans', sans-serif;
     user-select: none;
-    padding: ;
 }
+
 
 /* Boutons */
 .portion-control__decrement, .portion-control__increment {
@@ -125,23 +126,21 @@ ul {
     width: 40px;
     height: 40px;
     cursor: pointer;
-    transition: color 0.3s ease;
-    overflow: hidden; /* Empêche le débordement */
+    border: 0;
 }
 
 .portion-control__decrement {
-    border-right: 1px solid rgba(63, 55, 53, .23);
+    border-right: 1px solid rgba(63, 55, 53, 0.23);
 }
 
 .portion-control__increment {
-    border-left: 1px solid rgba(63, 55, 53, .23);
+    border-left: 1px solid rgba(63, 55, 53, 0.23);
 }
 
-/* Style pour l'icône SVG */
 .icon {
-    width: 24px; /* Largeur de l'icône */
-    height: 24px; /* Hauteur de l'icône */
-    transition: transform 0.2s ease; /* Transition pour l'agrandissement */
+    width: 24px;
+    height: 24px;
+    fill: none;
 }
 
 
