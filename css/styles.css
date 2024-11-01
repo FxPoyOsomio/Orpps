@@ -490,7 +490,7 @@ h1, h2, h3 {
     color: #333; /* Couleur du texte */
     font-weight: bold; /* Gras */
     font-size: 18px; /* Taille de police */
-    transition: color 0.3s; /* Transition pour la couleur */
+    transition: color 0.3s ease, fill 0.3s ease, transform 3s ease; /* Transition pour la couleur */
 }
 
 /* Changement de couleur au survol */
@@ -499,6 +499,7 @@ h1, h2, h3 {
 }
 .header__nav a:hover svg {
     fill: #CB6863;
+    transform: scale(1.33);
 }
 
 /* Afficher le menu mobile lorsque actif */
