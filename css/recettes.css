@@ -247,21 +247,21 @@ input {
     padding: 0 35px 0 0;
 }
 
-/* Personnalisation du lien */
+/* Personnalisation du lien bring en FORÇANT le style css importer par le js */
+
 #bring-import-container a {
-    display: inline-block; /* Pour que le lien se comporte comme un bouton */
-    padding: 10px 20px; /* Espacement interne */
-    background-color: #CB6863; /* Couleur de fond personnalisée */
-    color: white; /* Couleur du texte */
-    text-decoration: none; /* Supprime le soulignement */
-    border-radius: 5px; /* Arrondi des coins */
-    font-size: 16px; /* Taille de police */
-    transition: background-color 0.3s; /* Transition pour l'effet au survol */
+    /*pour l'instant rien */
+}
+.bring-import-button-light {
+    background-color: #ffffff !important;
+}
+.bring-import-text-light {
+    font-family: unset !important;
+    color: #CB6863 !important;
 }
 
 /* Effet au survol */
 #bring-import-container a:hover {
-    background-color: #a95a57; /* Couleur de fond lors du survol */
     transform: scale(1.05);
 }
 
