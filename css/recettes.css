@@ -26,13 +26,13 @@ p { font-weight: 200; font-size: 16px;}*/
     max-width: var(--page-max-width);
 }
 .ingredients {
-    width: 100%;
+    /*width: 100%;*/
     padding: 0 35px;
     margin: var(--page-margin);
     max-width: var(--page-max-width);
 }
 .preparations {
-    width: 100%;
+    /*width: 100%;*/
     padding: 0 50px 0 50px;
     margin: var(--page-margin);
     max-width: var(--page-max-width);
