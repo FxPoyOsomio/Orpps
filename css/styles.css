@@ -436,7 +436,7 @@ h1, h2, h3 {
 
 
 /* --- Styles pour le menu mobile --- */
-.header__mobile-nav {
+.header__nav {
     display: none; /* Masquer par défaut */
     flex-direction: column; /* Disposer les éléments verticalement */
     padding: 15px; /* Espacement interne */
@@ -445,16 +445,16 @@ h1, h2, h3 {
     margin: 0 auto;
 }
 
-.header__mobile-nav ul {
+.header__nav ul {
     list-style: none; /* Pas de puces */
     padding: 0; /* Pas de padding par défaut */
 }
 
-.header__mobile-nav li {
+.header__nav li {
     margin: 10px 0; /* Espacement entre les éléments de la liste */
 }
 
-.header__mobile-nav a {
+.header__nav a {
     text-decoration: none; /* Pas de soulignement */
     color: #333; /* Couleur du texte */
     font-weight: bold; /* Gras */
@@ -463,12 +463,12 @@ h1, h2, h3 {
 }
 
 /* Changement de couleur au survol */
-.header__mobile-nav a:hover {
+.header__nav a:hover {
     color: #007BFF; /* Changez cette couleur selon vos préférences */
 }
 
 /* Afficher le menu mobile lorsque actif */
-#overlayMenu.active .header__mobile-nav {
+#overlayMenu.active .header__nav {
     display: flex; /* Afficher le menu lorsque actif */
 }
 

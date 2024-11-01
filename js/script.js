@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Gérer le changement de couleur des liens dans le header et le menu mobile
-            const navLinks = document.querySelectorAll('.header__nav a, .header__mobile-nav a');
+            const navLinks = document.querySelectorAll('.header__nav a');
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
