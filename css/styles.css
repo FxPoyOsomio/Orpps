@@ -539,7 +539,7 @@ h1, h2, h3 {
 
 
 /* ajout d'un class pour les SVG du header nav */
-.header__nav__sgg-icon {
+.header__nav__svg-icon {
     width: 20px; /* Largeur de l'icône */
     height: 20px; /* Hauteur de l'icône */
     margin-right: 10px; /* Marge à droite pour espacer le texte */
