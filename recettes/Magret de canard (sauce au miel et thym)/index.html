@@ -28,13 +28,8 @@
         <div class="ingredients">
 
 
-            <div class="portion-bring-conteneur">    
-                <div class="bring-container">
-                    <div id="bring-import-container" data-bring-import data-bring-language="fr" data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
-                        <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
-                    </div>
-                </div>                
-            </div>
+
+
             <div class="section-ingredient">
                 <div class="section-ingredient-container">
                     <div class="titre-section-container" style="padding:0 0 0 15px">
@@ -67,6 +62,13 @@
                                 <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"/> <!-- Ligne horizontale -->
                             </svg>
                         </div>
+                    </div>            
+                    <div class="portion-bring-conteneur">    
+                        <div class="bring-container">
+                            <div id="bring-import-container" data-bring-import data-bring-language="fr" data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
+                                <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
+                            </div>
+                        </div>                
                     </div>
                 </div>
             </div>
@@ -502,8 +504,7 @@
 <script src="/Orpps/js/script.js"></script> <!-- Incluez votre fichier JS ici -->
 
 
-<!-- script pour forcer le nom du button bring! et l'image // Utilisation d'un polling pour vérifier si l'element à changer existe ou pas  -->
-<!-- Script pour forcer le nom du bouton Bring! et remplacer l'image -->
+
 <!-- Script pour forcer le nom du bouton Bring! et remplacer l'image -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -516,7 +517,7 @@
                 textElement.textContent = 'Courses sur Bring!';
                 clearInterval(checkElement);
             }
-        }, 500); // Vérification toutes les 500 ms
+        }, 5); // Vérification toutes les 500 ms
     });
 </script>
     
