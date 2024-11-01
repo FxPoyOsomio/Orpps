@@ -42,13 +42,13 @@ p { font-weight: 200; font-size: 16px;}*/
     display: grid;
     gap: 10px;
 }
-@media (min-width: 450) {
+@media (min-width: 450px) {
     .section-ingredient {
         grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur les écrans plus larges */
     }
 }
 
-@media (max-width: 449) {
+@media (max-width: 449px) {
     .section-ingredient {
         grid-template-columns: 1fr; /* 1 colonne sur les écrans plus petits */
     }
