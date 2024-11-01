@@ -376,7 +376,7 @@ h1, h2, h3 {
     height: 3px;
     border-radius: 2px;
     transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
-    background-color: #000; /* Couleur des barres */
+    background-color: #CB6863; /* Couleur des barres */
 }
 
 .header__burger > span:first-child {
@@ -392,6 +392,26 @@ h1, h2, h3 {
 .header__burger > span:last-child {
     width: 25px;
     margin-bottom: 7px;
+}
+
+/* Animation du burger menu */
+.header.modal-burger-open .header__burger > span:first-child {
+    top: 10px;
+    transform: rotate(-45deg);
+}
+
+.header.modal-burger-open .header__burger > span:nth-child(2) {
+    width: 0;
+    opacity: 0;
+}
+
+.header.modal-burger-open .header__burger > span:last-child {
+    top: -10px;
+    transform: rotate(45deg);
+}
+
+.header.modal-burger-open .header__overlay {
+    display: flex; /* Affiche l'overlay quand le menu est ouvert */
 }
 
 
@@ -483,25 +503,7 @@ h1, h2, h3 {
 
 
 
-/* Animation du burger menu */
-.header.modal-burger-open .header__burger > span:first-child {
-    top: 10px;
-    transform: rotate(-45deg);
-}
 
-.header.modal-burger-open .header__burger > span:nth-child(2) {
-    width: 0;
-    opacity: 0;
-}
-
-.header.modal-burger-open .header__burger > span:last-child {
-    top: -10px;
-    transform: rotate(45deg);
-}
-
-.header.modal-burger-open .header__overlay {
-    display: flex; /* Affiche l'overlay quand le menu est ouvert */
-}
 
 
 
