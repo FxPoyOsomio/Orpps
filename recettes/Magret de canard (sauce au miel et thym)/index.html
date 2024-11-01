@@ -504,18 +504,18 @@
 <script src="/Orpps/js/script.js"></script> <!-- Incluez votre fichier JS ici -->
 
 
-<!-- script pour forcer le nom du button bring! -->
+<!-- script pour forcer le nom du button bring! ajout d'un polling pour vérifier si l'element à changer existe ou pas  -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Sélectionner l'élément avec la classe 'bring-import-text-light'
+document.addEventListener('DOMContentLoaded', function() {
+    const checkElement = setInterval(function() {
         const element = document.querySelector('.bring-import-text-light');
-        
-        // Vérifier si l'élément existe pour éviter les erreurs
+
         if (element) {
-            // Remplacer le texte
-            element.textContent = 'liste de course pour bring';
+            element.textContent = 'Nouveau texte';
+            clearInterval(checkElement); // Arrête de vérifier une fois trouvé
         }
-    });
+    }, 500); // Vérifie toutes les 500 ms
+});
 </script>
 
 </body>
