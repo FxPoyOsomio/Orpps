@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Magret de canard (sauce au miel et thym)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "Recipe",
+        "name": "Magret de canard (sauce au miel et thym)",
+        "recipeIngredient": ["2  magrets de canard", "1 pincée  de piment d'espellette", "4 cuil. à soupe  de miel de montagne", "0.25  citron jaune", "20 cl.  de fond de veau", "null  Poivre noir", "40 g.  de beurre doux", "null  Sel fin", "4 cuil. à soupe  de vinaigre de vin rouge"]
+        }
+    </script>
+
+
+    <script async="async" src="//platform.getbring.com/widgets/import.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        h1 { color: #CB6863; font-weight: 700; font-size: 45px; }
+        h2 { font-weight: 600; font-size: 30px;}
+        h3 { font-weight: 500; font-size: 24px;}
+        h4 { font-weight: 400; font-size: 16px;}
+        h5 { color: #CB6863; font-weight: 700; font-size: 16px; }
+        p { font-weight: 200; font-size: 16px;}
+        .page-container {
+            width: 100%; /* Assure que le conteneur utilise toute la largeur disponible jusqu'à max-width */
+        }
+
+
+        :root {
+            --page-margin: 20px auto;
+            --page-max-width: 950px;
+        }
+
+        
+        .marge-page {
+            margin: var(--page-margin);
+            max-width: var(--page-max-width);
+        }
+
+
+        .titre-recette {
+            text-align: center; /* Centre le texte */
+            font-weight: bold; /* Rend le texte en gras */
+            padding: 50px 0 50px 0;
+            margin: var(--page-margin);
+            max-width: var(--page-max-width);
+        }
+        .ingredients {
+            width: 100%;
+            padding: 0 35px;
+            margin: var(--page-margin);
+            max-width: var(--page-max-width);
+        }
+        .preparations {
+            width: 100%;
+            padding: 0 50px 0 50px;
+            margin: var(--page-margin);
+            max-width: var(--page-max-width);
+        }
+
+
+
+
+
+        .titre-section-container {
+            display: flex;
+            align-items: center; /* Centre verticalement les éléments */
+            padding: 0 0 35px 0;
+        }
+
+        .titre-section-image {
+            height: 45px; /* Hauteur de l'image (svg ici) */
+            width: 45px; /* Largeur de l'image (svg ici) */
+        }
+
+        .titre-section-titre_border {
+            display: flex ;
+            align-items: center; /* Centre verticalement les éléments */
+            width :100%;
+        }
+
+        .titre-section-title {
+            margin: 0 18px; /* Marge à gauche et à droite du texte */
+            flex-grow: 1; /* Permet au texte de prendre l'espace restant */
+        }
+
+        .titre-section-border {
+            border-bottom: 2px solid rgba(63, 55, 53, .23); /* Bordure en bas */
+            width: 100%; /* S'étend sur toute la largeur */
+        }
+
+
+
+
+        .preparation-instruction {
+            padding: 0 70px 35px 70px;
+        }
+
+        .preparation-ingrédients {
+            padding: 0 70px 35px 70px;
+        }
+
+
+        .etape {
+            padding: 0 0 0 20px;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            font-size: 16px;
+        }
+        .instructions {
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+
+        .portion-bring-conteneur {
+            display: flex;
+            align-items: center; /* Centre verticalement les enfants */
+            justify-content: flex-end; /* Aligne le contenu à droite */
+            padding: 0 0 50px 0;
+        }
+
+        .portion-control {
+            display: flex;
+            align-items: center; /* Centre verticalement les enfants */
+            justify-content: space-between;
+            min-width: 200px;
+            max-width: 280px;
+            height: 40px;
+            background-color: #fff;
+            border: 1px solid rgba(63, 55, 53, .23);
+            border-radius: 8px;
+            overflow: hidden; /* Cache tout débordement */
+            color: #CB6863;
+            font-family: 'Open Sans', sans-serif;
+            user-select: none;
+            padding: ;
+        }
+
+        /* Boutons */
+        .portion-control__decrement, .portion-control__increment {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            overflow: hidden; /* Empêche le débordement */
+        }
+
+        .portion-control__decrement {
+            border-right: 1px solid rgba(63, 55, 53, .23);
+        }
+
+        .portion-control__increment {
+            border-left: 1px solid rgba(63, 55, 53, .23);
+        }
+
+        /* Style pour l'icône SVG */
+        .icon {
+            width: 24px; /* Largeur de l'icône */
+            height: 24px; /* Hauteur de l'icône */
+            transition: transform 0.2s ease; /* Transition pour l'agrandissement */
+        }
+
+
+
+        /* Agrandissement & couleur au survol */
+        .portion-control__decrement:hover .icon,
+        .portion-control__increment:hover .icon {
+            transform: scale(1.2); /* Agrandissement lors du survol */
+        }
+
+        /* Pour garder la couleur au clic */
+        .portion-control__decrement:hover .icon-fill,
+        .portion-control__increment:hover .icon-fill {
+            stroke: #CB6863; /* Changement de couleur au survol */
+        }
+
+        /* Conteneur pour la valeur */
+        .portion-control__value_container {
+            display: flex;
+            align-items: center; /* Centre verticalement la valeur */
+            justify-content: flex-end; /* Aligne le contenu à droite */
+            gap: 5px;
+            margin-inline: 10px;
+        }
+
+        .portion-control__value_container {
+            display: flex;
+            align-items: center; /* Centre verticalement la valeur */
+            justify-content: flex-end; /* Aligne le contenu à droite */
+            gap: 5px;
+            margin-inline: 10px;
+        }
+
+        .portion-control__value_number {
+            width: 50px; /* Ajustez si nécessaire */
+            text-align: right; /* Aligne le texte à droite */
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 15px;
+            color: #CB6863;
+            padding-right: 5px;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            line-height: normal; /* Ajoute un peu de flexibilité */
+            vertical-align: middle; /* Aligne verticalement au centre */
+        }
+
+        input[type="text"] {
+            -moz-appearance: textfield; /* Firefox */
+            appearance: textfield; /* Chrome */
+        }
+
+        /* Masquer les flèches pour les inputs */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input {
+            -webkit-appearance: none; /* Chrome, Safari */
+            -moz-appearance: textfield; /* Firefox */
+            appearance: none; /* Pour tous les navigateurs */
+        }
+
+
+        /* Champ d'entrée */
+        #portion-input {
+            width: 35px;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 15px;
+            color: #CB6863;
+        }
+
+        /* Unité de portion */
+        .portion-control__unit {
+            font-weight: bold;
+            font-size: 15px;
+            color: #CB6863;
+        }
+
+
+
+
+
+        /* Styles pour le conteneur */
+        .bring-container {
+            text-align: center; /* Centrer le bouton si nécessaire */
+            padding: 0 35px 0 0;
+        }
+
+        /* Personnalisation du lien */
+        #bring-import-container a {
+            display: inline-block; /* Pour que le lien se comporte comme un bouton */
+            padding: 10px 20px; /* Espacement interne */
+            background-color: #CB6863; /* Couleur de fond personnalisée */
+            color: white; /* Couleur du texte */
+            text-decoration: none; /* Supprime le soulignement */
+            border-radius: 5px; /* Arrondi des coins */
+            font-size: 16px; /* Taille de police */
+            transition: background-color 0.3s; /* Transition pour l'effet au survol */
+        }
+
+        /* Effet au survol */
+        #bring-import-container a:hover {
+            background-color: #a95a57; /* Couleur de fond lors du survol */
+            transform: scale(1.05);
+        }
+        
+
+        .recette_ingredients-qtunit {
+            display: block; 
+        }
+
+        .highlight-quantity {
+            font-weight: 400;
+            font-style: normal; 
+        }
+
+        .highlight {
+            background-color: #F6E2DF; /* ou une autre couleur de votre choix */
+            transition: background-color 0.3s ease;
+        }
+
+        .recette_ingredients-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .card-ingredient {
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .card-ingredient:hover {
+            transform: scale(1.05);
+        }
+
+        .card-ingredient-image {
+            text-align: center;
+            padding: 10px;
+            max-width: 100%; /* Assure que l'image ne dépasse pas la largeur de son conteneur */
+        }
+
+        .card-ingredient-image img {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            max-width: 100%; /* Permet à l'image de s'ajuster à la largeur de son conteneur */
+            height: auto; /* Conserve le ratio d'aspect de l'image */
+        }
+
+        .recette_ingredients-details {
+            display: flex;                /* Utilise Flexbox pour le layout */
+            flex-direction: column;       /* Aligne les enfants en colonne */
+            align-items: center;          /* Centre horizontalement le contenu */
+            text-align: center;           /* Centre le texte à l'intérieur */
+            font-weight: 300;
+        }
+
+        .ingredient-preparation {
+            font-weight: 300;            
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <h1 class="titre-recette">Magret de canard (sauce au miel et thym)</h1>
+        <div class="ingredients">
+
+
+            <div class="portion-bring-conteneur">    
+                <div class="bring-container">
+                    <div id="bring-import-container" data-bring-import data-bring-language="fr" data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
+                        <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
+                    </div>
+                </div>                
+            </div>
+
+
+            <div class="titre-section-container">
+                <svg class="titre-section-image" width="64px" height="64px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.00 512.00" xml:space="preserve" fill="#CB6863" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)" stroke="#CB6863" stroke-width="0.00512">
+                    <style type="text/css"> .st0{fill:#CB6863;} </style>
+                    <g>
+                        <path class="st0" d="M512,182.161c0-12.088-4.164-23.909-11.996-33.389c-9.964-12.046-24.792-19.027-40.42-19.027H349.003 c-2.382-8.597-7.88-15.895-15.245-20.56l-0.133-66.82l-0.017-0.124c-0.283-13.546-7.797-25.892-19.71-32.323 c-5.582-3.016-11.763-4.532-17.895-4.532c-6.697,0-13.429,1.832-19.377,5.423l-0.016-0.025l-65.146,37.538l-0.216,0.15 c-15.696,9.78-25.725,26.492-27.041,44.919l-0.033,0.624v35.764c-20.844,0.1-40.904,7.864-56.366,21.826l-108.732,98.21 C6.732,260.969,0,276.639,0,292.726c0,5.839,0.883,11.763,2.732,17.511L54.499,472.9c6.381,20.077,25.008,33.714,46.085,33.714 h230.092c25.208,0,49.45-9.706,67.711-27.083l66.995-63.813c8.714-8.314,14.628-19.11,16.911-30.939l0.066-0.383l28.841-193.054 h-0.033C511.701,188.3,512,185.227,512,182.161z M218.996,95.539c0.6-7.164,4.515-13.628,10.597-17.477l64.696-37.288l0.266-0.159 c0.45-0.275,0.916-0.425,1.449-0.425c0.45,0,0.883,0.101,1.316,0.351h0.017c0.883,0.483,1.433,1.399,1.466,2.365l0.149,64.404 c-9.014,4.44-15.861,12.571-18.577,22.435h-36.105v34.813h215.313c2.632,0,5.198,0.592,7.514,1.683l-93.636,86.863 c-9.964,9.03-22.959,14.012-36.388,14.012h-92.07c-2.749-14.778-12.696-26.991-26.075-32.93L218.996,95.539z M151.134,177.438 c9.064-8.188,20.826-12.721,33.022-12.862l-0.033,68.902c-14.245,5.616-24.925,18.244-27.791,33.639H51.85L151.134,177.438z M48.901,340.56l-13.013-40.87c-0.666-2.15-0.999-4.298-1.016-6.464h64.629l5.998,47.334H48.901z M55.832,362.311h52.417 l5.348,42.378H69.328L55.832,362.311z M100.584,471.809c-5.898,0-11.13-3.84-12.912-9.456l-11.43-35.888h40.104l5.732,45.344 H100.584z M188.922,471.809h-44.918l-5.732-45.344h50.65V471.809z M188.922,404.689h-53.399l-5.348-42.378h58.747V404.689z M188.922,340.56h-61.497l-5.998-47.334h67.494V340.56z M198.802,277.28c-6.615,0-11.98-5.381-11.98-11.971 c0-6.623,5.365-11.971,11.98-11.971c6.597,0,11.962,5.348,11.962,11.971C210.765,271.899,205.4,277.28,198.802,277.28z M265.564,471.809h-54.882v-45.344h56.015L265.564,471.809z M267.246,404.689h-56.564v-42.378h57.631L267.246,404.689z M268.846,340.56h-58.164v-47.334h59.364L268.846,340.56z M336.541,471.517c-1.949,0.176-3.916,0.292-5.864,0.292h-43.352 l1.133-45.344h50.666L336.541,471.517z M340.373,404.689h-51.367l1.066-42.378h52.733L340.373,404.689z M344.055,340.56h-53.432 l1.182-47.334h45.27c3.282,0,6.514-0.276,9.747-0.658L344.055,340.56z M399.288,430.598l-24.909,23.716 c-3.416,3.25-7.198,6.041-11.196,8.44l2.449-42.52l36.538-29.357L399.288,430.598z M404.336,361.22l-37.005,29.732l2.315-40.445 l37.655-30.274L404.336,361.22z M409.451,290.593l-38.122,30.64l2.1-36.738c6.298-3.191,12.212-7.19,17.528-11.996l21.243-19.71 L409.451,290.593z M448.055,378.322c-0.917,4.657-3.249,8.906-6.682,12.204l-18.66,17.744l2.616-36.022l26.874-21.592 L448.055,378.322z M456.935,318.966l-29.44,23.643l2.966-40.995l33.022-26.516L456.935,318.966z M462.967,263.159l-35.704,28.694 l3.432-47.493l41.364-38.474L462.967,263.159z"/>
+                    </g>
+                </svg>
+                <div class="titre-section-titre_border">
+                    <h2 class="titre-section-title">Ingrédients</h3>
+                    <div class="titre-section-border" style="margin-right: 20px;"></div>
+                </div>
+                <div class="portion-control">
+                    <div class="portion-control__decrement minus" onclick="updatePortions(-1)">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"> <!-- Ajout de width et height -->
+                            <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round" /> <!-- Ajout de stroke, stroke-width, et stroke-linecap -->
+                        </svg>
+                    </div>
+                    <div class="portion-control__value_container">
+                        <input type="text" id="portion-input" class="portion-control__value_number" value="6" readonly>
+                        <span class="portion-control__unit">portions</span>
+                    </div>
+                    <div class="portion-control__increment plus" onclick="updatePortions(1)">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"> <!-- Ajout de width et height -->
+                            <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"/> <!-- Ligne verticale -->
+                            <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"/> <!-- Ligne horizontale -->
+                        </svg>
+                    </div>
+                </div>
+                <div style="width: 50px;"></div>
+            </div>
+
+
+
+            
+                        <div class="preparation-ingrédients">
+                            <h3>Préparation des magrets</h3>
+                            <div class="recette_ingredients-items">
+                                
+                                    <div class="card-ingredient" data-name="1">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Viandes et Poissons/Volaille/Canard/Magret%20de%20canard.jpg" alt="magrets de canard">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-1">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            2 
+                                                        </span>
+                                                    </span>
+                                                 
+                                                magrets de canard
+                                            </span>
+                                        </span>
+                                    </div>
+                                                
+                            </div>
+                        </div>
+                    
+                        <div class="preparation-ingrédients">
+                            <h3>Sauce au miel & thym</h3>
+                            <div class="recette_ingredients-items">
+                                
+                                    <div class="card-ingredient" data-name="5">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/Piment%20d'Espellette.jpg" alt=" de piment d'espellette">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-5">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            1 pincée
+                                                        </span>
+                                                    </span>
+                                                 
+                                                 de piment d'espellette
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="2">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg" alt=" de miel de montagne">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-2">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            4 cuil. à soupe
+                                                        </span>
+                                                    </span>
+                                                 
+                                                 de miel de montagne
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="9">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20jaune.jpg" alt="citron jaune">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-9">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            0.25 
+                                                        </span>
+                                                    </span>
+                                                 
+                                                citron jaune
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="4">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Bouillon et fond de sauce/Fond%20de%20veau.jpg" alt=" de fond de veau">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-4">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            20 cl.
+                                                        </span>
+                                                    </span>
+                                                 
+                                                 de fond de veau
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="7">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg" alt="Poivre noir">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-7">
+                                                 
+                                                Poivre noir
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="8">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Doux.jpg" alt=" de beurre doux">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-8">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            40 g.
+                                                        </span>
+                                                    </span>
+                                                 
+                                                 de beurre doux
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="6">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg" alt="Sel fin">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-6">
+                                                 
+                                                Sel fin
+                                            </span>
+                                        </span>
+                                    </div>
+                                
+                                    <div class="card-ingredient" data-name="3">
+                                        <div class="card-ingredient-image">
+                                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Vinaigre%20de%20vin%20rouge.jpg" alt=" de vinaigre de vin rouge">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-3">
+                                                
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            4 cuil. à soupe
+                                                        </span>
+                                                    </span>
+                                                 
+                                                 de vinaigre de vin rouge
+                                            </span>
+                                        </span>
+                                    </div>
+                                                
+                            </div>
+                        </div>
+                    
+
+
+        </div>
+
+
+        <div class="preparations">
+            
+            <div class="titre-section-container">
+                <svg class="titre-section-image" width="64px" height="64px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#CB6863" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <g>
+                            <g>
+                                <path d="M301.283,205.972c-4.5-2.115-8.983-4.213-13.44-6.289c-5.105-2.377-11.174-0.165-13.552,4.94 c-2.377,5.107-0.166,11.173,4.94,13.552c4.433,2.063,8.894,4.151,13.37,6.257c1.402,0.659,2.879,0.971,4.334,0.971 c3.829,0,7.5-2.166,9.236-5.86C308.57,214.445,306.381,208.37,301.283,205.972z"></path>
+                            </g>
+                        </g>
+                        <g>
+                            <g>
+                                <path d="M476.165,303.14c-16.708-16.709-63.253-43.412-142.294-81.636c-5.07-2.449-11.169-0.33-13.622,4.742 c-2.452,5.071-0.329,11.169,4.742,13.622c94.518,45.708,126.534,67.48,136.751,77.696c19.255,19.255,29.86,44.856,29.86,72.088 c0,11.983-2.055,23.649-5.995,34.598c-0.754-3.032-1.669-6.134-2.754-9.304c-8.133-23.76-24.871-49.104-47.131-71.364 c-33.38-33.38-174.505-130.807-243.769-177.961l8.642-8.643c3.983-3.983,3.983-10.441,0-14.425L61.027,2.986 c-3.983-3.982-10.441-3.982-14.425,0L2.987,46.602C1.075,48.516,0,51.109,0,53.814c0,2.705,1.075,5.298,2.987,7.212 l139.57,139.569c1.912,1.912,4.506,2.987,7.212,2.987c2.706,0,5.299-1.075,7.212-2.987l2.185-2.185 c42.13,95.439,111.166,244.945,143.975,277.754C326.248,499.273,356.972,512,389.652,512s63.404-12.727,86.513-35.835 S512,422.333,512,389.652S499.273,326.249,476.165,303.14z M149.768,178.959L24.623,53.814l29.192-29.191L178.96,149.767 L149.768,178.959z M389.652,491.602c-27.231,0-52.833-10.605-72.088-29.861c-19.421-19.42-61.084-98.012-114.436-215.116 c49.654,71.804,114.471,163.113,140.455,189.097c22.26,22.26,47.604,38.998,71.364,47.13c3.18,1.088,6.286,1.989,9.328,2.744 C413.319,489.542,401.645,491.602,389.652,491.602z M466.785,452.36L280.551,266.126c-3.983-3.982-10.441-3.982-14.425,0 c-3.983,3.983-3.983,10.441,0,14.425l186.233,186.233c-7.9,2.017-18.546,0.966-30.807-3.23 c-20.875-7.146-43.442-22.152-63.546-42.256c-31.246-31.246-123.119-163.97-171.225-234.516 c70.659,48.182,203.275,139.985,234.517,171.227c20.104,20.103,35.11,42.669,42.255,63.544 C467.751,433.814,468.802,444.46,466.785,452.36z"></path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <div class="titre-section-titre_border">
+                    <h2 class="titre-section-title">Preparation</h3>
+                    <div class="titre-section-border"></div>
+                </div>
+            </div>
+
+
+            
+                <div class="preparation-instruction">
+                    <h3 >Préparation des magrets</h3>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 1</h4>
+                            <p>Faire chauffer une poêle progressivement jusqu'à arriver à un feu fort.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 2</h4>
+                            <p>Parer les <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-1">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                2 
+                                                            </span>
+                                                        
+                                                        magrets de canard
+                                                    </span>
+                                                </span> en enlevant l'excédant de gras autour du filet ainsi que les nerf et les membranes. Ensuite, retourner les magret coté gras et faire un quadrillage au couteau en veillant à ne pas entailler la chair. Le fait de parer le magret  permettra une cuisson plus uniforme.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 3</h4>
+                            <p>Faire cuire pendant environ 5 minutes à feu moyen / fort les magrets sur le coté gras jusqu'à ce que ce dernier deviennent brun. Ensuite retourner les magrets pour colorer le côté chair pendant environ 15 à 30 secondes.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 4</h4>
+                            <p>Laisser reposer les magrets 20 minutes sur une grille afin qu'ils se détendent.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 5</h4>
+                            <p>Préchauffer le four à 210° en chaleur statique (pour ne pas dessécher la viande).
+</p>
+                        </div>
+                    
+                </div>
+            
+                <div class="preparation-instruction">
+                    <h3 >Sauce au miel & thym</h3>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 1</h4>
+                            <p>Ajouter <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-2">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                4 cuil. à soupe
+                                                            </span>
+                                                        
+                                                         de miel de montagne
+                                                    </span>
+                                                </span> dans une casserole sur un feu moyen / fort. Quand le miel commence à bouillir et à changer de couleur déglacer <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-3">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                4 cuil. à soupe
+                                                            </span>
+                                                        
+                                                         de vinaigre de vin rouge
+                                                    </span>
+                                                </span> et laisser réduire.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 2</h4>
+                            <p>Quand le mélange a bien réduit et devient sirupeux, ajouter <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-4">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                20 cl.
+                                                            </span>
+                                                        
+                                                         de fond de veau
+                                                    </span>
+                                                </span> et assaisonner de <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-5">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                1 pincée
+                                                            </span>
+                                                        
+                                                         de piment d'espellette
+                                                    </span>
+                                                </span>, de <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-6">
+                                                        
+                                                        Sel fin
+                                                    </span>
+                                                </span> et de <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-7">
+                                                        
+                                                        Poivre noir
+                                                    </span>
+                                                </span> à convenance. Laisser réduire de nouveau de 1 tiers pour retrouver l'état sirupeux du mélange.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 3</h4>
+                            <p>Retirer la casserole du feu pour monter la sauce au beurre. Ajouter <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-8">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                40 g.
+                                                            </span>
+                                                        
+                                                         de beurre doux
+                                                    </span>
+                                                </span> froid dans la sauce chaude et remuer à l'aide d'un fouet. Pour donner un peu plus de peps à la sauce, ajouter le jus de <span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-9">
+                                                                                                                
+                                                            <span class="highlight-quantity">
+                                                                0.25 
+                                                            </span>
+                                                        
+                                                        citron jaune
+                                                    </span>
+                                                </span>.
+</p>
+                        </div>
+                    
+                </div>
+            
+                <div class="preparation-instruction">
+                    <h3 >Cuisson à coeur des magrets</h3>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 2</h4>
+                            <p>Enfourner 12 à 15 minutes les magret de canard disposés sur une grille au dessus d'un lèche fritte.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 3</h4>
+                            <p>Trancher et servir immédiatement les magret de canard.
+</p>
+                        </div>
+                    
+                </div>
+            
+
+
+        </div>
+    </div>
+    <script>
+        // Récupération des ingrédients pour la mise à jour
+        const originalIngredients = [{"quantite":2,"unite":"","nom":"magrets de canard","order":"[1]","ordernb":1,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Viandes et Poissons/Volaille/Canard/Magret%20de%20canard.jpg"]},{"quantite":1,"unite":"pincée","nom":" de piment d'espellette","order":"[5]","ordernb":5,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/Piment%20d'Espellette.jpg"]},{"quantite":4,"unite":"cuil. à soupe","nom":" de miel de montagne","order":"[2]","ordernb":2,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"]},{"quantite":0.25,"unite":"","nom":"citron jaune","order":"[9]","ordernb":9,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20jaune.jpg"]},{"quantite":20,"unite":"cl.","nom":" de fond de veau","order":"[4]","ordernb":4,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Bouillon et fond de sauce/Fond%20de%20veau.jpg"]},{"quantite":null,"unite":"","nom":["Poivre noir"],"order":"[7]","ordernb":7,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"]},{"quantite":40,"unite":"g.","nom":" de beurre doux","order":"[8]","ordernb":8,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Doux.jpg"]},{"quantite":null,"unite":"","nom":["Sel fin"],"order":"[6]","ordernb":6,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg"]},{"quantite":4,"unite":"cuil. à soupe","nom":" de vinaigre de vin rouge","order":"[3]","ordernb":3,"img":["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Vinaigre%20de%20vin%20rouge.jpg"]}];
+
+        function updatePortions(delta) {
+            const input = document.getElementById("portion-input");
+            let currentValue = parseInt(input.value, 10);
+            console.log("Valeur actuelle des portions :", currentValue);
+
+            if (currentValue + delta > 0) {
+                input.value = currentValue + delta;
+                console.log("Nouvelle valeur des portions :", input.value);
+
+                // Mise à jour des attributs Bring
+                const bringContainer = document.getElementById("bring-import-container");
+                bringContainer.setAttribute("data-bring-base-quantity", input.value);
+                bringContainer.setAttribute("data-bring-requested-quantity", input.value);
+                console.log("Attributs data-bring mis à jour :", bringContainer.getAttribute("data-bring-base-quantity"), bringContainer.getAttribute("data-bring-requested-quantity"));
+
+                // Création de la liste des IDs d'ingrédients et mise à jour des quantités
+                originalIngredients.forEach(ingredient => {
+                    let newQuantite;
+
+                    // Calcul de la nouvelle quantité
+                    if (ingredient.quantite === null || ingredient.quantite === 0) {
+                        newQuantite = '';
+                    } else {
+                        let calculateNewQuantite = (ingredient.quantite * input.value / 6);
+                        console.log("Quantité calculée pour l'ingrédient :", ingredient.nom, "->", calculateNewQuantite);
+
+                        if (ingredient.unite === "kg." || ingredient.unite === "l.") {
+                            newQuantite = Number.isInteger(calculateNewQuantite) ? calculateNewQuantite.toFixed(0) : calculateNewQuantite.toFixed(3);
+                        } else if (ingredient.unite === "g." || ingredient.unite === "ml.") {
+                            newQuantite = calculateNewQuantite.toFixed(0);
+                        } else if (ingredient.unite === "cl.") {
+                            newQuantite = Number.isInteger(calculateNewQuantite) ? calculateNewQuantite.toFixed(0) : calculateNewQuantite.toFixed(1);
+                        } else {
+                            newQuantite = Number.isInteger(calculateNewQuantite) ? calculateNewQuantite.toFixed(0) : calculateNewQuantite.toFixed(2);
+                        }
+                    }
+
+                    console.log("Nouvelle quantité pour l'ingrédient :", ingredient.nom, "->", newQuantite);
+
+                    // Recherche et mise à jour de tous les éléments avec cet ID dans le DOM
+                    const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                    if (ingredientElements.length > 0) {
+                        ingredientElements.forEach(ingredientSpan => {
+                            const quantitySpan = ingredientSpan.querySelector(".highlight-quantity");
+                            if (quantitySpan) {
+                                quantitySpan.textContent = `${newQuantite} ${ingredient.unite}`;
+                                console.log("Quantité mise à jour dans le DOM pour :", ingredient.nom);
+                            } else {
+                                console.log("Élément .highlight-quantity introuvable pour l'ingrédient :", ingredient.nom);
+                            }
+                        });
+                    } else {
+                        console.log(`Élément avec l'ID ingredient-${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :`, ingredient.nom);
+                    }
+                });
+            } else {
+                console.log("Modification des portions ignorée car elle donnerait une valeur négative ou nulle.");
+            }
+        }
+
+        document.getElementById("portion-input").addEventListener("input", function(e) {
+            this.value = this.value.replace(/[^0-9]/g, ''); // N'accepte que les chiffres
+        });
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
