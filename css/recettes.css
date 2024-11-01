@@ -39,16 +39,21 @@ p { font-weight: 200; font-size: 16px;}*/
 
 
 .section-ingredient {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
 }
 
+.section-ingredient-container{
+    flex: 1 1 calc(50% - 10px); /* Chaque élément prend environ 50% moins un écart */
+    margin-bottom: 10px; /* Espace entre les lignes */
+}
 
 .titre-section-container {
     display: flex;
     align-items: center; /* Centre verticalement les éléments */
-    padding: 0 5px 35px 5px;
+    padding: 0 15px 35px 15px;
 }
 
 .titre-section-image {
@@ -315,3 +320,5 @@ input {
 .ingredient-preparation {
     font-weight: 300;            
 }
+
+
