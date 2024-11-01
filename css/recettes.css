@@ -1,0 +1,318 @@
+body { font-family: 'Open Sans', sans-serif; }
+h1 { color: #CB6863; font-weight: 700; font-size: 45px; }
+h2 { font-weight: 600; font-size: 30px;}
+h3 { font-weight: 500; font-size: 24px;}
+h4 { font-weight: 400; font-size: 16px;}
+h5 { color: #CB6863; font-weight: 700; font-size: 16px; }
+p { font-weight: 200; font-size: 16px;}
+.page-container {
+    width: 100%; /* Assure que le conteneur utilise toute la largeur disponible jusqu'à max-width */
+}
+
+
+:root {
+    --page-margin: 20px auto;
+    --page-max-width: 950px;
+}
+
+
+.marge-page {
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
+}
+
+
+.titre-recette {
+    text-align: center; /* Centre le texte */
+    font-weight: bold; /* Rend le texte en gras */
+    padding: 50px 0 50px 0;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
+}
+.ingredients {
+    width: 100%;
+    padding: 0 35px;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
+}
+.preparations {
+    width: 100%;
+    padding: 0 50px 0 50px;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
+}
+
+
+
+
+
+.titre-section-container {
+    display: flex;
+    align-items: center; /* Centre verticalement les éléments */
+    padding: 0 0 35px 0;
+}
+
+.titre-section-image {
+    height: 45px; /* Hauteur de l'image (svg ici) */
+    width: 45px; /* Largeur de l'image (svg ici) */
+}
+
+.titre-section-titre_border {
+    display: flex ;
+    align-items: center; /* Centre verticalement les éléments */
+    width :100%;
+}
+
+.titre-section-title {
+    margin: 0 18px; /* Marge à gauche et à droite du texte */
+    flex-grow: 1; /* Permet au texte de prendre l'espace restant */
+}
+
+.titre-section-border {
+    border-bottom: 2px solid rgba(63, 55, 53, .23); /* Bordure en bas */
+    width: 100%; /* S'étend sur toute la largeur */
+}
+
+
+
+
+.preparation-instruction {
+    padding: 0 70px 35px 70px;
+}
+
+.preparation-ingrédients {
+    padding: 0 70px 35px 70px;
+}
+
+
+.etape {
+    padding: 0 0 0 20px;
+}
+ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    font-size: 16px;
+}
+.instructions {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+
+.portion-bring-conteneur {
+    display: flex;
+    align-items: center; /* Centre verticalement les enfants */
+    justify-content: flex-end; /* Aligne le contenu à droite */
+    padding: 0 0 50px 0;
+}
+
+.portion-control {
+    display: flex;
+    align-items: center; /* Centre verticalement les enfants */
+    justify-content: space-between;
+    min-width: 200px;
+    max-width: 280px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid rgba(63, 55, 53, .23);
+    border-radius: 8px;
+    overflow: hidden; /* Cache tout débordement */
+    color: #CB6863;
+    font-family: 'Open Sans', sans-serif;
+    user-select: none;
+    padding: ;
+}
+
+/* Boutons */
+.portion-control__decrement, .portion-control__increment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    overflow: hidden; /* Empêche le débordement */
+}
+
+.portion-control__decrement {
+    border-right: 1px solid rgba(63, 55, 53, .23);
+}
+
+.portion-control__increment {
+    border-left: 1px solid rgba(63, 55, 53, .23);
+}
+
+/* Style pour l'icône SVG */
+.icon {
+    width: 24px; /* Largeur de l'icône */
+    height: 24px; /* Hauteur de l'icône */
+    transition: transform 0.2s ease; /* Transition pour l'agrandissement */
+}
+
+
+
+/* Agrandissement & couleur au survol */
+.portion-control__decrement:hover .icon,
+.portion-control__increment:hover .icon {
+    transform: scale(1.2); /* Agrandissement lors du survol */
+}
+
+/* Pour garder la couleur au clic */
+.portion-control__decrement:hover .icon-fill,
+.portion-control__increment:hover .icon-fill {
+    stroke: #CB6863; /* Changement de couleur au survol */
+}
+
+/* Conteneur pour la valeur */
+.portion-control__value_container {
+    display: flex;
+    align-items: center; /* Centre verticalement la valeur */
+    justify-content: flex-end; /* Aligne le contenu à droite */
+    gap: 5px;
+    margin-inline: 10px;
+}
+
+.portion-control__value_container {
+    display: flex;
+    align-items: center; /* Centre verticalement la valeur */
+    justify-content: flex-end; /* Aligne le contenu à droite */
+    gap: 5px;
+    margin-inline: 10px;
+}
+
+.portion-control__value_number {
+    width: 50px; /* Ajustez si nécessaire */
+    text-align: right; /* Aligne le texte à droite */
+    border: none;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 15px;
+    color: #CB6863;
+    padding-right: 5px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: normal; /* Ajoute un peu de flexibilité */
+    vertical-align: middle; /* Aligne verticalement au centre */
+}
+
+input[type="text"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield; /* Chrome */
+}
+
+/* Masquer les flèches pour les inputs */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input {
+    -webkit-appearance: none; /* Chrome, Safari */
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none; /* Pour tous les navigateurs */
+}
+
+
+/* Champ d'entrée */
+#portion-input {
+    width: 35px;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 15px;
+    color: #CB6863;
+}
+
+/* Unité de portion */
+.portion-control__unit {
+    font-weight: bold;
+    font-size: 15px;
+    color: #CB6863;
+}
+
+
+
+
+
+/* Styles pour le conteneur */
+.bring-container {
+    text-align: center; /* Centrer le bouton si nécessaire */
+    padding: 0 35px 0 0;
+}
+
+/* Personnalisation du lien */
+#bring-import-container a {
+    display: inline-block; /* Pour que le lien se comporte comme un bouton */
+    padding: 10px 20px; /* Espacement interne */
+    background-color: #CB6863; /* Couleur de fond personnalisée */
+    color: white; /* Couleur du texte */
+    text-decoration: none; /* Supprime le soulignement */
+    border-radius: 5px; /* Arrondi des coins */
+    font-size: 16px; /* Taille de police */
+    transition: background-color 0.3s; /* Transition pour l'effet au survol */
+}
+
+/* Effet au survol */
+#bring-import-container a:hover {
+    background-color: #a95a57; /* Couleur de fond lors du survol */
+    transform: scale(1.05);
+}
+
+
+.recette_ingredients-qtunit {
+    display: block; 
+}
+
+.highlight-quantity {
+    font-weight: 400;
+    font-style: normal; 
+}
+
+.highlight {
+    background-color: #F6E2DF; /* ou une autre couleur de votre choix */
+    transition: background-color 0.3s ease;
+}
+
+.recette_ingredients-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.card-ingredient {
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.card-ingredient:hover {
+    transform: scale(1.05);
+}
+
+.card-ingredient-image {
+    text-align: center;
+    padding: 10px;
+    max-width: 100%; /* Assure que l'image ne dépasse pas la largeur de son conteneur */
+}
+
+.card-ingredient-image img {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    max-width: 100%; /* Permet à l'image de s'ajuster à la largeur de son conteneur */
+    height: auto; /* Conserve le ratio d'aspect de l'image */
+}
+
+.recette_ingredients-details {
+    display: flex;                /* Utilise Flexbox pour le layout */
+    flex-direction: column;       /* Aligne les enfants en colonne */
+    align-items: center;          /* Centre horizontalement le contenu */
+    text-align: center;           /* Centre le texte à l'intérieur */
+    font-weight: 300;
+}
+
+.ingredient-preparation {
+    font-weight: 300;            
+}
