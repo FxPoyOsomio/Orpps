@@ -14,19 +14,25 @@ p { font-weight: 200; font-size: 16px;}*/
 
 
 
+
 .titre-recette {
     text-align: center; /* Centre le texte */
     font-weight: bold; /* Rend le texte en gras */
     padding: 50px 0 50px 0;
-    width: 100%;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
 }
 .ingredients {
     /*width: 100%;*/
     padding: 0 35px;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
 }
 .preparations {
     /*width: 100%;*/
     padding: 0 50px 0 50px;
+    margin: var(--page-margin);
+    max-width: var(--page-max-width);
 }
 
 
