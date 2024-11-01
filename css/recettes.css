@@ -7,7 +7,7 @@ h5 { color: #CB6863; font-weight: 700; font-size: 16px; }
 p { font-weight: 200; font-size: 16px;}*/
 
 .page-container {
-    width: 100%; /* Assure que le conteneur utilise toute la largeur disponible jusqu'à max-width */
+    /*width: 100%; /* Assure que le conteneur utilise toute la largeur disponible jusqu'à max-width */
 }
 
 
