@@ -411,7 +411,7 @@ input {
 
 
 .ingredient-preparation {
-    font-weight: 300;            
+    font-weight: 400;      
 }
 
 
@@ -474,7 +474,7 @@ input {
      }
      .img-recette {
         width: 90%;
-        aspect-ratio: 32 / 9;
+        aspect-ratio: 21 / 9;
         border-radius: 8px;
      }
 
