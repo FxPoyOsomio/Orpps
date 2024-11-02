@@ -118,7 +118,6 @@ ul {
     display: flex;
     align-items: center; /* Centre verticalement les enfants */
     justify-content: center; /* Aligne le contenu à droite */
-    padding: 0 0 35px 0;
 }
 
 .portion-control {
