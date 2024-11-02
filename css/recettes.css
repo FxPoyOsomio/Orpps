@@ -339,11 +339,15 @@ input {
 
 /* position bouton portion responsive */
 
-@media (max-width: 6700px) {
+@media (max-width: 670px) {
     /* :root {
         --page-max-width: 100%;  
         --page-margin: 20px auto;
     } */
+     .container__img-recette {
+        width: 90%;
+        margin: 0 auto;
+    }
 
 
     /* position bouton portion responsive */
@@ -376,7 +380,10 @@ input {
         --page-max-width: 100%;  
         --page-margin: 20px auto;
     } */
-
+    .container__img-recette {
+        width: 90%;
+        margin: 0 auto;
+    }
 
     /* position bouton portion responsive */
     .section-ingredient {
@@ -409,6 +416,7 @@ input {
         column-gap: 50px;
         padding: 0 50px 0 50px;
      }
+
 
 
 
