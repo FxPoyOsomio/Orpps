@@ -37,14 +37,12 @@ p { font-weight: 200; font-size: 16px;}
 }
 .ingredients {
     width: 100%;
-    /* padding: 0 35px; */
-    margin: var(--page-margin);
+    padding: 35px 0 0 0;
     max-width: var(--page-max-width);
 }
 .preparations {
     width: 100%;
-    /* padding: 0 50px 0 50px; */
-    margin: var(--page-margin);
+    padding: 35px 0 0 0;
     max-width: var(--page-max-width);
 }
 
@@ -431,6 +429,13 @@ input {
     .portion-bring-conteneur {
         margin-right: unset;
     }
+    .container__img-recette {
+        background-color:whitesmoke;
+     }
+     .ingredients {
+        background-color:whitesmoke ;
+     }
+
 
 
 
@@ -452,6 +457,13 @@ input {
         grid-template-columns: 380px 1fr;
         column-gap: 50px;
      }
+     .container__img-recette {
+        background-color:whitesmoke;
+     }
+     .ingredients {
+        background-color:whitesmoke ;
+     }
+
      
 
 
@@ -485,9 +497,14 @@ input {
 
      .page-container {
         grid-template-columns: 500px 1fr;
-        column-gap: 50px;
+        column-gap: 50px;        
      }
-
+     .container__img-recette {
+        background-color:whitesmoke;
+     }
+     .ingredients {
+        background-color:whitesmoke ;
+     }
 
 
      /* position bouton portion responsive */
