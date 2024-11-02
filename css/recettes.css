@@ -1,15 +1,16 @@
-/*body { font-family: 'Open Sans', sans-serif; }
+body { font-family: 'Open Sans', sans-serif; }
 h1 { color: #CB6863; font-weight: 700; font-size: 45px; }
 h2 { font-weight: 600; font-size: 30px;}
 h3 { font-weight: 500; font-size: 24px;}
 h4 { font-weight: 400; font-size: 16px;}
 h5 { color: #CB6863; font-weight: 700; font-size: 16px; }
-p { font-weight: 200; font-size: 16px;}*/
+p { font-weight: 200; font-size: 16px;}
 
 .page-container {
     max-width: var(--page-max-width);
     width: 100%;
     margin: 0 auto;
+    display: grid;
 }
 
 
@@ -325,20 +326,23 @@ input {
 
 
 
-@media (min-width: 700px) {
-    .section-ingredient {
-        grid-template-columns: 1fr 297px ; /* 2 colonnes sur les écrans plus larges */
-    }
-    .portion-control {
-        margin-left: 0;
-        margin-right: 15px;
-    }
-    .portion-bring-conteneur {
-        margin-right: 15px;
-    }
-}
+/* position bouton portion responsive */
 
-@media (max-width: 699px) {
+
+
+
+
+
+
+
+/* Styles pour les écrans de taille mobile */
+@media (max-width: 450px) {
+    /* :root {
+        --page-max-width: 100%;  
+        --page-margin: 20px auto;
+    } */
+
+    /* position bouton portion responsive */
     .section-ingredient {
         grid-template-columns: 1fr; /* 1 colonne sur les écrans plus petits */
     }
@@ -350,9 +354,115 @@ input {
         margin-right: unset;
     }
 }
-@media (max-width: 450px) {
+
+/* Styles pour les tablettes */
+@media (min-width: 451px) and (max-width: 980px) {
+    /* :root {
+        --page-max-width: 100%; 
+        --page-margin: 20px auto;
+    } */
+    .page-container {
+        grid-template-columns: 300px 1fr;
+        column-gap: 50px;
+     }
+
+
+    .container-web-responsive {
+        display: block;
+    }
+
+
+    /* position bouton portion responsive */
+    .section-ingredient {
+        grid-template-columns: 1fr; 
+    }
+    .portion-control {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .portion-bring-conteneur {
+        margin-right: unset;
+    }
+
+
+
+    /* largeur colonnes item ingrédients */
+    .recette_ingredients-items{
+        grid-template-columns:repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+    }
+}
+
+/* Styles pour le web */
+@media (min-width: 981px) and (max-width: 1240px) {
+    /* :root {
+        --page-max-width: 980px; 
+        --page-margin: 20px auto;
+    } */
+
+    .page-container {
+        grid-template-columns: 380px 1fr;
+        column-gap: 50px;
+     }
+     
+
+
+    /* position bouton portion responsive */
+    .section-ingredient {
+        grid-template-columns: 1fr; 
+    }
+    .portion-control {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .portion-bring-conteneur {
+        margin-right: unset;
+    }
+    
+
+    /* largeur colonnes item ingrédients */
     .recette_ingredients-items{
         grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
         gap: 10px;
     }
+
 }
+
+/* Styles pour les très grands écrans */
+@media (min-width: 1241px) {
+    /* :root {
+        --page-max-width: 1240px; 
+        --page-margin: 20px auto;
+    } */
+
+     .page-container {
+        grid-template-columns: 500px 1fr;
+        column-gap: 50px;
+     }.container-web-responsive {
+        display: block;
+     }
+
+
+
+     /* position bouton portion responsive */
+     .section-ingredient {
+        grid-template-columns: 1fr; 
+    }
+    .portion-control {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .portion-bring-conteneur {
+        margin-right: unset;
+    }
+    
+
+
+    /* largeur colonnes item ingrédients */
+    .recette_ingredients-items{
+        grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+    }
+
+}
+

@@ -253,7 +253,7 @@ h1, h2, h3 {
 /* Styles pour les très grands écrans */
 @media (min-width: 1241px) {
     :root {
-        --page-max-width: 1240px; /* 1240px pour les grands écrans */
+        --page-max-width: 1540px; /* 1240px pour les grands écrans */
         --page-margin: 20px auto;
     }
 }
