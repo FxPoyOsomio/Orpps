@@ -117,7 +117,7 @@ ul {
 .portion-bring-conteneur {
     display: flex;
     align-items: center; /* Centre verticalement les enfants */
-    justify-content: center; /* Aligne le contenu à droite */
+    justify-content: center; /* Aligne le contenu à  droite */
 }
 
 .portion-control {
