@@ -227,7 +227,7 @@ h1, h2, h3 {
 }
 
 /* Styles pour les écrans de taille mobile */
-@media (max-width: 450px) {
+@media (max-width: 740px) {
     :root {
         --page-max-width: 100%; /* 100% de la largeur pour mobile */
         --page-margin: 20px auto;
@@ -235,7 +235,7 @@ h1, h2, h3 {
 }
 
 /* Styles pour les tablettes */
-@media (min-width: 451px) and (max-width: 980px) {
+@media (min-width: 741px) and (max-width: 980px) {
     :root {
         --page-max-width: 100%; /* 450px pour les petits écrans */
         --page-margin: 20px auto;
@@ -253,7 +253,7 @@ h1, h2, h3 {
 /* Styles pour les très grands écrans */
 @media (min-width: 1241px) {
     :root {
-        --page-max-width: 1540px; /* 1240px pour les grands écrans */
+        --page-max-width: 1240px; /* 1240px pour les grands écrans */
         --page-margin: 20px auto;
     }
 }
