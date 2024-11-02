@@ -430,10 +430,10 @@ input {
         margin-right: unset;
     }
     .container__img-recette {
-        background-color:whitesmoke;
+        background-color: #F9F9F9;
      }
      .ingredients {
-        background-color:whitesmoke ;
+        background-color : #F9F9F9 ;
      }
 
 
@@ -458,10 +458,10 @@ input {
         column-gap: 50px;
      }
      .container__img-recette {
-        background-color:whitesmoke;
+        background-color: #F9F9F9;
      }
      .ingredients {
-        background-color:whitesmoke ;
+        background-color : #F9F9F9 ;
      }
 
      
