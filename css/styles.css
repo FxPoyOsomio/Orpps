@@ -166,7 +166,7 @@
 }
 
 @font-face {
-    font-family: 'Source Sans Pro';
+    font-family: 'Source Sans Pro__light';
     font-weight: light;
     src: url('/Orpps/assets/fonts/SourceSansPro-Light.ttf') format('truetype');
 }
@@ -204,14 +204,37 @@
 
 /* --- Style de base pour les balise simple --- */
 body {
-    font-family: 'Caviar Dreams', sans-serif; /* Utilise Caviar Dreams comme police principale */
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding-top: 80px;
 }
 
-h1, h2, h3 {
-    font-family: 'Montserrat', sans-serif; /* Utilise Montserrat pour les titres */
+
+
+
+h1 { 
+    font-weight: 700; 
+    font-size: 45px;
+    font-family: 'Caviar Dreams', sans-serif;
+ }
+h2 { 
+    font-weight: 600;
+     font-size: 30px;}
+h3 { font-weight: 500; font-size: 24px;
 }
+h4 { font-weight: 400;
+    font-size: 16px;
+}
+h5 { color: #CB6863; 
+    font-weight: 700; 
+    font-size: 16px; 
+}
+p { 
+    font-size: 1.2em; 
+    font-family: 'Source Sans Pro__light';
+}
+
+
 
 .bold-text {
     font-family: 'Caviar Dreams', sans-serif;
