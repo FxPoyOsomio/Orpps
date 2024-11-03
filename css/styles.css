@@ -1,200 +1,215 @@
 /* --- Ajout des polices depuis la racine /assets/fonts/ --- */
 @font-face {
     font-family: 'Caviar Dreams';
+    font-weight: 300; /* Light */
     src: url('/Orpps/assets/fonts/CaviarDreams.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Caviar Dreams';
-    font-weight: bold;
-    src: url('/Orpps/assets/fonts/CaviarDreams_Bold.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Caviar Dreams';
+    font-weight: 300; /* Light */
     font-style: italic;
     src: url('/Orpps/assets/fonts/CaviarDreams_Italic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Caviar Dreams';
-    font-weight: bold;
+    font-weight: 700; /* Bold */
+    src: url('/Orpps/assets/fonts/CaviarDreams_Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Caviar Dreams';
+    font-weight: 700; /* Bold */
     font-style: italic;
     src: url('/Orpps/assets/fonts/CaviarDreams_BoldItalic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
+    font-weight: 300; /* Light */
     src: url('/Orpps/assets/fonts/MontserratAlternates-Light.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
+    font-weight: 400; /* Regular */
     src: url('/Orpps/assets/fonts/MontserratAlternates-Regular.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: medium;
+    font-weight: 500; /* Medium */
     src: url('/Orpps/assets/fonts/MontserratAlternates-Medium.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: semi-bold;
+    font-weight: 600; /* Semi-Bold */
     src: url('/Orpps/assets/fonts/MontserratAlternates-SemiBold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: bold;
+    font-weight: 700; /* Bold */
     src: url('/Orpps/assets/fonts/MontserratAlternates-Bold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: extra-bold;
+    font-weight: 800; /* Extra Bold */
     src: url('/Orpps/assets/fonts/MontserratAlternates-ExtraBold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: extra-light;
+    font-weight: 200; /* Extra Light */
     src: url('/Orpps/assets/fonts/MontserratAlternates-ExtraLight.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat Alternates';
-    font-weight: thin;
+    font-weight: 100; /* Thin */
     src: url('/Orpps/assets/fonts/MontserratAlternates-Thin.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
+    font-weight: 900; /* Black */
     src: url('/Orpps/assets/fonts/Montserrat-Black.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: bold;
+    font-weight: 700; /* Bold */
     src: url('/Orpps/assets/fonts/Montserrat-Bold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: extra-bold;
+    font-weight: 800; /* Extra Bold */
     src: url('/Orpps/assets/fonts/Montserrat-ExtraBold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: extra-light;
+    font-weight: 200; /* Extra Light */
     src: url('/Orpps/assets/fonts/Montserrat-ExtraLight.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: light;
+    font-weight: 300; /* Light */
     src: url('/Orpps/assets/fonts/Montserrat-Light.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: medium;
+    font-weight: 500; /* Medium */
     src: url('/Orpps/assets/fonts/Montserrat-Medium.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
+    font-weight: 400; /* Regular */
     src: url('/Orpps/assets/fonts/Montserrat-Regular.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: semi-bold;
+    font-weight: 600; /* Semi-Bold */
     src: url('/Orpps/assets/fonts/Montserrat-SemiBold.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Montserrat';
-    font-weight: thin;
+    font-weight: 100; /* Thin */
     src: url('/Orpps/assets/fonts/Montserrat-Thin.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
+    font-weight: 900; /* Black */
     src: url('/Orpps/assets/fonts/SourceSansPro-Black.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: black;
+    font-weight: 900; /* Black */
     font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-BlackItalic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: bold;
+    font-weight: 700; /* Bold */
     src: url('/Orpps/assets/fonts/SourceSansPro-Bold.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: bold;
+    font-weight: 700; /* Bold */
     font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-BoldItalic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: extra-light;
+    font-weight: 200; /* Extra Light */
     src: url('/Orpps/assets/fonts/SourceSansPro-ExtraLight.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: extra-light;
+    font-weight: 200; /* Extra Light */
     font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-ExtraLightItalic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-style: italic;
+    font-weight: 400; /* Regular */
     src: url('/Orpps/assets/fonts/SourceSansPro-Italic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Source Sans Pro__light';
-    font-weight: light;
+    font-family: 'Source Sans Pro';
+    font-weight: 300; /* Light */
     src: url('/Orpps/assets/fonts/SourceSansPro-Light.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: light;
+    font-weight: 300; /* Light */
     font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-LightItalic.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
+    font-weight: 400; /* Regular */
     src: url('/Orpps/assets/fonts/SourceSansPro-Regular.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: semi-bold;
+    font-weight: 600; /* Semi-Bold */
     src: url('/Orpps/assets/fonts/SourceSansPro-Semibold.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Source Sans Pro';
-    font-weight: semi-bold;
+    font-weight: 600; /* Semi-Bold */
     font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-SemiboldItalic.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'Gold Leaf';
+    font-weight: 500; /* Medium */
+    src: url('/Orpps/assets/fonts/GoldleafBoldPersonalUseBold-eZ4dO.ttf') format('truetype');
+}
+
 
 
 
@@ -213,25 +228,65 @@ body {
 
 
 h1 { 
-    font-weight: 700; 
-    font-size: 45px;
-    font-family: 'Caviar Dreams', sans-serif;
+    font-weight: 500; 
+    font-size: 3em;
+    font-family: 'Gold Leaf', sans-serif;
+    color: #1B1B1B;
+    letter-spacing: 0.05cap;
  }
 h2 { 
-    font-weight: 600;
-     font-size: 30px;}
-h3 { font-weight: 500; font-size: 24px;
+    font-weight: 500;
+     font-size: 1.8em;
+     font-family: 'Montserrat', sans-serif;
+     color: #1B1B1B;  
+}
+h3 { 
+    font-weight: 400; 
+    font-size: 1.6em;
+    font-family: 'Montserrat', sans-serif;
+    color: #1B1B1B;  
 }
 h4 { font-weight: 400;
-    font-size: 16px;
+    font-size: 1.2em;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1B1B1B; 
 }
-h5 { color: #CB6863; 
+h5 {
     font-weight: 700; 
-    font-size: 16px; 
+    font-size: 1em;
+    font-family: 'Caviar Dreams', sans-serif; 
+    color: #CB6863;  
 }
+h6 {
+    font-weight: 300; 
+    font-size: 0.8em;
+    font-family: 'Montserrat', sans-serif;
+    color: #1B1B1B; 
+    margin: unset; 
+}
+h7 {
+    font-weight: 700; 
+    font-size: 0.9em;
+    font-family: 'Caviar Dreams', sans-serif;
+    color: #696969; 
+    margin: unset;
+}
+
+
 p { 
     font-size: 1.2em; 
-    font-family: 'Source Sans Pro__light';
+    font-weight: 200;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1B1B1B; 
+}
+p2 {
+    font-size: 1em; 
+    font-weight: 200;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1B1B1B; 
+    font-style: italic;
+    letter-spacing: 0.1cap;
+    line-height: 2cap;
 }
 
 

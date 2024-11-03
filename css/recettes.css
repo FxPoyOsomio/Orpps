@@ -26,22 +26,95 @@ p { font-weight: 200; font-size: 16px;} */
 
 }
 
-.
+
 .container__info-recette{
     width: 100%;
     margin: auto;
 }
+.path-to-recette {
+    padding:12px 0 0 35px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.path-to-recette h6 {
+    color: #a3a3a3;
+}
+.path-to-recette__link:hover h6 {
+    color: #CB6863;
+    text-decoration: underline;
+}
 .titre-recette {
     text-align: center; /* Centre le texte */
     font-weight: bold; /* Rend le texte en gras */
-    padding: 50px 5px 50px 5px;
-    max-width: var(--page-max-width);
+    padding: 50px 15px 15px 15px;
+    max-width: 100%;
+    margin: 0;
 }
+.top-infos__recette {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap ;
+    row-gap: 10px;
+    column-gap: 20px;
+    max-width: 100% ;
+    margin: auto;
+    padding: 15px 0 15px 0;
+    justify-content: center;
+}
+.top-info {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+}
+.top-info__img {
+    height: 22px;
+    width: 22px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.top-info__label {
+    padding: 0 0 0 10px;
+}
+
+
+.call-to-action__buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    margin: auto;
+    justify-content: center;
+}
+.secondary-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+
+p2 {
+    text-align: center;
+}
+
+.desciption-recette {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    box-sizing: border-box;
+    padding: 25px 35px;
+}
+
+
 .ingredients {
     width: 100%;
     padding: 35px 0 0 0;
     max-width: var(--page-max-width); 
 }
+
+
 .preparations {
     width: 100%;
     padding: 35px 0 0 0;
@@ -199,8 +272,11 @@ ul {
     text-align: right; /* Aligne le texte à droite */
     border: none;
     background-color: transparent;
-    font-weight: bold;
-    font-size: 15px;
+
+    font-weight: 700; 
+    font-size: 1em;
+    font-family: 'Caviar Dreams', sans-serif;   
+    
     color: #CB6863;
     padding-right: 5px;
     box-sizing: border-box;
@@ -242,8 +318,9 @@ input {
 
 /* Unité de portion */
 .portion-control__unit {
-    font-weight: bold;
-    font-size: 15px;
+    font-weight: 700; 
+    font-size: 1em;
+    font-family: 'Caviar Dreams', sans-serif; 
     color: #CB6863;
 }
 
@@ -358,7 +435,7 @@ input {
     display: flex;
 }
 
-.total-timing .timing__label , .total-timing .timing__time {
+.total-timing .timing__label h6 , .total-timing .timing__time h7 {
     color: #CB6863 ;
     font-size: 0.9em;
 }
@@ -388,14 +465,11 @@ input {
 }
 
 .timing__label {
-    font-weight: 400;
-    font-size: 0.8em;
-    color: #555555;
+
 }
 
 .timing__time {
-    font-size: 0.9em;
-    color: #A3A3A3;
+
 }
 
 
