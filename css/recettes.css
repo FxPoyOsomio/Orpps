@@ -332,7 +332,8 @@ input {
 
 /* Styles pour le conteneur */
 .bring-container {
-    text-align: center; /* Centrer le bouton si nécessaire */
+    text-align: center; 
+    margin: 15px !important;
 }
 
 /* Personnalisation du lien bring en FORÇANT le style css importer par le js */
@@ -341,19 +342,29 @@ input {
 .bring-import-link-light {
     min-width: unset !important;
     max-width: unset !important;
-    width: 195px !important;
+    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    transition: transform 0.2s !important;
 }
 .bring-import-button-light {
     background-color: #ffffff !important;
+    border: 1px solid #CB6863 !important;
+    box-shadow: none !important;
+    border-radius: 50px !important;
+}
+.bring-import-image-light {
+    margin: 0 10px 0 12px !important;
 }
 .bring-import-text-light {
-    font-family: unset !important;
+    font-family: 'Caviar Dreams', sans-serif !important;
     color: #CB6863 !important;
+    font-size: 1em !important;
+    font-weight: 700 !important;
+    padding: 0 15px 0 0  !important;
 }
-
-/* Effet au survol */
 #bring-import-container a:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 

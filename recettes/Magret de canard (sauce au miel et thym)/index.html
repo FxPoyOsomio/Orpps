@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    <div id="header"></div> 
+    <div id="header"></div>
 
     <div class="page-container">
 
@@ -190,7 +190,17 @@
                         </g>
                     </svg>
                 </primary-button>
-                <div class="secondary-buttons">
+
+                <div class="portion-bring-conteneur">
+                    <div class="bring-container">
+                        <div id="bring-import-container" data-bring-import data-bring-language="fr"
+                            data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
+                            <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div text="Bring!" class="secondary-buttons">
                     <secondary-button text="" href="">
                         <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -284,14 +294,7 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="portion-bring-conteneur">
-                        <div class="bring-container">
-                            <div id="bring-import-container" data-bring-import data-bring-language="fr"
-                                data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
-                                <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -849,7 +852,7 @@
 
                 if (textElement) {
                     console.log("Text element found.");
-                    textElement.textContent = 'Courses sur Bring!';
+                    textElement.textContent = 'Bring!';
                     clearInterval(checkElement);
                 }
             }, 5); // Vérification toutes les 500 ms
