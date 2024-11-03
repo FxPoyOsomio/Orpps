@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-<!-- Primary Button Component -->
+//  Primary Button Component 
 
 class PrimaryButton extends HTMLElement {
     constructor() {
@@ -199,7 +199,7 @@ customElements.define('primary-button', PrimaryButton);
 
 
 
-<!-- Secondary Button Component -->
+// Secondary Button Component 
 class SecondaryButton extends HTMLElement {
     constructor() {
         super();
