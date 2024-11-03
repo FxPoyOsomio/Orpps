@@ -89,7 +89,7 @@ p { font-weight: 200; font-size: 16px;} */
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    row-gap: 20px;
+    row-gap: 15px;
     max-width: 100%;
     margin: 15px auto;
     justify-content: center;
@@ -101,7 +101,7 @@ p { font-weight: 200; font-size: 16px;} */
 /* Styles pour le conteneur Bring! */
 .bring-container {
     text-align: center; 
-    margin: 0 15px;
+    margin: 0 10px;
 }
 .bring-import-link-light {
     min-width: unset !important;

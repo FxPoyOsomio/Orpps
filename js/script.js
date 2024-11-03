@@ -89,7 +89,7 @@ class PrimaryButton extends HTMLElement {
         button.style.position = 'relative'; // Nécessaire pour le masque
         button.style.overflow = 'hidden'; // Pour cacher le masque qui dépasse
         button.style.transition = 'transform 0.2s'; // Transition pour le hover
-        button.style.margin = '0 15px'; // Padding de 15px tout autour du bouton
+        button.style.margin = '0 10px'; // Padding de 10px sur côté du bouton
 
         // Créer une div pour l'icône SVG
         const iconContainer = document.createElement('div');
@@ -220,7 +220,7 @@ class SecondaryButton extends HTMLElement {
         button.style.position = 'relative'; // Nécessaire pour le masque
         button.style.overflow = 'hidden'; // Pour cacher le masque qui dépasse
         button.style.transition = 'transform 0.2s'; // Transition pour le hover
-        button.style.margin = '0 15px'; // Padding de 15px tout autour du bouton
+        button.style.margin = '0 10px'; // Padding de 10px sur côté du bouton
 
         // Créer une div pour l'icône SVG
         const iconContainer = document.createElement('div');
