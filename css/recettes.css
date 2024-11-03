@@ -85,15 +85,47 @@ p { font-weight: 200; font-size: 16px;} */
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    row-gap: 20px;
     max-width: 100%;
-    margin: auto;
+    margin: 15px auto;
     justify-content: center;
 }
 .secondary-buttons {
     display: flex;
     flex-direction: row;
 }
-
+/* Styles pour le conteneur Bring! */
+.bring-container {
+    text-align: center; 
+    margin: 0 15px;
+}
+.bring-import-link-light {
+    min-width: unset !important;
+    max-width: unset !important;
+    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    transition: transform 0.2s !important;
+}
+.bring-import-button-light {
+    background-color: #ffffff !important;
+    border: 1px solid #CB6863 !important;
+    box-shadow: none !important;
+    border-radius: 50px !important;
+}
+.bring-import-image-light {
+    margin: 0 10px 0 12px !important;
+}
+.bring-import-text-light {
+    font-family: 'Caviar Dreams', sans-serif !important;
+    color: #CB6863 !important;
+    font-size: 1em !important;
+    font-weight: 700 !important;
+    padding: 0 15px 0 0  !important;
+}
+#bring-import-container a:hover {
+    transform: scale(1.1);
+}
 
 
 
@@ -330,42 +362,7 @@ input {
 
 
 
-/* Styles pour le conteneur */
-.bring-container {
-    text-align: center; 
-    margin: 15px !important;
-}
 
-/* Personnalisation du lien bring en FORÇANT le style css importer par le js */
-
-
-.bring-import-link-light {
-    min-width: unset !important;
-    max-width: unset !important;
-    width: auto !important;
-    display: flex !important;
-    flex-direction: row !important;
-    transition: transform 0.2s !important;
-}
-.bring-import-button-light {
-    background-color: #ffffff !important;
-    border: 1px solid #CB6863 !important;
-    box-shadow: none !important;
-    border-radius: 50px !important;
-}
-.bring-import-image-light {
-    margin: 0 10px 0 12px !important;
-}
-.bring-import-text-light {
-    font-family: 'Caviar Dreams', sans-serif !important;
-    color: #CB6863 !important;
-    font-size: 1em !important;
-    font-weight: 700 !important;
-    padding: 0 15px 0 0  !important;
-}
-#bring-import-container a:hover {
-    transform: scale(1.1);
-}
 
 
 .recette_ingredients-qtunit {
