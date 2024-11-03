@@ -107,6 +107,7 @@ p { font-weight: 200; font-size: 16px;} */
     min-width: unset !important;
     max-width: unset !important;
     width: auto !important;
+    height: 40px !important;
     display: flex !important;
     flex-direction: row !important;
     transition: transform 0.2s !important;
@@ -116,6 +117,7 @@ p { font-weight: 200; font-size: 16px;} */
     border: 1px solid #CB6863 !important;
     box-shadow: none !important;
     border-radius: 50px !important;
+    box-sizing: unset;
 }
 .bring-import-image-light {
     margin: 0 10px 0 12px !important;
@@ -123,9 +125,16 @@ p { font-weight: 200; font-size: 16px;} */
 .bring-import-text-light {
     font-family: 'Caviar Dreams', sans-serif !important;
     color: #CB6863 !important;
-    font-size: 1em !important;
+    font-size: 0.95em !important;
     font-weight: 700 !important;
-    padding: 0 15px 0 0  !important;
+    line-height: 1.1em !important;
+    flex-grow: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    vertical-align:middle !important;
+    padding: 0 15px 0 0 !important;
+    
 }
 #bring-import-container a:hover {
     transform: scale(1.1);
