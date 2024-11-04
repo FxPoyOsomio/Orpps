@@ -770,7 +770,7 @@ let newHtmlContent = `
                                                     <span id="ingredient-${ingredient.order}">
                                                         ${ingredient.quantity !== null ? `                                                        
                                                             <span class="highlight-quantity">
-                                                                <input type="text" id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}"><span> ${ingredient.unit}</span>
+                                                                <input type="text" inputmode="decimal"  id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}"><span> ${ingredient.unit}</span>
                                                             </span>
                                                         ` : ''}
                                                         ${ingredient.name}
