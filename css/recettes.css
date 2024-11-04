@@ -369,6 +369,11 @@ input {
     border-radius: 4px;      /* Exemple d'arrondi des coins */
     padding: 0;            /* Exemple de padding pour un meilleur rendu */
 }
+/* desactiver le zoom de la page sur mobile lorsqu'on clic sur un input */
+html {
+    touch-action: manipulation;
+}
+
 
 
 .bouton-reset__portion {
