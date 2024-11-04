@@ -1,73 +1,388 @@
+// Fonction pour encoder un ArrayBuffer en Base64 sans utiliser btoa
+function arrayBufferToBase64(buffer) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    let base64 = '';
+
+    for (let i = 0; i < len; i += 3) {
+        const a = bytes[i];
+        const b = i + 1 < len ? bytes[i + 1] : 0;
+        const c = i + 2 < len ? bytes[i + 2] : 0;
+
+        const triplet = (a << 16) | (b << 8) | c;
+
+        base64 += chars[(triplet >> 18) & 0x3F];
+        base64 += chars[(triplet >> 12) & 0x3F];
+        base64 += i + 1 < len ? chars[(triplet >> 6) & 0x3F] : '=';
+        base64 += i + 2 < len ? chars[triplet & 0x3F] : '=';
+    }
+
+    return base64;
+}
+
+// Configuration d'entrée
+let config = input.config();
+let nomRecette = config.Nom_Recette;
+let recipeRecordId = config.RECETTE_RecordID; // ID de la recette en cours
+let ingredientRecette = config.Ingrédient_Recette; // Ingrédients principaux
+let preparationsRecetteBase = config.PRÉPARATIONS_RECETTE_base; // IDs des préparations
+let ingredientsPreparationsRecette = config.INGRÉDIENTS_PRÉPARATIONS_RECETTE; // IDs des ingrédients des préparations
+let nbPortions = config.Nb_Portions; // Récupérer le nombre de portions
+
+// infos pour github
+
+let nomRecetteBase64 = encodeURIComponent(nomRecette);
+
+const GITHUB_USERNAME = 'FxPoyOsomio';
+const GITHUB_TOKEN = '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';
+const REPO_NAME = 'Orpps';
+const RECIPE = nomRecette; // nom de votre recette
+const RECIPE_NAME = nomRecetteBase64; // nom de votre recette en base 64
+const FILE_NAME = 'index.html'; // Nom du fichier
+const IMAGE_PATH = `recettes/${RECIPE_NAME}/assets/images/img_recette/${RECIPE_NAME}.jpg`;
+const FILE_PATH = `recettes/${RECIPE_NAME}/${FILE_NAME}`;
+
+
+
+async function uploadRecipeImage() {
+    // Récupérer l'enregistrement de la recette dans Airtable
+    let table = base.getTable('RECETTES [base]');
+    let record = await table.selectRecordAsync(recipeRecordId);
+
+    if (record) {
+        // Récupérer l'URL de l'image depuis le champ d'attachement 'img.'
+        let imgAttachment = record.getCellValue('img.');
+
+        if (imgAttachment && imgAttachment.length > 0) {
+            // Extraire le nom de l'image depuis l'URL
+            let imgUrl = imgAttachment[0].url;
+            let imgName = imgUrl.substring(imgUrl.lastIndexOf('/') + 1);
+
+            // Construire le chemin complet de l'image
+            const IMAGE_PATH = `recettes/${RECIPE_NAME}/assets/images/img_recette/${RECIPE_NAME}.jpg`;
+            console.log(`Le chemin de l'image est : ${IMAGE_PATH}`);
+
+            try {
+                // Récupérer le blob de l'image
+                let response = await fetch(imgUrl);
+                let imgBlob = await response.blob();
+                let imgArrayBuffer = await imgBlob.arrayBuffer();
+                let imgBase64 = arrayBufferToBase64(imgArrayBuffer);
+
+                // Préparer les données pour le commit sur GitHub
+                let githubApiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${IMAGE_PATH}`;
+                let payload = {
+                    message: `Ajout de l'image de la recette ${nomRecette}`,
+                    content: imgBase64
+                };
+
+                // Commit de l'image sur GitHub
+                let uploadResponse = await fetch(githubApiUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `token ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github.v3+json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (uploadResponse.ok) {
+                    let imageUrl = `https://fxpoyosomio.github.io/${REPO_NAME}/${IMAGE_PATH}`;
+                    console.log(`L'image de la recette ${nomRecette} a été uploadée avec succès.`);
+                    console.log(`URL de l'image : ${imageUrl}`);
+                    
+                    // Mettre à jour le champ URL de l'image dans Airtable
+                    await table.updateRecordAsync(record.id, {
+                        'url_img_recette': imageUrl // Utilisez 'url_img_recette' pour stocker l'URL de l'image
+                    });
+                    console.log(`Le champ 'url_img_recette' a été mis à jour avec : ${imageUrl}`);
+
+                    return imageUrl; // Retourner l'URL de l'image ici
+                } else {
+                    console.log("Erreur lors de l'upload de l'image sur GitHub.", await uploadResponse.json());
+                }
+            } catch (error) {
+                console.log("Erreur lors de la récupération ou de l'encodage de l'image : " + error.message);
+            }
+        } else {
+            console.log("Aucune image trouvée pour cette recette.");
+        }
+    } else {
+        console.log("Aucun enregistrement trouvé pour l'ID de la recette fourni.");
+    }
+}
+
+// Appel de la fonction et gestion de la valeur retournée
+uploadRecipeImage().then(imageUrl => {
+    if (imageUrl) {
+        console.log("URL de l'image retournée : ", imageUrl);
+    } else {
+        console.log("Aucune URL d'image n'a été retournée.");
+    }
+});
+
+
+// Après l'exécution du script, imageUrl contient l'URL de l'image, si elle a été définie avec succès.
+console.log("Valeur finale de imageUrl : " + imageUrl);
+
+
+
+// Log des valeurs pour vérifier
+console.log("Nom de la recette :", nomRecette);
+console.log("Ingrédients :", ingredientRecette);
+console.log("ID des préparations :", preparationsRecetteBase);
+console.log("ID des ingrédients préparations :", ingredientsPreparationsRecette);
+console.log("Nombre de portions :", nbPortions); // Log du nombre de portions
+
+// Récupérer les enregistrements de la table "PRÉPARATIONS (RECETTE) [base]"
+let tablePreparations = base.getTable("PRÉPARATIONS (RECETTE) [base]");
+let queryPreparations = await tablePreparations.selectRecordsAsync();
+
+// Récupérer les enregistrements de la table "ÉTAPES PRÉPARATIONS (RECETTE) [base]"
+let tableEtapes = base.getTable("ÉTAPES PRÉPARATIONS (RECETTE) [base]");
+let queryEtapes = await tableEtapes.selectRecordsAsync();
+
+
+// Récupérer les ingrédients de la table 'INGRÉDIENTS [PRÉPARATIONS (RECETTE)]'
+let tableIngredients = base.getTable("INGRÉDIENTS [PRÉPARATIONS (RECETTE)]");
+let queryIngredients = await tableIngredients.selectRecordsAsync();
+
+// Récupérer les préparations
+let preparations = preparationsRecetteBase.map(id => {
+    let record = queryPreparations.getRecord(id);
+    if (record) {
+        let titrePreparation = record.getCellValue("Préparation");
+        let etapesPreparation = record.getCellValue("ÉTAPES PRÉPARATIONS (RECETTE) [base]");
+        let ingredientPreparation = record.getCellValue("INGRÉDIENTS [RECETTES PRÉPARATION]");
+
+        // Extraire uniquement les recordId des étapes
+        let etapesPreparationIds = etapesPreparation ? etapesPreparation.map(etape => etape.id) : [];
+
+        // Extraire les IDs des ingrédients
+        let ingredientPreparationIds = ingredientPreparation ? ingredientPreparation.map(ingredient => ingredient.id) : [];
+
+        return {
+            titre: titrePreparation,
+            etapes: etapesPreparationIds,
+            ingredientsId: ingredientPreparationIds // Utilisez le tableau d'IDs des ingrédients
+        };
+    } else {
+        console.error(`Préparation avec l'ID ${id} introuvable.`);
+        return null;
+    }
+}).filter(preparation => preparation !== null);
+
+// Log des préparations pour vérification
+console.log("Préparations après extraction des étapes :", preparations);
+
+let preparationsDetails = preparations.map(preparation => {
+    if (preparation.etapes) {
+        let etapesDetails = preparation.etapes.map(etapeId => {
+            if (typeof etapeId === 'string') {
+                let record = queryEtapes.getRecord(etapeId);
+                if (record) {
+                    let ordre = record.getCellValue("Ordre étape recette");
+                    let instructions = record.getCellValue("Instructions");
+
+                    return {
+                        ordre: ordre,
+                        originalInstructions: instructions,
+                    };
+                } else {
+                    console.error(`Étape avec l'ID ${etapeId} introuvable.`);
+                    return null;
+                }
+            } else {
+                console.error(`ID d'étape non valide : ${etapeId}`);
+                return null;
+            }
+        }).filter(etape => etape !== null);
+
+        let ingredientsDetails = preparation.ingredientsId.map(ingredientId => {
+            if (typeof ingredientId === 'string') {
+                let record = queryIngredients.getRecord(ingredientId);
+                if (record) {
+                    let quantite = record.getCellValue("Qté. [base]");
+                    let uniteObj = record.getCellValue("Unité");
+                    let unite = uniteObj ? uniteObj.name : "";
+                    let nomIngredient = record.getCellValue("Nom ingrédient (sans quantité)");
+                    let ordernb = record.getCellValue("Ordre d'ingrédient");
+                    let order = '[' + ordernb + ']';
+                    let img = record.getCellValue("url_Img (from INGRÉDIENTS [Base])");
+
+                    return { quantity: quantite, unit: unite || '', name: nomIngredient, order: order, ordernb: ordernb, img: img };
+                } else {
+                    console.error(`Ingrédient avec l'ID ${ingredientId} introuvable.`);
+                    return null;
+                }
+            } else {
+                console.error(`ID de l'ingrédient non valide : ${ingredientId}`);
+                return null;
+            }
+        }).filter(ingredient => ingredient !== null); // Assurez-vous de filtrer les ingrédients nulls
+
+        return {
+            ...preparation,
+            etapes: etapesDetails,
+            ingredientsDetails: ingredientsDetails
+        };
+    } else {
+        return preparation;
+    }
+});
+
+// Log des préparations avec étapes
+console.log("Préparations avec étapes détaillées :", preparationsDetails);
+
+
+
+// Récupérer les ingrédients de la table 'INGRÉDIENTS [PRÉPARATIONS (RECETTES)]'
+let ingredientsList = ingredientsPreparationsRecette.map(id => {
+    let record = queryIngredients.getRecord(id);
+    if (record) {
+        let quantite = record.getCellValue("Qté. [base]");
+        let uniteObj = record.getCellValue("Unité");  // Récupérer l'objet de la sélection unique
+        let unite = uniteObj ? uniteObj.name : "";    // Utiliser la propriété 'name' pour obtenir la valeur
+        let nomIngredient = record.getCellValue("Nom ingrédient (sans quantité)");
+        let nomSimpleIngredient = record.getCellValue("Nom ingrédient");
+        let ordernb = record.getCellValue("Ordre d'ingrédient");
+        let order = '[' + ordernb + ']';
+        let img = record.getCellValue("url_Img (from INGRÉDIENTS [Base])");
+
+        return { quantite, unite, nom: nomIngredient, simplename: nomSimpleIngredient, order, ordernb, img };
+    } else {
+        return null;
+    }
+}).filter(ingredient => ingredient !== null);
+
+// Log des ingrédients
+console.log("Ingrédients préparations :", ingredientsList);
+
+// Récupérer les détails des ingrédients pour HTML
+let ingredientsDetailsForHTML = ingredientsList.map((ingredient, index) => ({
+    order: ingredient.ordernb,
+    quantity: ingredient.quantite,
+    unit: ingredient.unite || '', // Vérifiez si l'unité existe
+    name: ingredient.nom,
+    simplename: ingredient.simplename,
+    img: ingredient.img,
+}));
+
+console.log("Ingrédients infos :", ingredientsDetailsForHTML);
+
+
+
+let categorieRecette = config.Categorie_Recette;
+console.log("Catégorie recette :", categorieRecette);
+
+let subCategorieRecette = config.Sub_Categorie_Recette;
+console.log("Sous-catégorie recette :", subCategorieRecette);
+
+
+
+let tempsRecette = config.Temps_Recette;
+console.log("Temps recette :", tempsRecette);
+
+let difficulteRecette = config.Difficulté_Recette;
+console.log("Difficulté recette :", difficulteRecette);
+
+let prixRecette = config.Prix_Recette;
+console.log("Prix recette :", prixRecette);
+
+
+
+let descriptionRecette = config.Desciption_Recette;
+console.log("Desciption recette :", descriptionRecette);
+
+
+
+let tempsPreparation = config.Temps_Préparation;
+console.log("Temps préparation :", tempsPreparation);
+
+let tempsRepos = config.Temps_Repos;
+console.log("Temps repos :", tempsRepos);
+
+let tempsCuisson = config.Temps_Cuisson;
+console.log("Temps cuisson :", tempsCuisson);
+
+let tempsTotal = config.Temps_Total;
+console.log("Temps total :", tempsTotal);
+
+
+
+
+
+// Génération du code HTML
+let newHtmlContent = `
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magret de canard (sauce au miel et thym)</title>
+    <title>${nomRecette}</title>
+    <link href="${imageUrl}" rel="stylesheet">
     <script type="application/ld+json">
         {
         "@context": "http://schema.org",
         "@type": "Recipe",
-        "name": "Magret de canard (sauce au miel et thym)",
-        "recipeIngredient": ["Magret de canard,2", "Piment d'Espellette,1pincée", "Miel de montagne,4cuil. à soupe", "Citron jaune,0.25", "Fond de veau,20cl.", "Poivre noir,null", "Beurre Doux,40g.", "Sel fin,null", "Vinaigre de vin rouge,4cuil. à soupe"]
+        "name": "${nomRecette}",
+        "recipeIngredient": [${ingredientsDetailsForHTML.map(item => `"${item.simplename},${item.quantity}${item.unit}"`).join(", ")}]
         }
     </script>
 
 
     <script async="async" src="//platform.getbring.com/widgets/import.js"></script>
     <link rel="stylesheet" href="/Orpps/css/styles.css"> <!-- fichiers global CSS ici -->
-    <link rel="stylesheet" href="/Orpps/css/recettes.css"> <!--  fichiers recettes CSS ici -->
+    <link rel="stylesheet" href="/Orpps/css/recettes.css"> <!--  fichiers recettes CSS ici -->  
 </head>
-
 <body>
-    <div id="header"></div>
+    <div id="header"></div> <!-- Conteneur pour charger le header -->
 
     <div class="page-container">
-
+    
         <div class="container__img-recette__two-column-page">
-            <img src="https://fxpoyosomio.github.io/Orpps/recettes/Magret%20de%20canard%20(sauce%20au%20miel%20et%20thym)/assets/images/img_recette/Magret%20de%20canard%20(sauce%20au%20miel%20et%20thym).jpg"
+            <img src="${imageUrl}"
                 class="img-recette" alt="image-recette"></img>
         </div>
 
         <div class="container__info-recette">
 
             <div class="bread-crumbs">
-                <span class="bread-crumbs__link">
+                <a class="bread-crumbs__link" href="https://fxpoyosomio.github.io/${REPO_NAME}/">
                     <h6>Accueil</h6>
-                </span>
+                </a>
                 <span style="padding: 0 8px;">
                     <h6 style="color: #CB6863;">></h6>
                 </span>
-                <span class="bread-crumbs__link">
+                <a class="bread-crumbs__link" href="https://fxpoyosomio.github.io/${REPO_NAME}/recettes.html">
                     <h6>Recettes</h6>
-                </span>
+                </a>
                 <span style="padding: 0 8px;">
                     <h6 style="color: #CB6863;">></h6>
                 </span>
-                <span class="bread-crumbs__link">
-                    <h6>Plats</h6>
-                </span>
+                <a class="bread-crumbs__link" href="https://fxpoyosomio.github.io/${REPO_NAME}/recettes/${categorieRecette}/">
+                    <h6>${categorieRecette}</h6>
+                </a>
                 <span style="padding: 0 8px;">
                     <h6 style="color: #CB6863;">></h6>
                 </span>
-                <span class="bread-crumbs__link">
-                    <h6>Viandes</h6>
-                </span>
+                <a class="bread-crumbs__link" href="https://fxpoyosomio.github.io/${REPO_NAME}/recettes/${categorieRecette}/${subCategorieRecette}/">
+                    <h6>${subCategorieRecette}</h6>
+                </a>
 
-            </div>
-
+            </div> 
+            
 
             <h1 class="titre-recette">
-                Magret de canard (sauce au miel et thym)
+                ${nomRecette}
             </h1>
 
-
             <div class="container__img-recette__one-column-page">
-                <img src="https://fxpoyosomio.github.io/Orpps/recettes/Magret%20de%20canard%20(sauce%20au%20miel%20et%20thym)/assets/images/img_recette/Magret%20de%20canard%20(sauce%20au%20miel%20et%20thym).jpg"
+                <img src="${imageUrl}"
                     class="img-recette" alt="image-recette"></img>
             </div>
-
 
             <div class="top-infos__recette">
                 <div class="top-info">
@@ -94,7 +409,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7>
-                            15 min
+                            ${tempsRecette}
                         </h7>
                     </div>
                 </div>
@@ -126,7 +441,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7>
-                            Très facile
+                            ${difficulteRecette}
                         </h7>
                     </div>
                 </div>
@@ -158,7 +473,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7>
-                            Bon Marché
+                            ${prixRecette}
                         </h7>
                     </div>
                 </div>
@@ -190,8 +505,7 @@
 
                 <div class="portion-bring-conteneur">
                     <div class="bring-container">
-                        <div id="bring-import-container" data-bring-import data-bring-language="fr"
-                            data-bring-theme="light" data-bring-base-quantity="6" data-bring-requested-quantity="6">
+                        <div id="bring-import-container" data-bring-import data-bring-language="fr" data-bring-theme="light" data-bring-base-quantity="${nbPortions}" data-bring-requested-quantity="${nbPortions}">
                             <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
                         </div>
                     </div>
@@ -229,19 +543,15 @@
                 </div>
 
             </div>
-
             <p2 class="desciption-recette">
-                "Découvrez l'alliance parfaite de saveurs avec ce magret de canard tendre, nappé d'une sauce au miel
-                délicieusement sucrée et légèrement caramélisée. Une recette simple et élégante qui sublime le canard,
-                idéale pour impressionner vos invités ou pour un repas gourmand en toute occasion. Accompagnez ce plat
-                de légumes de saison ou d'une purée maison pour un repas raffiné et plein de caractère.“
+                "${descriptionRecette}“
             </p2>
 
 
 
 
 
-        </div>
+        </div>  
 
         <div class="ingredients">
             <div class="section-ingredient">
@@ -267,7 +577,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="section-ingredient-container">
                     <div class="portion-control">
                         <div class="portion-control__decrement minus" onclick="updatePortions(-1)">
@@ -299,186 +609,46 @@
 
 
 
-            <div class="preparation-ingrédients">
-                <h3>Préparation des magrets</h3>
-                <div class="recette_ingredients-items">
-
-                    <div class="card-ingredient" data-name="1">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Viandes et Poissons/Volaille/Canard/Magret%20de%20canard.jpg"
-                                alt="magrets de canard">
+            ${preparationsDetails.map(preparation => {
+                // Vérifiez si la préparation a des détails d'ingrédients
+                if (preparation.ingredientsDetails && preparation.ingredientsDetails.length > 0) {
+                    return `
+                        <div class="preparation-ingrédients">
+                            <h3>${preparation.titre}</h3>
+                            <div class="recette_ingredients-items">
+                                ${preparation.ingredientsDetails.map(ingredient => `
+                                    <div class="card-ingredient" data-name="${ingredient.ordernb}">
+                                        <div class="card-ingredient-image">
+                                            <img src="${ingredient.img}" alt="${ingredient.name}">
+                                        </div>                        
+                                        <span class="recette_ingredients-details" id="ingredients">
+                                            <span id="ingredient-${ingredient.ordernb}">
+                                                ${ingredient.quantity !== null ? `
+                                                    <span class="recette_ingredients-qtunit">
+                                                        <span class="highlight-quantity">
+                                                            ${ingredient.quantity} ${ingredient.unit}
+                                                        </span>
+                                                    </span>
+                                                ` : ''} 
+                                                ${ingredient.name}
+                                            </span>
+                                        </span>
+                                    </div>
+                                `).join("")}                
+                            </div>
                         </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-1">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        2
-                                    </span>
-                                </span>
-
-                                magrets de canard
-                            </span>
-                        </span>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="preparation-ingrédients">
-                <h3>Sauce au miel & thym</h3>
-                <div class="recette_ingredients-items">
-
-                    <div class="card-ingredient" data-name="5">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/Piment%20d'Espellette.jpg"
-                                alt=" de piment d'espellette">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-5">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        1 pincée
-                                    </span>
-                                </span>
-
-                                de piment d'espellette
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="2">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"
-                                alt=" de miel de montagne">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-2">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        4 cuil. à soupe
-                                    </span>
-                                </span>
-
-                                de miel de montagne
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="9">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20jaune.jpg"
-                                alt="citron jaune">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-9">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        0.25
-                                    </span>
-                                </span>
-
-                                citron jaune
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="4">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Bouillon et fond de sauce/Fond%20de%20veau.jpg"
-                                alt=" de fond de veau">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-4">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        20 cl.
-                                    </span>
-                                </span>
-
-                                de fond de veau
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="7">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"
-                                alt="Poivre noir">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-7">
-
-                                Poivre noir
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="8">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Doux.jpg"
-                                alt=" de beurre doux">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-8">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        40 g.
-                                    </span>
-                                </span>
-
-                                de beurre doux
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="6">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg"
-                                alt="Sel fin">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-6">
-
-                                Sel fin
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="card-ingredient" data-name="3">
-                        <div class="card-ingredient-image">
-                            <img src="https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Vinaigre%20de%20vin%20rouge.jpg"
-                                alt=" de vinaigre de vin rouge">
-                        </div>
-                        <span class="recette_ingredients-details" id="ingredients">
-                            <span id="ingredient-3">
-
-                                <span class="recette_ingredients-qtunit">
-                                    <span class="highlight-quantity">
-                                        4 cuil. à soupe
-                                    </span>
-                                </span>
-
-                                de vinaigre de vin rouge
-                            </span>
-                        </span>
-                    </div>
-
-                </div>
-            </div>
-
+                    `;
+                } else {
+                    return ''; // Retourne une chaîne vide si aucune information d'ingrédients
+                }
+            }).join("")}
 
 
         </div>
 
 
         <div class="preparations">
-
+            
             <div class="titre-section-container">
                 <svg class="titre-section-image" width="64px" height="64px" viewBox="0 0 512 512"
                     xmlns="http://www.w3.org/2000/svg" fill="#CB6863" transform="matrix(1, 0, 0, 1, 0, 0)">
@@ -526,7 +696,7 @@
                                 <h6>Préparation</h6>
                             </div>
                             <div class="timing__time">
-                                <h7>10 min</h7>
+                                <h7>${tempsPreparation}</h7>
                             </div>
                         </div>
                     </div>
@@ -547,7 +717,7 @@
                                 <h6>Repos</h6>
                             </div>
                             <div class="timing__time">
-                                <h7>10 min</h7>
+                                <h7>${tempsRepos}</h7>
                             </div>
                         </div>
                     </div>
@@ -567,7 +737,7 @@
                                 <h6>Cuisson</h6>
                             </div>
                             <div class="timing__time">
-                                <h7>10 min</h7>
+                                <h7>${tempsCuisson}</h7>
                             </div>
                         </div>
                     </div>
@@ -578,7 +748,7 @@
                                     <h6>Temps total</h6>
                                 </div>
                                 <div class="timing__time">
-                                    <h7>10 min</h7>
+                                    <h7>${tempsTotal}</h7>
                                 </div>
                             </div>
                         </div>
@@ -591,180 +761,55 @@
                                 <h6>Temps total</h6>
                             </div>
                             <div class="timing__time">
-                                <h7>10 min</h7>
+                                <h7>${tempsTotal}</h7>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            ${preparationsDetails.map(preparation => `
+                <div class="preparation-instruction">
+                    <h3 >${preparation.titre}</h3>
+                    ${preparation.etapes.map(etape => `
+                        <div class="etape">
+                            <h4>ÉTAPE ${etape.ordre}</h4>
+                            <p>${etape.originalInstructions
+                                .replace(/\\n/g, '<br>') // Remplacer les retours à la ligne par <br>
+                                .replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:400; font-style: italic;">$1</span>')
+                                .replace(/\[(\d+)\]/g, (match, p1) => {
+                                    const ingredientOrder = parseInt(p1, 10); // Convertir p1 en nombre
 
-            <div class="preparation-instruction">
-                <h3>Préparation des magrets</h3>
+                                    // Trouver l'ingrédient correspondant par son ordre
+                                    const ingredient = ingredientsDetailsForHTML.find(ing => ing.order === ingredientOrder);
 
-                <div class="etape">
-                    <h4>ÉTAPE 1</h4>
-                    <p>Faire chauffer une poêle progressivement jusqu'à arriver à un feu fort.
-                    </p>
+                                    // Vérifier si l'ingrédient a été trouvé
+                                    if (ingredient) {
+                                        return `<span id="ingredients" class="ingredient-preparation">
+                                                    <span id="ingredient-${ingredient.order}">
+                                                        ${ingredient.quantity !== null ? `                                                        
+                                                            <span class="highlight-quantity">
+                                                                ${ingredient.quantity} ${ingredient.unit}
+                                                            </span>
+                                                        ` : ''}
+                                                        ${ingredient.name}
+                                                    </span>
+                                                </span>`;
+                                        }
+
+                                        // Retourner la correspondance originale si l'ingrédient n'est pas trouvé
+                                        return match;
+                                    })
+                            }</p>
+                        </div>
+                    `).join("")}
                 </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 2</h4>
-                    <p>Parer les <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-1">
-
-                                <span class="highlight-quantity">
-                                    2
-                                </span>
-
-                                magrets de canard
-                            </span>
-                        </span> en enlevant l'excédant de gras autour du filet ainsi que les nerf et les membranes.
-                        Ensuite, retourner les magret coté gras et faire un quadrillage au couteau en veillant à ne pas
-                        entailler la chair. Le fait de parer le magret permettra une cuisson plus uniforme.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 3</h4>
-                    <p>Faire cuire pendant environ 5 minutes à feu moyen / fort les magrets sur le coté gras jusqu'à ce
-                        que ce dernier deviennent brun. Ensuite retourner les magrets pour colorer le côté chair pendant
-                        environ 15 à 30 secondes.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 4</h4>
-                    <p>Laisser reposer les magrets 20 minutes sur une grille afin qu'ils se détendent.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 5</h4>
-                    <p>Préchauffer le four à 210° en chaleur statique (pour ne pas dessécher la viande).
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="preparation-instruction">
-                <h3>Sauce au miel & thym</h3>
-
-                <div class="etape">
-                    <h4>ÉTAPE 1</h4>
-                    <p>Ajouter <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-2">
-
-                                <span class="highlight-quantity">
-                                    4 cuil. à soupe
-                                </span>
-
-                                de miel de montagne
-                            </span>
-                        </span> dans une casserole sur un feu moyen / fort. Quand le miel commence à bouillir et à
-                        changer de couleur déglacer <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-3">
-
-                                <span class="highlight-quantity">
-                                    4 cuil. à soupe
-                                </span>
-
-                                de vinaigre de vin rouge
-                            </span>
-                        </span> et laisser réduire.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 2</h4>
-                    <p>Quand le mélange a bien réduit et devient sirupeux, ajouter <span id="ingredients"
-                            class="ingredient-preparation">
-                            <span id="ingredient-4">
-
-                                <span class="highlight-quantity">
-                                    20 cl.
-                                </span>
-
-                                de fond de veau
-                            </span>
-                        </span> et assaisonner de <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-5">
-
-                                <span class="highlight-quantity">
-                                    1 pincée
-                                </span>
-
-                                de piment d'espellette
-                            </span>
-                        </span>, de <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-6">
-
-                                Sel fin
-                            </span>
-                        </span> et de <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-7">
-
-                                Poivre noir
-                            </span>
-                        </span> à convenance. Laisser réduire de nouveau de 1 tiers pour retrouver l'état sirupeux du
-                        mélange.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 3</h4>
-                    <p>Retirer la casserole du feu pour monter la sauce au beurre. Ajouter <span id="ingredients"
-                            class="ingredient-preparation">
-                            <span id="ingredient-8">
-
-                                <span class="highlight-quantity">
-                                    40 g.
-                                </span>
-
-                                de beurre doux
-                            </span>
-                        </span> froid dans la sauce chaude et remuer à l'aide d'un fouet. Pour donner un peu plus de
-                        peps à la sauce, ajouter le jus de <span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-9">
-
-                                <span class="highlight-quantity">
-                                    0.25
-                                </span>
-
-                                citron jaune
-                            </span>
-                        </span>.
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="preparation-instruction">
-                <h3>Cuisson à coeur des magrets</h3>
-
-                <div class="etape">
-                    <h4>ÉTAPE 2</h4>
-                    <p>Enfourner 12 à 15 minutes les magret de canard disposés sur une grille au dessus d'un lèche
-                        fritte.
-                    </p>
-                </div>
-
-                <div class="etape">
-                    <h4>ÉTAPE 3</h4>
-                    <p>Trancher et servir immédiatement les magret de canard.
-                    </p>
-                </div>
-
-            </div>
-
-
-
+            `).join("")}
         </div>
     </div>
-    <div id="footer"></div>
     <script>
         // Récupération des ingrédients pour la mise à jour
-        const originalIngredients = [{ "quantite": 2, "unite": "", "nom": "magrets de canard", "simplename": ["Magret de canard"], "order": "[1]", "ordernb": 1, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Viandes et Poissons/Volaille/Canard/Magret%20de%20canard.jpg"] }, { "quantite": 1, "unite": "pincée", "nom": " de piment d'espellette", "simplename": ["Piment d'Espellette"], "order": "[5]", "ordernb": 5, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/Piment%20d'Espellette.jpg"] }, { "quantite": 4, "unite": "cuil. à soupe", "nom": " de miel de montagne", "simplename": ["Miel de montagne"], "order": "[2]", "ordernb": 2, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"] }, { "quantite": 0.25, "unite": "", "nom": "citron jaune", "simplename": ["Citron jaune"], "order": "[9]", "ordernb": 9, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20jaune.jpg"] }, { "quantite": 20, "unite": "cl.", "nom": " de fond de veau", "simplename": ["Fond de veau"], "order": "[4]", "ordernb": 4, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Bouillon et fond de sauce/Fond%20de%20veau.jpg"] }, { "quantite": null, "unite": "", "nom": ["Poivre noir"], "simplename": ["Poivre noir"], "order": "[7]", "ordernb": 7, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"] }, { "quantite": 40, "unite": "g.", "nom": " de beurre doux", "simplename": ["Beurre Doux"], "order": "[8]", "ordernb": 8, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Doux.jpg"] }, { "quantite": null, "unite": "", "nom": ["Sel fin"], "simplename": ["Sel fin"], "order": "[6]", "ordernb": 6, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg"] }, { "quantite": 4, "unite": "cuil. à soupe", "nom": " de vinaigre de vin rouge", "simplename": ["Vinaigre de vin rouge"], "order": "[3]", "ordernb": 3, "img": ["https://fxpoyosomio.github.io/Orpps/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Vinaigre%20de%20vin%20rouge.jpg"] }];
+        const originalIngredients = ${JSON.stringify(ingredientsList)};
 
         function updatePortions(delta) {
             const input = document.getElementById("portion-input");
@@ -789,7 +834,7 @@
                     if (ingredient.quantite === null || ingredient.quantite === 0) {
                         newQuantite = '';
                     } else {
-                        let calculateNewQuantite = (ingredient.quantite * input.value / 6);
+                        let calculateNewQuantite = (ingredient.quantite * input.value / ${nbPortions});
                         console.log("Quantité calculée pour l'ingrédient :", ingredient.nom, "->", calculateNewQuantite);
 
                         if (ingredient.unite === "kg." || ingredient.unite === "l.") {
@@ -806,19 +851,19 @@
                     console.log("Nouvelle quantité pour l'ingrédient :", ingredient.nom, "->", newQuantite);
 
                     // Recherche et mise à jour de tous les éléments avec cet ID dans le DOM
-                    const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                    const ingredientElements = document.querySelectorAll(\`#ingredient-\${ingredient.ordernb}\`);
                     if (ingredientElements.length > 0) {
                         ingredientElements.forEach(ingredientSpan => {
                             const quantitySpan = ingredientSpan.querySelector(".highlight-quantity");
                             if (quantitySpan) {
-                                quantitySpan.textContent = `${newQuantite} ${ingredient.unite}`;
+                                quantitySpan.textContent = \`\${newQuantite} \${ingredient.unite}\`;
                                 console.log("Quantité mise à jour dans le DOM pour :", ingredient.nom);
                             } else {
                                 console.log("Élément .highlight-quantity introuvable pour l'ingrédient :", ingredient.nom);
                             }
                         });
                     } else {
-                        console.log(`Élément avec l'ID ingredient-${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :`, ingredient.nom);
+                        console.log(\`Élément avec l'ID ingredient-\${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :\`, ingredient.nom);
                     }
                 });
             } else {
@@ -826,11 +871,11 @@
             }
         }
 
-        document.getElementById("portion-input").addEventListener("input", function (e) {
+        document.getElementById("portion-input").addEventListener("input", function(e) {
             this.value = this.value.replace(/[^0-9]/g, ''); // N'accepte que les chiffres
         });
 
-
+        
 
 
 
@@ -860,5 +905,78 @@
 
 
 </body>
-
 </html>
+`;
+
+console.log("HTML généré :", newHtmlContent);
+
+// Fonction pour encoder en base64
+function encodeBase64(str) {
+    let buffer = Buffer.from(str, 'utf-8');
+    return buffer.toString('base64');
+}
+
+// Fonction pour vérifier si le fichier existe
+async function checkFileExists() {
+    const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            Authorization: `token ${GITHUB_TOKEN}`
+        }
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data; // Retourne les données si le fichier existe
+    } else if (response.status === 404) {
+        return null; // Fichier non trouvé
+    } else {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+}
+
+// Fonction pour créer ou mettre à jour le fichier
+async function createOrUpdateFile() {
+    const fileData = await checkFileExists();
+    const sha = fileData ? fileData.sha : undefined; // Récupère le SHA si le fichier existe
+
+    const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FILE_PATH}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            Authorization: `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: sha ? `${RECIPE} : Update index.html` : `${RECIPE} : Create index.html`,
+            content: encodeBase64(newHtmlContent), // Encode le contenu en base64
+            sha: sha // Inclure le SHA si le fichier existe
+        })
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        const fileUrl = result.content.html_url; // URL du fichier sur GitHub
+
+        console.log("File URL:", fileUrl); // Affiche l'URL du fichier
+
+        // Mise à jour du champ 'url_recette' dans Airtable
+        await updateRecipeUrlInAirtable(fileUrl);
+    } else {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+}
+
+// Fonction pour mettre à jour l'URL dans le champ 'url_recette' de la recette dans Airtable
+async function updateRecipeUrlInAirtable(fileUrl) {
+    const table = base.getTable('RECETTES [base]');
+    await table.updateRecordAsync(RECORD_ID, {
+        'url_recette': fileUrl
+    });
+}
+
+// Exécute la fonction
+createOrUpdateFile().catch(error => {
+    console.error(error.message);
+});
