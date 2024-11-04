@@ -577,7 +577,7 @@ let newHtmlContent = `
                         </div>
                         <div class="portion-control__value_container">
                             <div class="portion-control__value">
-                                <input type="text" id="portion-input" class="portion-control__value_number" value="6">
+                                <input type="text" inputmode="decimal" id="portion-input" class="portion-control__value_number" value="6">
                                 <span class="portion-control__unit">portions</span>
                             </div>
 
@@ -627,7 +627,7 @@ let newHtmlContent = `
                                                 ${ingredient.quantity !== null ? `
                                                     <span class="recette_ingredients-qtunit">
                                                         <span class="highlight-quantity">
-                                                            <input type="text" id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}"><span> ${ingredient.unit}</span>
+                                                            <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}"><span> ${ingredient.unit}</span>
                                                         </span>
                                                     </span>
                                                 ` : ''} 
@@ -788,26 +788,32 @@ let newHtmlContent = `
             `).join("")}
         </div>
     </div>
-    <script> 
+   <script> 
         // Récupération des ingrédients pour la mise à jour
-        const originalIngredients = ${JSON.stringify(ingredientsList)};    
+        const originalIngredients = ${JSON.stringify(ingredientsList)};   
     
         document.addEventListener("DOMContentLoaded", function() {
+            // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+            document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
+                if (input.value.includes('.')) {
+                    input.value = convertPointToComma(input.value);
+                }
+            });
             // Ajustement initial des styles des inputs
             adjustPortionInputStyle(); // Ajuster l'input des portions
     
-            // Appliquer l'ajustement de style initial pour tous les ingrédients
+            // Appliquer l'ajustement de style initial pour tous les ingédients
             initializeIngredientStyles();
         });
     
         function updatePortions(delta) {
             const input = document.getElementById("portion-input");
-            let currentValue = parseFloat(input.value);
+            let currentValue = parseFloat(input.value.replace(',', '.')); // Remplacer la virgule par un point pour le calcul
             console.log("Valeur actuelle des portions :", currentValue);
     
             if (currentValue + delta > 0) {
                 let newValue = currentValue + delta;
-                input.value = Number.isInteger(newValue) ? newValue : newValue.toFixed(2);
+                input.value = convertPointToComma(newValue); // Utiliser la virgule pour l'affichage
                 adjustPortionInputStyle(); // Ajuster le style après la mise à jour
                 updateIngredients();
             } else {
@@ -817,7 +823,7 @@ let newHtmlContent = `
     
         function updateIngredients() {
             const input = document.getElementById("portion-input");
-            let portionValue = parseFloat(input.value);
+            let portionValue = parseFloat(input.value.replace(',', '.')); // Remplacer la virgule par un point pour le calcul
             console.log("Nouvelle valeur des portions :", portionValue);
     
             // Mise à jour des attributs Bring
@@ -844,6 +850,9 @@ let newHtmlContent = `
     
                 console.log("Nouvelle quantité pour l'ingrédient :", ingredient.nom, "->", newQuantite);
     
+                // Conversion du point en virgule pour l'affichage
+                newQuantite = convertPointToComma(newQuantite);
+    
                 // Recherche et mise à jour de tous les éléments avec cet ID dans le DOM
                 const ingredientElements = document.querySelectorAll(\`\#ingredient-\${ingredient.ordernb}\`);
                 if (ingredientElements.length > 0) {
@@ -858,7 +867,7 @@ let newHtmlContent = `
                         }
                     });
                 } else {
-                    console.log(\`\Élément avec l'ID ingredient-\${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :\`, ingredient.nom);
+                    console.log(\`Élément avec l'ID ingredient-\${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :\`, ingredient.nom);
                 }
             });
         }
@@ -919,8 +928,8 @@ let newHtmlContent = `
                             const ingredientId = parseInt(this.closest("[id^='ingredient-']").id.replace("ingredient-", ""), 10);
                             const ingredient = originalIngredients.find(ing => ing.ordernb === ingredientId);
                             if (ingredient) {
-                                const newPortionValue = (parseFloat(this.value) / ingredient.quantite) * 6;
-                                document.getElementById("portion-input").value = Number.isInteger(newPortionValue) ? newPortionValue : newPortionValue.toFixed(2);
+                                const newPortionValue = (parseFloat(this.value.replace(',', '.')) / ingredient.quantite) * 6;
+                                document.getElementById("portion-input").value = convertPointToComma(Number.isInteger(newPortionValue) ? newPortionValue : newPortionValue.toFixed(2));
                                 updateIngredients();
                                 adjustPortionInputStyle(); // Ajuster le style après la mise à jour
                             }
@@ -944,10 +953,10 @@ let newHtmlContent = `
         }
     
         document.getElementById("portion-input").addEventListener("input", function(e) {
-            this.value = this.value.replace(/[^0-9.]/g, ''); // N'accepte que les chiffres et les points
+            this.value = this.value.replace(/[^0-9,]/g, ''); // N'accepte que les chiffres et les virgules
             if (this.value !== "") {
-                let newValue = parseFloat(this.value);
-                this.value = Number.isInteger(newValue) ? newValue : newValue.toFixed(2);
+                let newValue = parseFloat(this.value.replace(',', '.'));
+                this.value = convertPointToComma(Number.isInteger(newValue) ? newValue : newValue.toFixed(2));
                 adjustPortionInputStyle(); // Ajuster la largeur en fonction du texte
                 updateIngredients();
             }
@@ -987,6 +996,14 @@ let newHtmlContent = `
             input.value = initialValue; // Réinitialiser l'input à la valeur initiale
             adjustPortionInputStyle(); // Ajuster le style de l'input après la mise à jour
             updateIngredients(); // Mettre à jour les ingrédients
+        }
+    
+        // Fonction de conversion du point en virgule pour l'affichage
+        function convertPointToComma(value) {
+            if (typeof value === 'number') {
+                value = value.toString();
+            }
+            return value.replace('.', ',');
         }
     </script>
     
