@@ -878,7 +878,7 @@ let newHtmlContent = `
                 console.log("Nouvelle quantité pour l'ingrédient :", ingredient.nom, "->", newQuantite);
     
                 // Recherche et mise à jour de tous les éléments avec cet ID dans le DOM
-                const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                const ingredientElements = document.querySelectorAll(\`\#ingredient-\${ingredient.ordernb}\`);
                 if (ingredientElements.length > 0) {
                     ingredientElements.forEach(ingredientSpan => {
                         const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
