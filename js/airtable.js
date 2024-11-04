@@ -824,6 +824,15 @@ let newHtmlContent = `
     <script> 
         // Récupération des ingrédients pour la mise à jour
         const originalIngredients = ${JSON.stringify(ingredientsList)};    
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            // Ajustement initial des styles des inputs
+            adjustPortionInputStyle(); // Ajuster l'input des portions
+    
+            // Appliquer l'ajustement de style initial pour tous les ingrédients
+            initializeIngredientStyles();
+        });
+    
         function updatePortions(delta) {
             const input = document.getElementById("portion-input");
             let currentValue = parseFloat(input.value);
@@ -898,7 +907,73 @@ let newHtmlContent = `
         function adjustInputWidth(input) {
             input.style.width = ((input.value.length + 1) * 0.5) + "em";
             input.style.textAlign = "center";
-            input.style.border = "none" ;
+            input.style.border = "none";
+        }
+    
+        function initializeIngredientStyles() {
+            // Parcourir tous les ingrédients et ajuster les styles initialement
+            originalIngredients.forEach(ingredient => {
+                const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                if (ingredientElements.length > 0) {
+                    ingredientElements.forEach(ingredientSpan => {
+                        const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
+                        if (quantityInput) {
+                            adjustInputWidth(quantityInput); // Ajuster la largeur initiale du champ input
+                            quantityInput.style.backgroundColor = "transparent";
+                            quantityInput.style.border = "none";
+                            quantityInput.style.textAlign = "center";
+                        }
+                    });
+                }
+            });
+    
+            // Ajustement des styles d'encadrement et focus pour chaque ingrédient
+            document.querySelectorAll(".card-ingredient").forEach(card => {
+                const input = card.querySelector(".highlight-quantity input");
+                if (input) {
+                    input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
+    
+                    // Gestion des styles d'encadrement et focus
+                    card.addEventListener("mouseover", function() {
+                        input.style.border = "1px solid #ccc";
+                        input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
+                    });
+                    card.addEventListener("mouseout", function() {
+                        input.style.border = "1px solid transparent";
+                        input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
+                    });
+                    card.addEventListener("click", function() {
+                        input.focus();
+                        input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
+                    });
+    
+                    input.addEventListener("blur", function() {
+                        if (this.value !== "") {
+                            const ingredientId = parseInt(this.closest("[id^='ingredient-']").id.replace("ingredient-", ""), 10);
+                            const ingredient = originalIngredients.find(ing => ing.ordernb === ingredientId);
+                            if (ingredient) {
+                                const newPortionValue = (parseFloat(this.value) / ingredient.quantite) * 6;
+                                document.getElementById("portion-input").value = Number.isInteger(newPortionValue) ? newPortionValue : newPortionValue.toFixed(2);
+                                updateIngredients();
+                                adjustPortionInputStyle(); // Ajuster le style après la mise à jour
+                            }
+                        }
+                    });
+    
+                    input.addEventListener("keydown", function(e) {
+                        if (e.key === "Enter") {
+                            this.blur();
+                        }
+                    });
+    
+                    // Ajustement de la largeur du champ input en fonction du texte
+                    input.addEventListener("input", function() {
+                        adjustInputWidth(this);
+                    });
+                    // Ajustement initial
+                    adjustInputWidth(input);
+                }
+            });
         }
     
         document.getElementById("portion-input").addEventListener("input", function(e) {
@@ -910,8 +985,6 @@ let newHtmlContent = `
                 updateIngredients();
             }
         });
-    
-        adjustPortionInputStyle(); // Ajustement initial des styles de l'input
     
         document.querySelector(".portion-control__value").addEventListener("mouseover", function() {
             const input = document.getElementById("portion-input");
@@ -929,52 +1002,6 @@ let newHtmlContent = `
             input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
         });
     
-        document.querySelectorAll(".card-ingredient").forEach(card => {
-            const input = card.querySelector(".highlight-quantity input");
-            input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
-    
-            // Gestion des styles d'encadrement et focus
-            card.addEventListener("mouseover", function() {
-                input.style.border = "1px solid #ccc";
-                input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
-            });
-            card.addEventListener("mouseout", function() {
-                input.style.border = "1px solid transparent";
-                input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
-            });
-            card.addEventListener("click", function() {
-                input.focus();
-                input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
-            });
-    
-            input.addEventListener("blur", function() {
-                if (this.value !== "") {
-                    const ingredientId = parseInt(this.closest("[id^='ingredient-']").id.replace("ingredient-", ""), 10);
-                    const ingredient = originalIngredients.find(ing => ing.ordernb === ingredientId);
-                    if (ingredient) {
-                        const newPortionValue = (parseFloat(this.value) / ingredient.quantite) * 6;
-                        document.getElementById("portion-input").value = Number.isInteger(newPortionValue) ? newPortionValue : newPortionValue.toFixed(2);
-                        updateIngredients();
-                        adjustPortionInputStyle(); // Ajuster le style après la mise à jour
-                    }
-                }
-            });
-    
-            input.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
-                    this.blur();
-                }
-            });
-    
-            // Ajustement de la largeur du champ input en fonction du texte
-            input.addEventListener("input", function() {
-                adjustInputWidth(this);
-            });
-            // Ajustement initial
-            adjustInputWidth(input);
-        });
-    
-        // Gestion des inputs dans le container 'preparation-instruction'
         document.querySelectorAll(".preparation-instruction .highlight-quantity input").forEach(input => {
             adjustInputWidth(input);
             input.style.backgroundColor = "transparent";
@@ -985,12 +1012,8 @@ let newHtmlContent = `
                 adjustInputWidth(this);
             });
         });
-
-
-
-
-        // Function reset nb. portion à l'initiaa
-
+    
+        // Function reset nb. portion à l'initiale
         function resetPortion() {
             const input = document.getElementById("portion-input");
             const initialValue = input.getAttribute("value"); // Récupérer la valeur initiale depuis l'attribut 'value'
@@ -998,13 +1021,6 @@ let newHtmlContent = `
             adjustPortionInputStyle(); // Ajuster le style de l'input après la mise à jour
             updateIngredients(); // Mettre à jour les ingrédients
         }
-
-
-
-
-
-
-
     </script>
     
     
