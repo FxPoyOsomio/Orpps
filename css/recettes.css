@@ -335,11 +335,39 @@ ul {
     vertical-align: middle; /* Aligne verticalement au centre */
 }
 
+/* Réinitialisation des styles pour tous les inputs */
+input {
+    -webkit-appearance: none; /* Supprime les styles par défaut sur Safari et Chrome */
+    -moz-appearance: none;    /* Supprime les styles par défaut sur Firefox */
+    appearance: none;         /* Supprime les styles par défaut sur les navigateurs modernes */
+    padding: 0;               /* Supprime le padding */
+    margin: 0;                /* Supprime la marge */
+    border: none;             /* Supprime la bordure par défaut */
+    background: none;         /* Supprime le fond par défaut */
+    font: inherit;            /* Hérite des propriétés de police du parent */
+}
+
 /* Styles spécifiques pour les inputs de type texte */
 input[type="text"] {
-    -webkit-appearance: textfield; /* Safari et Chrome */
-    -moz-appearance: textfield;    /* Firefox */
-    appearance: textfield;         /* Navigateurs modernes */
+    -webkit-appearance: textfield; /* Active le style textfield pour Safari et Chrome */
+    -moz-appearance: textfield;    /* Active le style textfield pour Firefox */
+    appearance: textfield;         /* Active le style textfield pour les navigateurs modernes */
+}
+
+/* Masquer les flèches pour les inputs de type number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Ajoutez des styles personnalisés si nécessaire, par exemple une hauteur, une largeur, une couleur de bordure, etc. */
+input {
+    height: auto;            /* Exemple de hauteur */
+    width: auto;             /* Exemple de largeur */
+    border: 1px solid #ccc;  /* Exemple de bordure */
+    border-radius: 4px;      /* Exemple d'arrondi des coins */
+    padding: 0;            /* Exemple de padding pour un meilleur rendu */
 }
 
 
@@ -360,24 +388,8 @@ input[type="text"] {
     fill:#CB6863;
 }
 
-/* Masquer les flèches pour les inputs de type number */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-    padding: 0;
-}
 
-/* Styles généraux pour tous les inputs */
-input {
-    -webkit-appearance: none; /* Safari et Chrome */
-    -moz-appearance: none;    /* Firefox */
-    appearance: none;         /* Navigateurs modernes */
-    padding: 0;
-    margin: 0;
-    border: none;             /* Supprime la bordure par défaut */
-    background: none;         /* Supprime le fond par défaut */
-}
+
 
 
 /* Champ d'entrée */
