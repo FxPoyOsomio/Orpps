@@ -335,12 +335,11 @@ ul {
     vertical-align: middle; /* Aligne verticalement au centre */
 }
 
+/* Styles spécifiques pour les inputs de type texte */
 input[type="text"] {
-    -moz-appearance: textfield;    /* Firefox */
     -webkit-appearance: textfield; /* Safari et Chrome */
+    -moz-appearance: textfield;    /* Firefox */
     appearance: textfield;         /* Navigateurs modernes */
-    padding: 0;
-    margin: 0;
 }
 
 
@@ -361,21 +360,23 @@ input[type="text"] {
     fill:#CB6863;
 }
 
-/* Masquer les flèches pour les inputs */
+/* Masquer les flèches pour les inputs de type number */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
     padding: 0;
-    margin: 0;
 }
 
+/* Styles généraux pour tous les inputs */
 input {
-    -webkit-appearance: none; /* Chrome, Safari */
-    -moz-appearance: textfield; /* Firefox */
-    appearance: none; /* Pour tous les navigateurs */
+    -webkit-appearance: none; /* Safari et Chrome */
+    -moz-appearance: none;    /* Firefox */
+    appearance: none;         /* Navigateurs modernes */
     padding: 0;
     margin: 0;
+    border: none;             /* Supprime la bordure par défaut */
+    background: none;         /* Supprime le fond par défaut */
 }
 
 
