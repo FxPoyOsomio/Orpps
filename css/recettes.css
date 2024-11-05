@@ -6,6 +6,14 @@ h4 { font-weight: 400; font-size: 16px;}
 h5 { color: #CB6863; font-weight: 700; font-size: 16px; }
 p { font-weight: 200; font-size: 16px;} */
 
+
+.container-bread-crumbs {
+    max-width: var(--page-max-width);
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    margin-bottom: 20px;
+}
 .page-container {
     max-width: var(--page-max-width);
     width: 100%;
@@ -30,26 +38,30 @@ p { font-weight: 200; font-size: 16px;} */
 .container__info-recette{
     width: 100%;
     height: 100%;
-    margin: auto;
+    margin: auto 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 .info-recette {
     margin: auto;
 }
 .bread-crumbs {
-    padding:12px 0 0 35px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: 20px;
+    height: auto;
+    margin: 15px;
+
 }
 .bread-crumbs h6 {
     color: #a3a3a3;
 }
 .bread-crumbs__link {
     cursor: pointer;
+    text-decoration: none;
 }
+
 .bread-crumbs__link:hover h6 {
     color: #CB6863;
     text-decoration: underline;
@@ -57,7 +69,7 @@ p { font-weight: 200; font-size: 16px;} */
 .titre-recette {
     text-align: center; /* Centre le texte */
     font-weight: bold; /* Rend le texte en gras */
-    padding: 25px 15px 15px 15px;
+    padding: 25px 30px 15px 30px;
     max-width: 100%;
     margin: 0;
     line-height: 1.4cap;
@@ -70,8 +82,7 @@ p { font-weight: 200; font-size: 16px;} */
     row-gap: 10px;
     column-gap: 20px;
     max-width: 100% ;
-    margin: auto;
-    padding: 15px 0 15px 0;
+    margin: 15px;
     justify-content: center;
 }
 .top-info {
@@ -97,7 +108,7 @@ p { font-weight: 200; font-size: 16px;} */
     flex-wrap: wrap;
     row-gap: 15px;
     max-width: 100%;
-    margin: 15px auto;
+    margin: 15px;
     justify-content: center;
 }
 .secondary-buttons {
@@ -163,14 +174,20 @@ p2 {
 
 .ingredients {
     width: 100%;
-    padding: 35px 0 0 0;
+    margin: 50px 0;
     max-width: var(--page-max-width); 
 }
-
+.section-ingrédient__titre , .section-preparation__titre{
+    background-color: #FFFFFF;
+    border-radius: 25px;
+    padding: 22px 15px;
+    margin: 15px 15px;
+    
+}
 
 .preparations {
     width: 100%;
-    padding: 35px 0 0 0;
+    margin: 50px 0;
     max-width: var(--page-max-width);
 }
 
@@ -178,17 +195,30 @@ p2 {
 
 .section-ingredient {
     display: grid;
-    gap: 15px;
+}
+
+.section-preparation {
+    display: grid;
 }
 
 
 
-
-
+.container-portion,
+.container-timing {
+    margin: 0; /* Pour s'assurer que les marges ne perturbent pas l'alignement */
+    padding: 0; /* Optionnellement, ajustez les padding si besoin */
+    box-sizing: border-box; /* Pour inclure le padding et les bordures dans la hauteur */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.section-ingredient-container {
+    display: grid;
+}
 .titre-section-container {
     display: flex;
     align-items: center; /* Centre verticalement les éléments */
-    padding: 0 15px 0 15px;
+    margin-bottom: 40px;
 }
 .ingredients .titre-section-container svg {
     cursor: pointer;
@@ -197,6 +227,10 @@ p2 {
 .titre-section-image {
     height: 50px; /* Hauteur de l'image (svg ici) */
     width: 50px; /* Largeur de l'image (svg ici) */
+    
+}
+.section-ingredient .titre-section-image:hover {
+    animation: bounce 1.5s ease;
 }
 
 .titre-section-titre_border {
@@ -218,18 +252,52 @@ p2 {
 
 
 
+.preparation-ingrédients ,.preparation-instruction {
+    display: grid;
+    border-radius: 25px;
+    padding: 22px 15px;
+    margin: 15px;
+}
+.preparation-ingrédients {
+    background-color: #f5f5f5;
+
+}
 .preparation-instruction {
-    padding: 0 15px 35px 15px;
+    background-color: #FBFBFB;
+
 }
 
-.preparation-ingrédients {
-    padding: 0 15px 35px 15px;
+
+
+.preparation-ingrédients p,
+.preparation-ingrédients h1,
+.preparation-ingrédients h2,
+.preparation-ingrédients h3,
+.preparation-ingrédients h4,
+.preparation-ingrédients span,
+.preparation-ingrédients li,
+.preparation-ingrédients input,
+.preparation-ingrédients a {
+    color: #000; /* Remplacez #ff0000 par la couleur désirée */
 }
+.preparation-ingrédients h3, .preparation-instruction h3 {
+    margin: 40px 15px 20px 15px;
+}
+
+
 
 
 .etape {
-    padding: 0 20px 0 20px;
+    margin: 20px 15px;
 }
+.etape h4 {
+    margin-bottom: 15px;
+}
+.etape p {
+    margin: 0;
+    line-height: 1.57em;
+}
+
 ul {
     list-style-type: disc;
     padding-left: 20px;
@@ -425,10 +493,13 @@ html {
     display: block; 
 }
 
-.highlight-quantity {
-    font-weight: 400;
+.highlight-quantity span , .highlight-quantity input , .recette_ingredients-details span  {
+    font-weight: 300;
     font-style: normal; 
+    letter-spacing: 0.03em;
 }
+
+
 .highlight-quantity span {
     line-height: none;
 }
@@ -451,6 +522,7 @@ html {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
+    margin: 20px 0px;
 }
 
 .card-ingredient {
@@ -513,12 +585,12 @@ html {
 .container__timings-recette {
     display: grid;
     align-items: center;
-    /* border: 1px solid rgba(63, 55, 53, 0.23); */
-    background-color: #F9F9F9;
+    border: 2px dotted rgba(63, 55, 53, 0.23);
+    /* background-color: #FAFAFA; */
     border-radius: 15px;
     overflow: hidden;
     margin: 0 auto;
-    margin-top: 20px;
+
 }
 
 
@@ -577,11 +649,17 @@ html {
 
 
 
-.ingredient-preparation {
-    font-weight: 400;      
+.ingredient-preparation span , .ingredient-preparation input {
+    font-weight: 300 ;     
+    font-style: italic;
+    color: #1B1B1B; 
+    transition: transform 1.2s ease;
 }
-
-
+.etape:hover .ingredient-preparation span , .etape:hover .ingredient-preparation input {
+    font-weight: 300 ;     
+    font-style: normal;
+    color: #CB6863;
+}
 
 
 
@@ -591,6 +669,14 @@ html {
 /* position bouton portion responsive */
 
 @media (max-width: 500px) {
+
+    .bread-crumbs {
+        justify-content: center;
+        align-items: center;
+    }
+    .container__info-recette {
+        margin: unset;
+    }
     .container__timings-recette {
         grid-template-columns: 1fr;
         width: 300px ;
@@ -600,7 +686,7 @@ html {
         width: 250px;
     }
     .total-timing {
-        border-top: 1px solid rgba(63, 55, 53, 0.23);
+        border-top: 2px dotted rgba(63, 55, 53, 0.23);
         display: none;
     }
     .sub-timing .total-timing {
@@ -610,6 +696,13 @@ html {
 
 
 @media (min-width: 501px) and (max-width: 670px) {
+    .bread-crumbs {
+        justify-content: center;
+        align-items: center;
+    }
+    .container__info-recette {
+        margin: unset;
+    }
     .container__timings-recette {
         grid-template-columns: 1fr;
         width:450px ;
@@ -618,7 +711,7 @@ html {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
     .total-timing {
-        border-top: 1px solid rgba(63, 55, 53, 0.23);
+        border-top: 2px dotted rgba(63, 55, 53, 0.23);
     }
     .sub-timing .total-timing {
         display: none;
@@ -632,6 +725,13 @@ html {
         --page-max-width: 100%;  
         --page-margin: 20px auto;
     } */
+    .bread-crumbs {
+        justify-content: center;
+        align-items: center;
+    }
+    .container__info-recette {
+        margin: unset;
+    }
     .container__img-recette__two-column-page {
         display: none;
      }
@@ -652,6 +752,9 @@ html {
     /* position bouton portion responsive */
     .section-ingredient {
         grid-template-columns: 1fr; /* 1 colonne sur les écrans plus petits */
+    }
+    .toggleViewButtonContainer {
+        
     }
     .portion-control {
         margin-left: auto;
@@ -679,6 +782,13 @@ html {
         --page-max-width: 100%;  
         --page-margin: 20px auto;
     } */
+    .container__info-recette {
+        margin: unset;
+    }
+    .bread-crumbs {
+        justify-content: center;
+        align-items: center;
+    }
     .container__img-recette__two-column-page {
         display: none;
      }
@@ -686,7 +796,7 @@ html {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 20px 0;
+        margin: 50px 15px;
         height: auto;
      }
      .img-recette {
@@ -697,6 +807,10 @@ html {
 
     /* position bouton portion responsive */
     .section-ingredient {
+        display: grid;
+    }
+    .section-ingrédient__titre {
+        display: grid;
         grid-template-columns: 1fr 297px; 
     }
     .portion-control {
@@ -724,7 +838,7 @@ html {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     }
     .total-timing {
-        border-left: 1px solid rgba(63, 55, 53, 0.23);
+        border-left: 2px dotted rgba(63, 55, 53, 0.23);
     }
     .sub-timing .total-timing {
         display: none;
@@ -738,24 +852,23 @@ html {
         --page-margin: 20px auto;
     } */
     .page-container {
-        grid-template-columns: 300px 1fr;
+        grid-template-columns: 330px 1fr;
         padding: 0 50px 0 50px;
         margin: auto;
      }
      .container__img-recette__two-column-page {
-        background-color: #F9F9F9;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 50px 0;
+        margin: 50px 15px 50px 15px;
         height: auto;
      }
      .container__img-recette__one-column-page {
         display: none;
      }
      .img-recette {
-        width: 90%;
-        aspect-ratio: 5 / 4;
+        width: 100%;
+        height: 100%;
         border-radius: 8px;
      }
      .container__info-recette {
@@ -769,6 +882,10 @@ html {
     .section-ingredient {
         grid-template-columns: 1fr; 
     }
+    .titre-section-container {
+        display: flex;
+        flex-direction: row;
+    }
     .portion-control {
         margin-left: auto;
         margin-right: auto;
@@ -776,12 +893,7 @@ html {
     .portion-bring-conteneur {
         margin-right: unset;
     }
-    .container__img-recette {
-        background-color: #F9F9F9;
-     }
-     .ingredients {
-        background-color : #F9F9F9 ;
-     }
+    
 
 
 
@@ -803,7 +915,7 @@ html {
         width: 250px;
     }
     .total-timing {
-        border-top: 1px solid rgba(63, 55, 53, 0.23);
+        border-top: 2px dotted rgba(63, 55, 53, 0.23);
         display: none;
     }
     .sub-timing .total-timing {
@@ -817,30 +929,27 @@ html {
         --page-max-width: 980px; 
         --page-margin: 20px auto;
     } */
-
+    
     .page-container {
         grid-template-columns: 380px 1fr;
      }
 
      .container__img-recette__two-column-page {
-        background-color: #F9F9F9;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 50px 0;
+        margin: 50px 15px 50px 15px;
         height: auto;
      }
      .container__img-recette__one-column-page {
         display: none;
      }
      .img-recette {
-        width: 90%;
-        aspect-ratio: 5 / 4;
+        width: 100%;
+        height: 100%;
         border-radius: 8px;
      }
-     .ingredients {
-        background-color : #F9F9F9 ;
-     }
+    
 
      
 
@@ -874,7 +983,7 @@ html {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
     .total-timing {
-        border-top: 1px solid rgba(63, 55, 53, 0.23);
+        border-top: 2px dotted rgba(63, 55, 53, 0.23);
     }
     .sub-timing .total-timing {
         display: none;
@@ -893,24 +1002,21 @@ html {
         grid-template-columns: 500px 1fr;      
      }
      .container__img-recette__two-column-page {
-        background-color: #F9F9F9;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 50px 0;
+        margin: 50px 15px 50px 15px;
         height: auto;
      }
      .container__img-recette__one-column-page {
         display: none;
      }
      .img-recette {
-        width: 90%;
-        aspect-ratio: 5 / 4;
+        width: 100%;
+        height: 100%;
         border-radius: 8px;
      }
-     .ingredients {
-        background-color : #F9F9F9 ;
-     }
+
 
 
      /* position bouton portion responsive */
@@ -943,7 +1049,7 @@ html {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     }
     .total-timing {
-        border-left: 1px solid rgba(63, 55, 53, 0.23);
+        border-left: 2px dotted rgba(63, 55, 53, 0.23);
     }
     .sub-timing .total-timing {
         display: none;

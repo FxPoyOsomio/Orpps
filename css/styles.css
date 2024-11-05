@@ -169,6 +169,7 @@
 @font-face {
     font-family: 'Source Sans Pro';
     font-weight: 400; /* Regular */
+    font-style: italic;
     src: url('/Orpps/assets/fonts/SourceSansPro-Italic.ttf') format('truetype');
 }
 
@@ -241,13 +242,16 @@ h2 {
      color: #1B1B1B;  
 }
 h3 { 
-    font-weight: 400; 
-    font-size: 1.6em;
+    font-weight: 500; 
+    font-size: 1.4em;
+    letter-spacing: 0.05em;
     font-family: 'Montserrat', sans-serif;
     color: #1B1B1B;  
 }
 h4 { font-weight: 400;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    letter-spacing: 0.1em;
+    font-style: italic;
     font-family: 'Source Sans Pro', sans-serif;
     color: #1B1B1B; 
 }
@@ -275,7 +279,7 @@ h7 {
 
 p { 
     font-size: 1.2em; 
-    font-weight: 200;
+    font-weight: 300;
     font-family: 'Source Sans Pro', sans-serif;
     color: #1B1B1B; 
 }
