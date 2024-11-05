@@ -494,12 +494,11 @@ html {
 }
 
 .highlight-quantity span , .highlight-quantity input , .recette_ingredients-details span  {
-    font-weight: 400;
-    font-style: normal; 
+    font-weight: 300;
     letter-spacing: 0.03em;
 }
-.highlight-quantity input {
-    font-weight: 500;
+.recette_ingredients-qtunit .highlight-quantity input {
+    font-weight: 400 !important;
 }
 
 .highlight-quantity span {
