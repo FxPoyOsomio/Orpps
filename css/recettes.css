@@ -494,11 +494,13 @@ html {
 }
 
 .highlight-quantity span , .highlight-quantity input , .recette_ingredients-details span  {
-    font-weight: 300;
+    font-weight: 400;
     font-style: normal; 
     letter-spacing: 0.03em;
 }
-
+.highlight-quantity input {
+    font-weight: 500;
+}
 
 .highlight-quantity span {
     line-height: none;
