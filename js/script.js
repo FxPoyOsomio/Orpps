@@ -358,7 +358,7 @@ class SecondaryButton extends HTMLElement {
                 if (redirectUrl) {
                     window.location.href = redirectUrl; // Rediriger vers l'URL
                 }
-            }, 500);
+            }, 300);
         });
     }
 
