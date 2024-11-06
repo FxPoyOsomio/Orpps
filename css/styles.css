@@ -597,6 +597,9 @@ p2 {
     transform: translateY(0); /* Descend à sa position normale */
     visibility: visible; /* Permet d'afficher l'élément */
 }
+.header.modal-burger-open {
+    box-shadow: 0px 40px 80px rgba(255, 255, 255, 0.1);
+}
 
 /* Contenu interne de l'overlay */
 .overlay-content {
@@ -613,6 +616,7 @@ p2 {
 .header__nav {
     padding: 50px 15px 100px 15px ; /* Espacement interne */
     background-color: rgba(255, 255, 255, 0.8); /* Fond blanc tranparent*/
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(25px); /* Applique un flou à l'arrière-plan */
     align-items: center;
     justify-content: center;
