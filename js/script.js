@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header fetch...");
-    fetch("/Orpps/components/header.html")
+    fetch("/components/header.html")
         .then(response => {
             console.log("Header fetch response:", response);
             return response.text();
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => console.error("Error loading header:", error));
 
     // Charger le footer
-    fetch("/Orpps/components/footer.html")
+    fetch("/components/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("footer").innerHTML = data;
