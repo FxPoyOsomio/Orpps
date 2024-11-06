@@ -1,0 +1,9 @@
+{
+    "name": "orpps",
+    "version": "1.0.0",
+    "scripts": {
+      "build": "echo 'This is a static site' && exit 0"
+    },
+    "dependencies": {}
+  }
+  
