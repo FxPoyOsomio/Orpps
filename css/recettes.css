@@ -69,7 +69,7 @@ p { font-weight: 200; font-size: 16px;} */
 .titre-recette {
     text-align: center; /* Centre le texte */
     font-weight: bold; /* Rend le texte en gras */
-    padding: 25px 30px 15px 30px;
+    padding: 25px 30px 35px 30px;
     max-width: 100%;
     margin: 0;
     line-height: 1.4cap;
@@ -82,7 +82,7 @@ p { font-weight: 200; font-size: 16px;} */
     row-gap: 10px;
     column-gap: 20px;
     max-width: 100% ;
-    margin: 15px;
+    margin: 20px 15px;
     justify-content: center;
 }
 .top-info {
@@ -108,7 +108,7 @@ p { font-weight: 200; font-size: 16px;} */
     flex-wrap: wrap;
     row-gap: 15px;
     max-width: 100%;
-    margin: 15px;
+    margin: 20px 15px;
     justify-content: center;
 }
 .secondary-buttons {
@@ -168,7 +168,7 @@ p2 {
     justify-content: center;
     height: auto;
     box-sizing: border-box;
-    padding: 15px 35px;
+    padding: 20px 35px;
 }
 
 
@@ -180,7 +180,7 @@ p2 {
 .section-ingrédient__titre , .section-preparation__titre{
     background-color: #FFFFFF;
     border-radius: 25px;
-    padding: 22px 15px;
+    padding: 22px 15px 5px 15px;
     margin: 15px 15px;
     
 }
@@ -218,7 +218,7 @@ p2 {
 .titre-section-container {
     display: flex;
     align-items: center; /* Centre verticalement les éléments */
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 .ingredients .titre-section-container svg {
     cursor: pointer;
@@ -243,6 +243,7 @@ p2 {
     margin: 0 18px; /* Marge à gauche et à droite du texte */
     flex-grow: 1; /* Permet au texte de prendre l'espace restant */
 }
+
 
 .titre-section-border {
     border-bottom: 2px solid rgba(63, 55, 53, .23); /* Bordure en bas */
@@ -653,7 +654,7 @@ html {
 .ingredient-preparation span , .ingredient-preparation input {
     font-weight: 300 ;     
     font-style: italic;
-    color: #1B1B1B; 
+    color: #CB6863; 
     transition: transform 1.2s ease;
 }
 .etape:hover .ingredient-preparation span , .etape:hover .ingredient-preparation input {
@@ -813,6 +814,7 @@ html {
     .section-ingrédient__titre {
         display: grid;
         grid-template-columns: 1fr 297px; 
+        margin-bottom: 5px;
     }
     .portion-control {
         margin-left: 0;
@@ -886,7 +888,7 @@ html {
     .titre-section-container {
         display: flex;
         flex-direction: row;
-    }
+        margin-bottom: 20px;    }
     .portion-control {
         margin-left: auto;
         margin-right: auto;
