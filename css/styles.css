@@ -656,11 +656,16 @@ p2 {
 
 /* Afficher le menu burger lorsque la largeur de la fenêtre est inférieure à 768px */
 @media (max-width: 768px) {
-    .header__burger {
-        display: flex; /* Afficher le burger */
+
+    .header__nav {
+        position: relative; /* Assurez-vous que la navigation est en dessous du header */
+        height: calc(100vh - 80px); /* Ajustez 80px à la hauteur réelle de votre header */
+        padding: 0 15px;
     }
 
-   
+    .header__burger {
+        display: flex; /* Afficher le burger */
+    }   
 
 
 } 
