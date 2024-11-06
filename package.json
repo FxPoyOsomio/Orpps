@@ -1,9 +1,14 @@
 {
-    "name": "orpps",
-    "version": "1.0.0",
-    "scripts": {
-      "build": "echo 'This is a static site' && exit 0"
-    },
-    "dependencies": {}
+  "name": "orpps",
+  "version": "1.0.0",
+  "description": "Projet Netlify pour Orpps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.0.0"  
   }
-  
+}
