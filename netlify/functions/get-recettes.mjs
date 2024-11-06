@@ -1,9 +1,16 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
   const apiKey = process.env.AIRTABLE_API_TOKEN;
   const baseId = process.env.AIRTABLE_BASE_ID;
   const recettesTableId = process.env.AIRTABLE__RECETTES__TABLE_ID;
+
+  if (!apiKey || !baseId || !recettesTableId) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Missing environment variables' })
+    };
+  }
 
   const url = `https://api.airtable.com/v0/${baseId}/${recettesTableId}`;
 
@@ -15,7 +22,7 @@ exports.handler = async (event, context) => {
     });
 
     if (!response.ok) {
-      return { statusCode: response.status, body: 'Error fetching data' };
+      return { statusCode: response.status, body: 'Error fetching data from Airtable' };
     }
 
     const data = await response.json();
@@ -24,6 +31,6 @@ exports.handler = async (event, context) => {
       body: JSON.stringify(data.records)
     };
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error' }) };
+    return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error', details: error.message }) };
   }
-};
+}
