@@ -552,6 +552,7 @@ p2 {
     row-gap: 20px;
     align-items: center;
     justify-content: center;
+    margin-bottom: 80px;
 }
 
 
@@ -614,7 +615,7 @@ p2 {
 
 /* --- Header navigation styles --- */
 .header__nav {
-    padding: 50px 15px 100px 15px ; /* Espacement interne */
+    padding: 0 15px 0 15px ; /* Espacement interne */
     background-color: rgba(255, 255, 255, 0.8); /* Fond blanc tranparent*/
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(25px); /* Applique un flou à l'arrière-plan */
@@ -663,7 +664,7 @@ p2 {
 
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
-        height: calc(100vh - 80px); /* Ajustez 80px à la hauteur réelle de votre header */
+        height: calc(100vh - 20px); /* Ajustez 80px à la hauteur réelle de votre header */
         padding: 0 15px;
     }
 
