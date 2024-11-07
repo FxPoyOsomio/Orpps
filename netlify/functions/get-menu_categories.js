@@ -28,8 +28,15 @@ exports.handler = async (event, context) => {
       return { statusCode: response.status, body: `Error fetching data from Airtable: ${response.statusText}` };
     }
 
-    const data = await response.json();
+    let data = await response.json();
     console.log("Données reçues de Airtable (Catégories) :", JSON.stringify(data, null, 2));
+
+    // Trier les catégories par le champ 'Menu (ordre d'affichage)'
+    data.records.sort((a, b) => {
+      const ordreA = a.fields['Menu (ordre d\'affichage)'] || 0;
+      const ordreB = b.fields['Menu (ordre d\'affichage)'] || 0;
+      return ordreA - ordreB;
+    });
 
     return {
       statusCode: 200,

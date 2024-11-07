@@ -552,7 +552,7 @@ p2 {
     row-gap: 20px;
     align-items: center;
     justify-content: center;
-    margin-bottom: 80px;
+    margin: 25px ;
 }
 
 
@@ -670,7 +670,13 @@ p2 {
 
     .header__burger {
         display: flex; /* Afficher le burger */
-    }   
+    }  
+    #headerSearchBar__Small_Screen {
+        display: contents;
+    }
+    #headerSearchBar__Large_Screen {
+        display: none;
+    } 
 
 
 } 
@@ -680,6 +686,11 @@ p2 {
     .header__burger {
         display: flex; /* Masquer le burger menu */
     }
-
+    #headerSearchBar__Small_Screen {
+        display: none;
+    }
+    #headerSearchBar__Large_Screen {
+        display: contents;
+    }
 
 }

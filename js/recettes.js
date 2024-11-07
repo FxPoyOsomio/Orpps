@@ -1,25 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const selectedCategory = urlParams.get('categorie');
+  const searchTerms = urlParams.get('searchTerms');
+
+  // Modifier le titre H1 si une catégorie est sélectionnée
+  const displayCategoryTitle = document.querySelector('.display_categorie__titre');
+  if (selectedCategory && displayCategoryTitle) {
+    displayCategoryTitle.textContent = selectedCategory; // Mettre à jour le texte de l'élément H1
+  }
+
   if (selectedCategory) {
     loadRecipes([selectedCategory]); // Charger les recettes en fonction de la catégorie sélectionnée
+  } else if (searchTerms) {
+    loadRecipes(null, searchTerms.split(' ')); // Charger les recettes en fonction des termes de recherche
   } else {
     loadRecipes(); // Charger toutes les recettes par défaut
   }
 });
 
-// Modifier la fonction `loadRecipes` pour gérer les catégories sélectionnées ou non
-async function loadRecipes(categoryNames = []) {
+// Modifier la fonction `loadRecipes` pour gérer les catégories sélectionnées ou les termes de recherche
+async function loadRecipes(categoryNames = [], searchTerms = []) {
   try {
     console.log("Récupération des recettes...");
     let url = '/.netlify/functions/get-recettes';
 
-    if (categoryNames.length > 0) {
+    if (categoryNames && categoryNames.length > 0) {
       const filterByCategory = categoryNames
-        .map(name => `SEARCH('${name}', ARRAYJOIN({CATÉGORIE MENUS [base]}, ','))`)
+        .map(name => `SEARCH('${name}', {CATÉGORIE MENUS [base]-Name})`)
         .join(', ');
       const filterFormula = `OR(${filterByCategory})`;
       url += `?filterByCategory=${encodeURIComponent(filterFormula)}`;
+    }
+
+    if (searchTerms && searchTerms.length > 0) {
+      const searchTermsParam = searchTerms.join(' ');
+      url += (url.includes('?') ? '&' : '?') + `searchTerms=${encodeURIComponent(searchTermsParam)}`;
     }
 
     console.log("URL utilisée pour la requête Airtable :", url); // Log de l'URL utilisée
@@ -57,9 +72,12 @@ async function loadRecipes(categoryNames = []) {
       const recipeElement = document.createElement('div');
       recipeElement.className = 'recette-item';
       recipeElement.innerHTML = `
-        <h3 class="recette_titre">${title}</h3>
-        <p class="recette-description">${description}</p>
-        ${imageUrl ? `<img class="recette-image" src="${imageUrl}" alt="${title}">` : ''}
+        <div class="recette-item__container_img">
+          <p class="recette-description">"${description}"</p> 
+          <div class="recette-image_overlay"></div>
+          ${imageUrl ? `<img class="recette-image" src="${imageUrl}" alt="${title}">` : ''}          
+        </div>
+        <h3 class="recette_titre">${title}</h3> 
       `;
 
       recipesContainer.appendChild(recipeElement);

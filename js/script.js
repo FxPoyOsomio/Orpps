@@ -12,9 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Charger les catégories dans le header après avoir inséré le HTML
             loadHeaderCategories().then(() => {
                 // Initialiser les éléments du header après le chargement des catégories
-                initializeHeader();
+                initializeHeader(); // Assure que les écouteurs d'événements du header sont bien attachés
             });
-
         })
         .catch(error => console.error("Error loading header:", error));
 
@@ -25,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("footer").innerHTML = data;
         });
 });
+
 
 // Fonction pour charger les catégories dans le header
 async function loadHeaderCategories() {
@@ -46,22 +46,19 @@ async function loadHeaderCategories() {
 
         headerNav.innerHTML = '';
 
-        // Itérer sur les catégories et les ajouter au HTML du header
         data.forEach(record => {
             const category = record.fields;
-            const categoryId = record.id; // ID de la catégorie
+            const categoryId = record.id;
             const categoryName = category['Nom Menu'] || 'Sans nom';
 
-            // Créer l'élément HTML pour chaque catégorie
             const categoryLink = document.createElement('a');
             categoryLink.href = `/recettes?categorie=${encodeURIComponent(categoryName)}`;
             categoryLink.className = 'header__nav__link';
             categoryLink.textContent = categoryName;
 
-            // Ajouter un événement pour changer la classe active du lien
             categoryLink.addEventListener('click', (event) => {
                 event.preventDefault();
-                window.location.href = categoryLink.href; // Rediriger vers la page des recettes avec le filtre
+                window.location.href = categoryLink.href;
             });
 
             headerNav.appendChild(categoryLink);
@@ -73,53 +70,189 @@ async function loadHeaderCategories() {
 
 // Fonction pour initialiser les éléments du header après leur chargement
 function initializeHeader() {
-    // Accéder aux éléments du header
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
     const header = document.querySelector(".header");
+    const headerContainer = document.querySelector(".header__container");
+    const searchBarContainerLarge = document.getElementById("headerSearchBar__Large_Screen");
+    const searchBarContainerSmall = document.getElementById("headerSearchBar__Small_Screen");
     console.log("burgerMenu:", burgerMenu);
     console.log("overlayMenu:", overlayMenu);
 
     if (burgerMenu && overlayMenu) {
-        // Gestion du clic sur le menu burger
         burgerMenu.addEventListener("click", () => {
-            header.classList.toggle("modal-burger-open"); // Modifie le header pour ajouter la classe d'animation
-            overlayMenu.classList.toggle("active"); // Affiche ou cache l'overlay
-            burgerMenu.classList.toggle("active"); // Ajoute la classe "active" au menu burger
-            console.log("Burger menu clicked, overlay active:", overlayMenu.classList.contains("active"));
+            header.classList.toggle("modal-burger-open");
+            overlayMenu.classList.toggle("active");
+            burgerMenu.classList.toggle("active");
+
+            handleSearchBarToggle(searchBarContainerLarge);
+            handleSearchBarToggle(searchBarContainerSmall);
+
+            animateCategoryButtons(overlayMenu.classList.contains("active"));
         });
 
-        // Gestion du clic en dehors du menu pour le fermer
-        overlayMenu.addEventListener("click", (event) => {
-            if (event.target === overlayMenu) {
-                header.classList.remove("modal-burger-open");
-                overlayMenu.classList.remove("active");
-                burgerMenu.classList.remove("active"); // Retire la classe "active" du menu burger
-                console.log("Overlay clicked, menu closed");
+        document.addEventListener("click", (event) => {
+            if (shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer)) {
+                closeMenu(header, overlayMenu, burgerMenu);
+                handleSearchBarReset(searchBarContainerLarge);
+                handleSearchBarReset(searchBarContainerSmall);
+                animateCategoryButtons(false);
             }
         });
-    } else {
-        console.error("Elements not found:", { burgerMenu, overlayMenu });
     }
 
-    // Gérer le changement de couleur des liens dans le header et le menu mobile
     const navLinks = document.querySelectorAll('.header__nav a');
-
     navLinks.forEach(link => {
         link.addEventListener('click', function () {
-            // Supprimer la classe active de tous les liens
             navLinks.forEach(navLink => navLink.classList.remove('active'));
-
-            // Ajouter la classe active au lien cliqué
             this.classList.add('active');
-
-            // Retirer la classe active après 1 seconde
             setTimeout(() => {
                 this.classList.remove('active');
             }, 1000);
         });
     });
 }
+
+function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer) {
+    return !overlayMenu.contains(event.target) &&
+           !burgerMenu.contains(event.target) &&
+           !header.contains(event.target) &&
+           !headerContainer.contains(event.target);
+}
+
+function closeMenu(header, overlayMenu, burgerMenu) {
+    header.classList.remove("modal-burger-open");
+    overlayMenu.classList.remove("active");
+    burgerMenu.classList.remove("active");
+}
+
+function handleSearchBarToggle(searchBarContainer) {
+    if (searchBarContainer) {
+        if (!searchBarContainer.querySelector(".header__search-content")) {
+            const searchContent = createSearchContent();
+            searchBarContainer.appendChild(searchContent);
+            setTimeout(() => animateSearchBar(searchContent), 100);
+        } else {
+            resetSearchBar(searchBarContainer);
+        }
+    }
+}
+
+function handleSearchBarReset(searchBarContainer) {
+    if (searchBarContainer) {
+        const searchContent = searchBarContainer.querySelector(".header__search-content");
+        if (searchContent) {
+            resetSearchBar(searchBarContainer);
+        }
+    }
+}
+
+function createSearchContent() {
+    const searchContent = document.createElement("div");
+    searchContent.className = "header__search-content";
+    searchContent.style.display = "flex";
+    searchContent.style.alignItems = "center";
+    searchContent.style.border = "1px solid rgba(63, 55, 53, 0.23)";
+    searchContent.style.borderRadius = "50px";
+    searchContent.style.padding = "5px 10px";
+    searchContent.style.width = "50px";
+    searchContent.style.opacity = "0";
+    searchContent.style.transition = "width 0.9s ease, opacity 0.3s ease";
+
+    const searchButton = document.createElement("div");
+    searchButton.className = "search-bar__button";
+    searchButton.id = "SearchBarButton";
+    searchButton.innerHTML = `
+        <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#696969">
+            <path d="M16.6725 16.6412L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#696969" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+    `;
+    searchButton.style.marginRight = "10px";
+    searchButton.style.cursor = "pointer";
+    searchButton.addEventListener("click", SearchRecipe);
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.placeholder = "Recherche";
+    searchInput.style.border = "none";
+    searchInput.style.outline = "none";
+    searchInput.style.flex = "1";
+    searchInput.style.opacity = "0";
+    searchInput.style.transition = "opacity 0.4s ease 0.3s";
+
+    searchContent.appendChild(searchButton);
+    searchContent.appendChild(searchInput);
+
+    return searchContent;
+}
+
+function animateSearchBar(searchContent) {
+    searchContent.style.width = "250px";
+    searchContent.style.opacity = "1";
+    searchContent.querySelector("input").style.opacity = "1";
+}
+
+function resetSearchBar(container) {
+    const searchContent = container.querySelector(".header__search-content");
+    if (searchContent) {
+        searchContent.querySelector("input").style.opacity = "0";
+        searchContent.style.width = "50px";
+        searchContent.style.opacity = "0";
+        setTimeout(() => container.innerHTML = '', 600);
+    }
+}
+
+function animateCategoryButtons(isActive) {
+    const categoryButtonsContainer = document.querySelector('.Menu_categorie');
+    if (categoryButtonsContainer) {
+        const categoryButtons = categoryButtonsContainer.querySelectorAll('secondary-button');
+        categoryButtons.forEach((button, index) => {
+            button.style.opacity = isActive ? "1" : "0";
+            button.style.transition = `opacity 0.6s ease ${index * 0.1}s`;
+        });
+    }
+}
+
+function SearchRecipe() {
+    const searchBarInput = document.querySelector(".header__search-content input");
+    if (searchBarInput) {
+        console.log("Bouton de recherche cliqué");
+        
+        // Remplacer les virgules par des espaces et diviser par les espaces
+        const inputValue = searchBarInput.value.replace(/,/g, ' ');
+        const searchTerms = inputValue.split(' ').map(term => term.trim()).filter(term => term !== '');
+
+        console.log("Liste des termes de recherche :", searchTerms);
+
+        // Rediriger vers la page recettes avec les termes de recherche dans l'URL
+        if (searchTerms.length > 0) {
+            const searchQuery = encodeURIComponent(searchTerms.join(' '));
+            window.location.href = `/recettes?searchTerms=${searchQuery}`;
+        }
+    } else {
+        console.log("Le champ de recherche n'a pas été trouvé.");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -174,7 +307,7 @@ class PrimaryButton extends HTMLElement {
             textElement.textContent = buttonText;
             textElement.style.fontFamily = "'Montserrat Alternates"; // Police du texte
             textElement.style.fontSize = '1.1em'; // Taille de la police
-            textElement.style.fontWeight = '300'; // Graisse de la police // Utiliser le texte fourni
+            textElement.style.fontWeight = '400'; // Graisse de la police // Utiliser le texte fourni
             button.appendChild(textElement); // Ajouter le texte au bouton
         }
 
@@ -371,7 +504,7 @@ class SecondaryButton extends HTMLElement {
             this.textElement.style.color = '#CB6863'; // Couleur du texte
             this.textElement.style.fontFamily = "'Montserrat Alternates'"; // Police du texte
             this.textElement.style.fontSize = '1.1em'; // Taille de la police
-            this.textElement.style.fontWeight = '300'; // Graisse de la police
+            this.textElement.style.fontWeight = '400'; // Graisse de la police
             this.button.appendChild(this.textElement);
         }
     }

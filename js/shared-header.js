@@ -1,3 +1,4 @@
+// Fonction pour charger les catégories dans le header
 async function loadHeaderCategories() {
     try {
         console.log("Fetching categories for header...");
@@ -25,7 +26,23 @@ async function loadHeaderCategories() {
             // Création de l'élément <secondary-button> pour chaque catégorie
             const categoryButton = document.createElement('secondary-button');
             categoryButton.setAttribute('text', categoryName);
+            categoryButton.setAttribute('style', 'opacity: 0');
             categoryButton.setAttribute('href', `/recettes?categorie=${encodeURIComponent(categoryName)}`);
+
+            // Ajouter l'événement de clic pour gérer la classe active
+            categoryButton.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                // Supprimer la classe active de tous les boutons
+                const allButtons = categoriesContainer.querySelectorAll('secondary-button');
+                allButtons.forEach(button => button.classList.remove('active'));
+
+                // Ajouter la classe active au bouton cliqué
+                categoryButton.classList.add('active');
+
+                // Rediriger vers la page des recettes avec le filtre
+                window.location.href = categoryButton.getAttribute('href');
+            });
 
             categoriesContainer.appendChild(categoryButton);
         });

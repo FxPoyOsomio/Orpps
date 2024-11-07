@@ -1,25 +1,86 @@
 .recettes-list{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 15px;
+
 }
+
 
 .recette-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 15px;
+    cursor: pointer;
 }
 
-.recette_titre {
+.recette-item__container_img {
+    height: 200px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative; /* Pour positionner les éléments absolument */
+}
 
+/* Superposition pour le fond au-dessus de l'image */
+.recette-item__container_img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6); /* Fond semi-transparent */
+    backdrop-filter: blur(25px);
+    opacity: 0; /* Initialement masqué */
+    transition: opacity 1s ease;
+    border-radius: inherit; /* Hérite des coins arrondis du parent */
+    z-index: 1; /* Derrière la description mais au-dessus de l'image */
+}
+
+.recette-item:hover .recette-item__container_img::before {
+    opacity: 1; /* Affiche le fond au survol */
 }
 
 .recette-description {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: inherit;
+    opacity: 0; /* Initialement masqué */
+    transition: opacity 0.5s ease;
+    text-align: center;
+    z-index: 2; /* Au-dessus du fond */
+}
 
+.recette-item:hover .recette-description {
+    opacity: 1; /* Affiche la description au survol */
 }
 
 .recette-image {
-    width: auto;
-    height: 100px;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    box-shadow: 0px 40px 80px rgba(255, 255, 255, 0.1);
 }
+
+.recette-item:hover .recette-image {
+    transform: scale(1.2); /* Zoom de l'image */
+}
+
+
+
+
+
+.recette_titre {
+    /* font-size: 1.2em; */
+}
+
+
