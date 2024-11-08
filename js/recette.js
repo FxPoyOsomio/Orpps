@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Extraire le slug de l'URL
     const pathParts = window.location.pathname.split('/');
-    const lastPart = decodeURIComponent(pathParts[pathParts.length - 1]);
-    const [recordId, ...slugParts] = lastPart.split('-');
-    const slug = slugParts.join('-'); // Rassemblez le slug
+    const slug = decodeURIComponent(pathParts[pathParts.length - 1]);
 
     if (!slug) {
         console.error('Aucun slug trouvé dans l’URL');
@@ -11,10 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // Construire l'URL pour appeler la fonction Netlify avec le slug sans ID
+        // Construire l'URL pour appeler la fonction Netlify avec uniquement le slug
         const url = `/.netlify/functions/get-recettes?slug=${encodeURIComponent(slug)}`;
         const response = await fetch(url);
-        
+
         if (!response.ok) {
             throw new Error('Erreur lors de la récupération des détails de la recette');
         }
@@ -29,20 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!recipe) {
             document.body.innerHTML = '<p>Recette non trouvée</p>';
             return;
-        }
-
-        // Récupérer l'ID de la catégorie depuis 'CATÉGORIE MENUS [base]'
-        const categoryId = recipe['CATÉGORIE MENUS [base]']?.[0];
-        let categoryName = '';
-
-        // Si un ID de catégorie est disponible, appeler get-menu_categories.js pour récupérer le nom de la catégorie
-        if (categoryId) {
-            const categoryResponse = await fetch(`/.netlify/functions/get-menu_categories?id=${encodeURIComponent(categoryId)}`);
-            const categoryData = await categoryResponse.json();
-
-            if (categoryData && categoryData.fields) {
-                categoryName = categoryData.fields['Nom Menu'];
-            }
         }
 
         // Remplir les métadonnées dynamiques

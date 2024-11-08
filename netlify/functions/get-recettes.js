@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
 
   const filterByCategory = event.queryStringParameters.filterByCategory || null;
   const searchTerms = event.queryStringParameters.searchTerms || null;
-  const slug = event.queryStringParameters.slug || null; // Récupérer le slug
+  const slug = event.queryStringParameters.slug || null;
   let filterByFormula = 'Is_COMMIT_Recette=TRUE()';
 
   // Appliquer le filtre par catégorie si disponible
@@ -23,11 +23,6 @@ exports.handler = async (event, context) => {
     const categories = filterByCategory.split(',');
     const categoryFilters = categories.map(category => `SEARCH("${category}", {CATÉGORIE MENUS [base]-Name})`).join(',');
     filterByFormula = `AND(${filterByFormula}, OR(${categoryFilters}))`;
-  }
-
-  // Appliquer le filtre par slug si disponible
-  if (slug) {
-    filterByFormula = `AND(${filterByFormula}, {slug}="${slug}")`; // Assurez-vous que le champ 'slug' existe dans Airtable
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${recettesTableId}?filterByFormula=${encodeURIComponent(filterByFormula)}&sort%5B0%5D%5Bfield%5D=last-modification&sort%5B0%5D%5Bdirection%5D=desc`;
@@ -80,7 +75,7 @@ exports.handler = async (event, context) => {
           ...record,
           fields: {
             ...record.fields,
-            slug: `/recettes/${generateSlug(title)}` // Ajouter le slug au champ
+            slug: generateSlug(title) // Générer le slug directement
           }
         };
       });

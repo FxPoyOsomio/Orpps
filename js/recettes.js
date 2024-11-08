@@ -64,12 +64,13 @@ export async function loadRecipes(categoryNames = [], searchTerms = []) {
             const title = recipe['Titre recettes'] || 'Titre non disponible';
             const description = recipe['Description recette'] || '';
             const imageUrl = recipe['img.'] && recipe['img.'][0] ? recipe['img.'][0].url : '';
-            const slug = `/recettes/${encodeURIComponent(recipe['slug'])}`;
+            const slug = recipe['slug'];
+            const urlRecette = `/recettes/${slug}`;
 
             console.log("Ajout de la recette :", title);
 
             const recipeElement = document.createElement('a');
-            recipeElement.href = slug;
+            recipeElement.href = urlRecette;
             recipeElement.className = 'recette-item';
             recipeElement.innerHTML = `
                 <div class="recette-item__container_img">
