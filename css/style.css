@@ -665,18 +665,13 @@ p2 {
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
         height: calc(100vh - 20px); /* Ajustez 80px à la hauteur réelle de votre header */
-        padding: 0 15px;
+        padding: 0 15px; 
     }
 
     .header__burger {
         display: flex; /* Afficher le burger */
     }  
-    #headerSearchBar__Small_Screen {
-        display: contents;
-    }
-    #headerSearchBar__Large_Screen {
-        display: none;
-    } 
+
 
 
 } 
@@ -686,11 +681,6 @@ p2 {
     .header__burger {
         display: flex; /* Masquer le burger menu */
     }
-    #headerSearchBar__Small_Screen {
-        display: none;
-    }
-    #headerSearchBar__Large_Screen {
-        display: contents;
-    }
+
 
 }
