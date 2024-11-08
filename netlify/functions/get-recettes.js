@@ -16,6 +16,7 @@ exports.handler = async (event, context) => {
   const filterByCategory = event.queryStringParameters.filterByCategory || null;
   const searchTerms = event.queryStringParameters.searchTerms || null;
   const slug = event.queryStringParameters.slug || null;
+  const recordId = event.queryStringParameters.id || null;
   let filterByFormula = 'Is_COMMIT_Recette=TRUE()';
 
   // Appliquer le filtre par catégorie si disponible
@@ -23,6 +24,14 @@ exports.handler = async (event, context) => {
     const categories = filterByCategory.split(',');
     const categoryFilters = categories.map(category => `SEARCH("${category}", {CATÉGORIE MENUS [base]-Name})`).join(',');
     filterByFormula = `AND(${filterByFormula}, OR(${categoryFilters}))`;
+  }
+
+  // Appliquer le filtre par recordId si disponible
+  if (recordId) {
+    filterByFormula = `RECORD_ID()="${recordId}"`;
+  } else if (slug) {
+    // Appliquer le filtre par slug si disponible
+    filterByFormula = `AND(${filterByFormula}, {slug}="${slug}")`;
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${recettesTableId}?filterByFormula=${encodeURIComponent(filterByFormula)}&sort%5B0%5D%5Bfield%5D=last-modification&sort%5B0%5D%5Bdirection%5D=desc`;

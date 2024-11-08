@@ -1,16 +1,17 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Extraire le slug de l'URL
+    // Extraire l'ID de l'URL après "id="
     const pathParts = window.location.pathname.split('/');
-    const slug = decodeURIComponent(pathParts[pathParts.length - 1]);
+    const idPart = pathParts[pathParts.length - 1]; // Dernière partie de l'URL après "id="
+    const recordId = idPart.split('=')[1]; // Extraire l'ID après "id="
 
-    if (!slug) {
-        console.error('Aucun slug trouvé dans l’URL');
+    if (!recordId) {
+        console.error('Aucun recordId trouvé dans l’URL');
         return;
     }
 
     try {
-        // Construire l'URL pour appeler la fonction Netlify avec uniquement le slug
-        const url = `/.netlify/functions/get-recettes?slug=${encodeURIComponent(slug)}`;
+        // Construire l'URL pour appeler la fonction Netlify avec le recordId
+        const url = `/.netlify/functions/get-recettes?id=${encodeURIComponent(recordId)}`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             "image": recipe['img.']?.[0]?.url || '',
             "author": { "@type": "Person", "name": "François-Xavier Poy" },
             "datePublished": recipe['created'],
-            "recipeCategory": categoryName,
+            "recipeCategory": recipe['CATÉGORIE MENUS [base]'],
             "prepTime": "PT" +
             (recipe['Temps PRÉPARATION - Heure'] ? recipe['Temps PRÉPARATION - Heure'] + "H" : "") +
             (recipe['Temps PRÉPARATION - Minute'] ? recipe['Temps PRÉPARATION - Minute'] + "M" : ""),
@@ -81,8 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span style="padding: 0 8px;">
                         <h6 style="color: #CB6863;">></h6>
                     </span>
-                    <a class="bread-crumbs__link" href="/recettes?categorie=${categoryName}">
-                        <h6>${categoryName}</h6>
+                    <a class="bread-crumbs__link" href="/recettes?categorie=${recipe['CATÉGORIE MENUS [base]']}">
+                        <h6>${recipe['CATÉGORIE MENUS [base]']}</h6>
                     </a>
                     <span style="padding: 0 8px;">
                         <h6 style="color: #CB6863;">></h6>
