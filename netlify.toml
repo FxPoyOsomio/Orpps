@@ -5,3 +5,8 @@
 [functions]
   directory = "netlify/functions"  # Si tu as des fonctions serverless
   external_node_modules = ["node-fetch"]
+
+[[redirects]]
+  from = "/recettes/*"
+  to = "/recettes/recette.html"
+  status = 200

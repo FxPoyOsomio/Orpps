@@ -15,11 +15,19 @@ exports.handler = async (event, context) => {
 
   const filterByCategory = event.queryStringParameters.filterByCategory || null;
   const searchTerms = event.queryStringParameters.searchTerms || null;
+  const slug = event.queryStringParameters.slug || null; // Récupérer le slug
   let filterByFormula = 'Is_COMMIT_Recette=TRUE()';
 
   // Appliquer le filtre par catégorie si disponible
   if (filterByCategory) {
-    filterByFormula = `AND(${filterByFormula}, OR(${filterByCategory}))`;
+    const categories = filterByCategory.split(',');
+    const categoryFilters = categories.map(category => `SEARCH("${category}", {CATÉGORIE MENUS [base]-Name})`).join(',');
+    filterByFormula = `AND(${filterByFormula}, OR(${categoryFilters}))`;
+  }
+
+  // Appliquer le filtre par slug si disponible
+  if (slug) {
+    filterByFormula = `AND(${filterByFormula}, {slug}="${slug}")`; // Assurez-vous que le champ 'slug' existe dans Airtable
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${recettesTableId}?filterByFormula=${encodeURIComponent(filterByFormula)}&sort%5B0%5D%5Bfield%5D=last-modification&sort%5B0%5D%5Bdirection%5D=desc`;
@@ -41,25 +49,41 @@ exports.handler = async (event, context) => {
     const data = await response.json();
     console.log("Données reçues de Airtable (Recettes) :", JSON.stringify(data, null, 2));
 
+    // Fonction pour générer un slug à partir du titre de la recette
+    function generateSlug(title) {
+      return title
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Remplacer les espaces par des tirets
+        .replace(/[^\w-]+/g, ''); // Supprimer les caractères non alphanumériques
+    }
+
     // Appliquer le filtrage par termes de recherche en local
     const normalizedSearchTerms = searchTerms ? searchTerms.split(' ').map(normalizeText) : [];
 
-    const filteredRecords = data.records.filter(record => {
-      const title = normalizeText(record.fields['Titre recettes'] || '');
-      const instructions = normalizeText(record.fields['Instruction'] || '');
-      const ingredientsList = normalizeText((record.fields['List ingrédient pour Orpps'] || []).join(' '));
-    
-      console.log("Contenu du champ 'List ingrédient pour Orpps':", record.fields['List ingrédient pour Orpps']);
-    
-      return normalizedSearchTerms.every(term => {
-        // Créer une expression régulière pour correspondre au début du mot avec une longueur similaire
-        const regex = new RegExp(`\\b${term}\\w{0,2}\\b`, 'i');
-        
-        return regex.test(title) || regex.test(instructions) || regex.test(ingredientsList);
+    // Filtrer et transformer les données
+    const filteredRecords = data.records
+      .filter(record => {
+        const title = normalizeText(record.fields['Titre recettes'] || '');
+        const instructions = normalizeText(record.fields['Instruction'] || '');
+        const ingredientsList = normalizeText((record.fields['List ingrédient pour Orpps'] || []).join(' '));
+
+        return normalizedSearchTerms.every(term => {
+          const regex = new RegExp(`\\b${term}\\w{0,2}\\b`, 'i');
+          return regex.test(title) || regex.test(instructions) || regex.test(ingredientsList);
+        });
+      })
+      .map(record => {
+        const title = record.fields['Titre recettes'] || '';
+        return {
+          ...record,
+          fields: {
+            ...record.fields,
+            slug: `/recettes/${generateSlug(title)}` // Ajouter le slug au champ
+          }
+        };
       });
-    });
-    
-    
 
     return {
       statusCode: 200,

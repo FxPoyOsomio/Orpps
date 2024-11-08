@@ -1,5 +1,8 @@
+import { initializeRecipes, loadRecipes } from './recettes.js';
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header fetch...");
+
     fetch("/components/header.html")
         .then(response => response.text())
         .then(data => {
@@ -8,16 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
             loadHeaderCategories().then(() => {
                 initializeHeader();
 
-                // Appliquer la détection de "Entrée" après l'initialisation de la barre de recherche
-                const searchInput = document.querySelector(".header__search-content input");
-                if (searchInput) {
-                    searchInput.addEventListener("keydown", (event) => {
-                        if (event.key === "Enter") {
-                            SearchRecipe();
-                        }
-                    });
-                }
+                // Initialiser les événements de recherche lorsque le menu est ouvert
+                applySearchEventsOnHeaderOpen();
             });
+
+            // Vérifie si on est sur la page des recettes ou si l'URL contient des filtres
+            if (window.location.pathname === "/recettes.html" || window.location.search.includes("categorie") || window.location.search.includes("searchTerms")) {
+                initializeRecipes(); // Affiche toutes les recettes ou les recettes filtrées immédiatement
+            }
         })
         .catch(error => console.error("Error loading header:", error));
 
@@ -40,37 +41,53 @@ async function loadHeaderCategories() {
         }
 
         const data = await response.json();
-        console.log("Header Categories received:", data);
+        console.log("Header categories received:", data);
 
-        const headerNav = document.querySelector('.header__nav');
-        if (!headerNav) {
-            console.error("Element with class 'header__nav' not found.");
+        const categoriesContainer = document.querySelector('.Menu_categorie');
+        if (!categoriesContainer) {
+            console.error("Element with class 'Menu_categorie' not found.");
             return;
         }
 
-        headerNav.innerHTML = '';
+        categoriesContainer.innerHTML = '';
 
+        // Ajouter chaque catégorie en tant que <secondary-button>
         data.forEach(record => {
             const category = record.fields;
-            const categoryId = record.id;
             const categoryName = category['Nom Menu'] || 'Sans nom';
-
-            const categoryLink = document.createElement('a');
-            categoryLink.href = `/recettes?categorie=${encodeURIComponent(categoryName)}`;
-            categoryLink.className = 'header__nav__link';
-            categoryLink.textContent = categoryName;
-
-            categoryLink.addEventListener('click', (event) => {
+        
+            const categoryButton = document.createElement('secondary-button');
+            categoryButton.setAttribute('text', categoryName);
+            categoryButton.setAttribute('href', `/recettes?categorie=${encodeURIComponent(categoryName)}`);
+        
+            categoryButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                window.location.href = categoryLink.href;
+        
+                const allButtons = categoriesContainer.querySelectorAll('secondary-button');
+                allButtons.forEach(button => button.classList.remove('active'));
+        
+                categoryButton.classList.add('active');
+        
+                // Récupère les termes de recherche existants
+                const searchInput = document.querySelector(".header__search-content input");
+                const searchTerms = searchInput ? searchInput.value.trim() : '';
+        
+                // Construit l'URL avec la catégorie et les termes de recherche
+                let url = `/recettes?categorie=${encodeURIComponent(categoryName)}`;
+                if (searchTerms) {
+                    url += `&searchTerms=${encodeURIComponent(searchTerms)}`;
+                }
+        
+                window.location.href = url;
             });
-
-            headerNav.appendChild(categoryLink);
+        
+            categoriesContainer.appendChild(categoryButton);
         });
     } catch (error) {
-        console.error('Erreur lors du chargement des catégories dans le header :', error);
+        console.error('Erreur lors du chargement des catégories pour le header :', error);
     }
 }
+
 // Fonction pour initialiser les éléments du header après leur chargement
 function initializeHeader() {
     const burgerMenu = document.getElementById("burgerMenu");
@@ -87,6 +104,12 @@ function initializeHeader() {
 
             handleSearchBarToggle(searchBarContainer);
             animateCategoryButtons(overlayMenu.classList.contains("active"));
+
+            // Initialize recipes and search events only when the menu is opened
+            if (overlayMenu.classList.contains("active")) {
+                initializeRecipes(); // Load recipes with the current filters
+                applySearchEvents(searchBarContainer); // Apply search bar event listeners
+            }
         });
 
         document.addEventListener("click", (event) => {
@@ -97,30 +120,77 @@ function initializeHeader() {
             }
         });
     }
-
-    // Appliquer la détection "Entrée" et click pour la barre de recherche unique
-    applySearchEvents(searchBarContainer);
 }
+
+
+function applySearchEventsOnHeaderOpen() {
+    const burgerMenu = document.getElementById("burgerMenu");
+    const overlayMenu = document.getElementById("overlayMenu");
+
+    if (burgerMenu && overlayMenu) {
+        burgerMenu.addEventListener("click", () => {
+            if (overlayMenu.classList.contains("active")) {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', () => {
+                        console.log("Contenu de l'input en temps réel :", searchInput.value);
+                    });
+                }
+
+                const searchButton = document.getElementById("SearchBarButton");
+                if (searchButton) {
+                    searchButton.addEventListener('click', () => {
+                        const selectedCategory = new URLSearchParams(window.location.search).get('categorie');
+                        const searchTerms = searchInput ? searchInput.value.trim().split(' ') : [];
+                        loadRecipes(selectedCategory ? [selectedCategory] : null, searchTerms);
+                    });
+                }
+            }
+        });
+    }
+}
+
+
 
 
 // Fonction pour ajouter les événements de recherche à la searchBar
 function applySearchEvents(searchBarContainer) {
-    if (searchBarContainer) {
-        const searchInput = searchBarContainer.querySelector("input");
-        const searchButton = searchBarContainer.querySelector("#SearchBarButton");
+    const searchInput = document.getElementById("searchInput"); // Utilisation de l'ID ici
+    const searchButton = document.getElementById("SearchBarButton");
 
-        if (searchInput) {
-            searchInput.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") {
-                    SearchRecipe();
-                }
-            });
-        }
-
-        if (searchButton) {
-            searchButton.addEventListener("click", SearchRecipe);
-        }
+    if (searchInput) {
+        console.log("Input de recherche trouvé");
+        searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                filterRecipesByCategoryAndSearch();
+            }
+        });
+    } else {
+        console.log("Impossible de trouver l'élément input de recherche.");
     }
+
+    if (searchButton) {
+        console.log("Bouton de recherche trouvé");
+        searchButton.addEventListener("click", filterRecipesByCategoryAndSearch);
+    } else {
+        console.log("Impossible de trouver le bouton de recherche.");
+    }
+}
+
+// Fonction pour filtrer les recettes par catégorie et termes de recherche
+function filterRecipesByCategoryAndSearch(selectedCategory = null) {
+    const searchInput = document.querySelector(".header__search-content input");
+    const searchTerms = searchInput ? searchInput.value.trim() : '';
+
+    const url = `/path_to_netlify_function/get-recettes?filterByCategory=${encodeURIComponent(selectedCategory || '')}&searchTerms=${encodeURIComponent(searchTerms)}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Recettes filtrées :", data);
+            // Insérez ici le code pour afficher les recettes filtrées
+        })
+        .catch(error => console.error("Erreur lors de la récupération des recettes :", error));
 }
 
 
@@ -184,6 +254,7 @@ function createSearchContent() {
 
     const searchInput = document.createElement("input");
     searchInput.type = "text";
+    searchInput.id = "searchInput"; 
     searchInput.placeholder = "Recherche";
     searchInput.style.border = "none";
     searchInput.style.outline = "none";
