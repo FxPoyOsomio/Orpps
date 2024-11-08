@@ -30,6 +30,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+
+        // Récupérer les IDs de catégories et de sous-catégories
+        const categoryIds = recipe['CATÉGORIE MENUS [base]'] || [];
+        const subCategoryIds = recipe['SOUS-CATÉGORIE MENUS [base]'] || [];
+
+
+        // Récupérer les noms des catégories et des sous-catégories
+        const categoryNames = await fetchCategories(categoryIds);
+        const subCategoryNames = await fetchSubCategories(subCategoryIds);
+
+ 
+        const categoriesDisplay = [
+            ...categoryNames.map(category => category.name),
+            ...subCategoryNames.map(subCategory => subCategory.name)
+        ].join(', ');
+
+        
+
+
+
+
+
+
         // Remplir les métadonnées dynamiques
         document.getElementById("page-title").textContent = `${recipe['Titre recettes']} - Orpps`;
         document.getElementById("page-description").content = recipe['Description recette'];
@@ -49,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             "image": recipe['img.']?.[0]?.url || '',
             "author": { "@type": "Person", "name": "François-Xavier Poy" },
             "datePublished": recipe['created'],
-            "recipeCategory": recipe['CATÉGORIE MENUS [base]'],
+            "recipeCategory": categoriesDisplay,
             "prepTime": "PT" +
             (recipe['Temps PRÉPARATION - Heure'] ? recipe['Temps PRÉPARATION - Heure'] + "H" : "") +
             (recipe['Temps PRÉPARATION - Minute'] ? recipe['Temps PRÉPARATION - Minute'] + "M" : ""),
@@ -66,36 +89,99 @@ document.addEventListener('DOMContentLoaded', async () => {
             "recipeIngredient": recipe['recipeIngredient [Bring!] (from INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || [],
         });
 
-        // Remplir le MAIN de la recette
-        document.querySelector('main').innerHTML = `
-            <div class="container-bread-crumbs">
-                <div class="bread-crumbs">
-                    <a class="bread-crumbs__link" href="/index.html">
-                        <h6>Accueil</h6>
-                    </a>
-                    <span style="padding: 0 8px;">
-                        <h6 style="color: #CB6863;">></h6>
-                    </span>
-                    <a class="bread-crumbs__link" href="/recettes.html">
-                        <h6>Recettes</h6>
-                    </a>
-                    <span style="padding: 0 8px;">
-                        <h6 style="color: #CB6863;">></h6>
-                    </span>
-                    <a class="bread-crumbs__link" href="/recettes?categorie=${recipe['CATÉGORIE MENUS [base]']}">
-                        <h6>${recipe['CATÉGORIE MENUS [base]']}</h6>
-                    </a>
-                    <span style="padding: 0 8px;">
-                        <h6 style="color: #CB6863;">></h6>
-                    </span>
-                    <a class="bread-crumbs__link" href="">
-                        <h6>${recipe['Titre recettes']}</h6>
-                    </a>
-                </div>
-            </div>
-        `;
+        // Appeler la fonction pour injecter les catégories dans les "bread-crumbs"
+        injectBreadCrumbsCategories(categoryNames, subCategoryNames, recipe['Titre recettes']);
+
+
+       
         
     } catch (error) {
         console.error('Erreur lors du chargement de la recette :', error);
     }
 });
+
+/**
+ * Fonction pour récupérer les catégories à partir des IDs
+ * @param {Array} categoryIds - Tableau des IDs de catégories
+ */
+async function fetchCategories(categoryIds) {
+    let categoryNames = [];
+
+    for (const categoryId of categoryIds || []) {
+        const categoryUrl = `/.netlify/functions/get-menu_categories?id=${encodeURIComponent(categoryId)}`;
+        const categoryResponse = await fetch(categoryUrl);
+
+        if (categoryResponse.ok) {
+            const categoryData = await categoryResponse.json();
+            const categoryName = categoryData[0]?.fields['Nom Menu'] || 'Catégorie inconnue';
+            categoryNames.push({ name: categoryName, id: categoryId });
+        }
+    }
+    return categoryNames;
+}
+
+/**
+ * Fonction pour récupérer les sous-catégories à partir des IDs
+ * @param {Array} subCategoryIds - Tableau des IDs de sous-catégories
+ */
+async function fetchSubCategories(subCategoryIds) {
+    let subCategoryNames = [];
+
+    for (const subCategoryId of subCategoryIds || []) {
+        const subCategoryUrl = `/.netlify/functions/get-menu_subcategories?id=${encodeURIComponent(subCategoryId)}`;
+        const subCategoryResponse = await fetch(subCategoryUrl);
+
+        if (subCategoryResponse.ok) {
+            const subCategoryData = await subCategoryResponse.json();
+            const subCategoryName = subCategoryData[0]?.fields['Nom sous-catégorie menus'] || 'Sous-catégorie inconnue';
+            subCategoryNames.push({ name: subCategoryName, id: subCategoryId });
+        }
+    }
+    return subCategoryNames;
+}
+
+/**
+ * Fonction pour injecter les catégories, sous-catégories et le titre de la recette dans les "bread-crumbs"
+ * @param {Array} categoryNames - Tableau contenant les objets { name, id } des catégories
+ * @param {Array} subCategoryNames - Tableau contenant les objets { name, id } des sous-catégories
+ * @param {String} recipeTitle - Titre de la recette
+ */
+function injectBreadCrumbsCategories(categoryNames, subCategoryNames, recipeTitle) {
+    const breadCrumbsContainer = document.getElementById("breadCrumbs__categorieMenu");
+    const subBreadCrumbsContainer = document.getElementById("breadCrumbs__subCategorieMenu");
+    const titleContainer = document.getElementById("breadCrumbs__tiltleRecette");
+
+    breadCrumbsContainer.innerHTML = '';
+    subBreadCrumbsContainer.innerHTML = '';
+    titleContainer.innerHTML = `<h6>${recipeTitle}</h6>`;
+
+    categoryNames.forEach((category, index) => {
+        const categoryLink = document.createElement('a');
+        categoryLink.className = 'bread-crumbs__link';
+        categoryLink.href = `/recettes?categorie=${encodeURIComponent(category.name)}`;
+        categoryLink.innerHTML = `<h6>${category.name}</h6>`;
+        breadCrumbsContainer.appendChild(categoryLink);
+
+        if (index < categoryNames.length - 1) {
+            const separator = document.createElement('span');
+            separator.style.padding = "0 8px";
+            separator.innerHTML = `<h6 style="color: #CB6863;">•</h6>`;
+            breadCrumbsContainer.appendChild(separator);
+        }
+    });
+
+    subCategoryNames.forEach((subCategory, index) => {
+        const subCategoryLink = document.createElement('a');
+        subCategoryLink.className = 'bread-crumbs__link';
+        subCategoryLink.href = `/recettes?sous_categorie=${encodeURIComponent(subCategory.name)}`;
+        subCategoryLink.innerHTML = `<h6>${subCategory.name}</h6>`;
+        subBreadCrumbsContainer.appendChild(subCategoryLink);
+
+        if (index < subCategoryNames.length - 1) {
+            const separator = document.createElement('span');
+            separator.style.padding = "0 8px";
+            separator.innerHTML = `<h6 style="color: #CB6863;">•</h6>`;
+            subBreadCrumbsContainer.appendChild(separator);
+        }
+    });
+}

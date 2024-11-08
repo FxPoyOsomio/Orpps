@@ -13,8 +13,17 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // URL avec filtre pour ne récupérer que les catégories ayant des recettes associées
-  const url = `https://api.airtable.com/v0/${baseId}/${categoriesTableId}?filterByFormula=NOT({RECETTES}='')`;
+  // Vérifier si un ID spécifique est fourni dans les paramètres de requête
+  const categoryId = event.queryStringParameters.id || null;
+  let url;
+
+  if (categoryId) {
+    // Construire l'URL pour récupérer une catégorie spécifique par ID
+    url = `https://api.airtable.com/v0/${baseId}/${categoriesTableId}/${categoryId}`;
+  } else {
+    // URL avec filtre pour récupérer toutes les catégories ayant des recettes associées
+    url = `https://api.airtable.com/v0/${baseId}/${categoriesTableId}?filterByFormula=NOT({RECETTES}='')`;
+  }
 
   try {
     const response = await fetch(url, {
@@ -29,14 +38,22 @@ exports.handler = async (event, context) => {
     }
 
     let data = await response.json();
+
+    // Si on récupère une seule catégorie, on place le résultat dans un tableau pour une gestion cohérente
+    if (categoryId) {
+      data = { records: [data] };
+    }
+
     console.log("Données reçues de Airtable (Catégories) :", JSON.stringify(data, null, 2));
 
-    // Trier les catégories par le champ 'Menu (ordre d'affichage)'
-    data.records.sort((a, b) => {
-      const ordreA = a.fields['Menu (ordre d\'affichage)'] || 0;
-      const ordreB = b.fields['Menu (ordre d\'affichage)'] || 0;
-      return ordreA - ordreB;
-    });
+    // Trier les catégories par le champ 'Menu (ordre d'affichage)' si aucune `id` n'est spécifiée
+    if (!categoryId) {
+      data.records.sort((a, b) => {
+        const ordreA = a.fields['Menu (ordre d\'affichage)'] || 0;
+        const ordreB = b.fields['Menu (ordre d\'affichage)'] || 0;
+        return ordreA - ordreB;
+      });
+    }
 
     return {
       statusCode: 200,
@@ -51,4 +68,3 @@ exports.handler = async (event, context) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error', details: error.message }) };
   }
 };
- 
