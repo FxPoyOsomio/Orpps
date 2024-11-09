@@ -10,3 +10,4 @@
   from = "/recettes/*"
   to = "/recettes/recette.html"
   status = 200
+  force = true
