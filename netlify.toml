@@ -1,19 +1,7 @@
 [build]
-  command = "echo 'Building...' && exit 0"  # Si aucune commande de build n'est nécessaire
-  publish = "."  # La racine du projet, si c'est là où se trouvent index.html et les autres pages
+  command = "echo 'Building...' && exit 0"  
+  publish = "."  
 
 [functions]
   directory = "netlify/functions"
   external_node_modules = ["node-fetch"]
-
-[[redirects]]
-  from = "/recettes/*-id=*"
-  to = "/recettes/recette.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
