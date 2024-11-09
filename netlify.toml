@@ -1,6 +1,6 @@
 [build]
-  command = "echo 'Building...' && exit 0"  # Simple commande de construction
-  publish = "public"
+  command = "echo 'Building...' && exit 0"  # Si aucune commande de build n'est nécessaire
+  publish = "."  # La racine du projet, si c'est là où se trouvent index.html et les autres pages
 
 [functions]
   directory = "netlify/functions"
