@@ -1,12 +1,19 @@
 [build]
-  command = ""
-  publish = "."
-  
+  command = ""  # Si aucune commande de build n'est nécessaire
+  publish = "public"  # Remplacez par votre dossier de publication
+
 [functions]
-  directory = "netlify/functions"  # Si tu as des fonctions serverless
+  directory = "netlify/functions"
   external_node_modules = ["node-fetch"]
 
 [[redirects]]
   from = "/recettes/*-id=*"
   to = "/recettes/recette.html"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
