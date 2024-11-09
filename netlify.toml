@@ -7,6 +7,7 @@
   external_node_modules = ["node-fetch"]
 
 [[redirects]]
-  from = "/recettes/*-id=*"
+  from = "/recettes/*"
   to = "/recettes/recette.html"
   status = 200
+  force = true
