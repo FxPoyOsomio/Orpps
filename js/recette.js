@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Extraire l'ID de l'URL après "id="
-    const pathParts = window.location.pathname.split('/');
-    const idPart = pathParts[pathParts.length - 1]; // Dernière partie de l'URL après "id="
-    const recordId = idPart.split('=')[1]; // Extraire l'ID après "id="
+    const pathParts = window.location.pathname.split('-'); // Séparer par "-"
+    const recordId = pathParts[pathParts.length - 1].split('=')[1]; // Extraire l'ID après "id="
 
     if (!recordId) {
         console.error('Aucun recordId trouvé dans l’URL');
