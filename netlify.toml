@@ -1,6 +1,6 @@
 [build]
-  command = ""  # Si aucune commande de build n'est nécessaire
-  publish = "public"  # Remplacez par votre dossier de publication
+  command = "echo 'Building...' && exit 0"  # Simple commande de construction
+  publish = "public"
 
 [functions]
   directory = "netlify/functions"
