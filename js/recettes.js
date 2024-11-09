@@ -66,7 +66,7 @@ export async function loadRecipes(categoryNames = [], searchTerms = []) {
             const imageUrl = recipe['img.'] && recipe['img.'][0] ? recipe['img.'][0].url : '';
             const slug = recipe['slug']; // Utilise le slug
             const recordId = record.id; // Utilise l'ID du record
-            const urlRecette = `/recettes/${slug}/id=${recordId}`; // Construit l'URL avec le slug et l'ID
+            const urlRecette = `/recettes/${slug}-id=${recordId}`; // Construit l'URL avec le slug et l'ID
 
             console.log("Ajout de la recette :", title);
 
