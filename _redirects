@@ -1,5 +1,4 @@
-# Redirection des URL des recettes vers le template recette.html
-/recettes/* /recettes/recette.html 200
+
 
 # Redirection pour gérer les URL non trouvées en envoyant vers index.html
 /* /index.html 200
