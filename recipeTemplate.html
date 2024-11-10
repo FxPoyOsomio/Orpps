@@ -5,37 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title id="page-title"></title> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta name="description" id="page-description"> <!-- Contenu dynimique pour champs 'Description recette'  -->
+    <title id="page-title">{{recipe-title}}</title> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
+    <meta name="description" id="page-description" content="{{recipe-description}}">
+    <!-- Contenu dynimique pour champs 'Description recette'  -->
 
-    <link rel="canonical" href="https://votredomaine.com/recettes/${slug}">
+    <link rel="canonical" href="https://votredomaine.com/recettes/{{slug}}">
 
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph pour l’aperçu sur les réseaux sociaux -->
-    <meta property="og:title" content="" id="og-title"> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta property="og:description" content="" id="og-description">
+    <meta property="og:title" content="{{recipe-title}}" id="og-title">
+    <!-- Contenu dynimique pour champs 'Titre recettes'  -->
+    <meta property="og:description" content="{{recipe-description}}" id="og-description">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
-    <meta property="og:image" content="" id="og-image"> <!-- Contenu dynimique pour champs 'img.'  -->
-    <meta property="og:url" content="https://https://orpps.netlify.app/recettes/${slug}">
+    <meta property="og:image" content="{{recipe-image}}" id="og-image"> <!-- Contenu dynimique pour champs 'img.'  -->
+    <meta property="og:url" content="https://https://orpps.netlify.app/recettes/{{slug}}">
     <!-- Contenu dynimique pour URL -->
     <meta property="og:type" content="article">
 
     <!-- Twitter Cards pour l’aperçu sur Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="" id="twitter-title"> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta name="twitter:description" content="" id="twitter-description">
+    <meta name="twitter:title" content="{{twitter-title}}" id="twitter-title">
+    <!-- Contenu dynimique pour champs 'Titre recettes'  -->
+    <meta name="twitter:description" content="{{recipe-description}}" id="twitter-description">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
-    <meta name="twitter:image" content="" id="twitter-image"> <!-- Contenu dynimique pour champs 'img.'  -->
+    <meta name="twitter:image" content="{{recipe-image}}" id="twitter-image">
+    <!-- Contenu dynimique pour champs 'img.'  -->
 
     <!-- Schema.org pour le balisage des recettes (exemple simplifié) -->
-    <script id="schema-org" type="application/ld+json"></script>
     <script type="application/ld+json">
         {
-        "@context": "http://schema.org",
-        "@type": "Recipe",
-        "name": "Saumon en gravlax au sirop d'érable",
-        "recipeIngredient": ["Saumon,500g.", "Sel fin,100g.", "Sucre semoule,50g.", "Baies roses,10g.", "Aneth,0.5botte", "Orange,1", "Sirop d'érable,25g.", "Gin,10ml.", "Betteraves cuites,50g."]
+            "@context": "https://schema.org",
+            "@type": "Recipe",
+            "name": {{recipe-title}},
+            "description": {{page-description}},
+            "image": {{recipe-image}},
+            "author": { "@type": "Person", "name": "François-Xavier Poy" },
+            "datePublished": {{recipe-createdDate}},
+            "recipeCategory": {{recipe-categoriesSubCategories}},
+            "prepTime": "PT{{recipe-prepDurationPT}},
+            "restTime": "PT"{{recipe-restDurationPT}},
+            "cookTime": "PT"{{recipe-cookDurationPT}},
+            "totalTime": "PT"{{recipe-totalDurationPT}},
+            "recipeYield": {{recipe-portion}},
+            "recipeIngredient": {{recipe-ingredientsList}},
         }
     </script>
 
@@ -63,29 +76,33 @@
                     <h6 style="color: #CB6863;">></h6>
                 </span>
                 <span id="breadCrumbs__categorieMenu" style="display: flex; flex-direction: row;">
+                    {{breadCrumbs__categorieMenu}}
                 </span>
                 <span style="padding: 0 8px;">
                     <h6 style="color: #CB6863;">></h6>
                 </span>
                 <span id="breadCrumbs__subCategorieMenu" style="display: flex; flex-direction: row;">
+                    {{breadCrumbs__subCategorieMenu}}
                 </span>
                 <span style="padding: 0 8px;">
                     <h6 style="color: #CB6863;">></h6>
                 </span>
-                <span id="breadCrumbs__tiltleRecette">
+                <span id="breadCrumbs__tiltleRecette" class="bread-crumbs__link">
+                    <h6>{{recipe-title}}</h6>
                 </span>
             </div>
         </div>
     </main>
     <div class="page-container">
         <div class="container__img-recette__two-column-page">
-            <img src="" class="img-recette" id="imageRecette_twoColumn" alt="image-recette"></img>
+            <img src="{{recipe-image}}" class="img-recette" id="imageRecette_twoColumn" alt="image-recette"></img>
         </div>
         <div class="container__info-recette">
             <h1 class="titre-recette" id="titreRecette">
+                {{recipe-title}}
             </h1>
             <div class="container__img-recette__one-column-page">
-                <img src="" class="img-recette" id="imageRecette_oneColumn" alt="image-recette"></img>
+                <img src="{{recipe-image}}" class="img-recette" id="imageRecette_oneColumn" alt="image-recette"></img>
             </div>
             <div class="top-infos__recette">
                 <div class="top-info">
@@ -112,6 +129,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7 id="tempsRecette">
+                            {{recipe-duration}}
                         </h7>
                     </div>
                 </div>
@@ -143,6 +161,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7 id="difficulteRecette">
+                            {{recipe-difficultiesLevel}}
                         </h7>
                     </div>
                 </div>
@@ -174,11 +193,13 @@
                     </div>
                     <div class="top-info__label">
                         <h7 id="prixRecette">
+                            {{recipe-pricingLevel}}
                         </h7>
                     </div>
                 </div>
             </div>
             <p2 class="desciption-recette" id="descriptionRecette">
+                {{recipe-description}}
             </p2>
             <div class="call-to-action__buttons">
                 <primary-button text="liste de course" href="/Orpps/liste_de_course.html">
@@ -286,7 +307,7 @@
                                 <div class="portion-control__value_container">
                                     <div class="portion-control__value">
                                         <input type="text" inputmode="decimal" id="portion-input"
-                                            class="portion-control__value_number" value="0">
+                                            class="portion-control__value_number" value="{{recipe-portion}}">
                                         <span class="portion-control__unit">portions</span>
                                     </div>
 
@@ -320,6 +341,7 @@
 
 
                 <div id="preparationIngrédients">
+                    {{recipe-preparationIngrédients}}
                 </div>
 
 
@@ -382,7 +404,9 @@
                                             <h6>Préparation</h6>
                                         </div>
                                         <div class="timing__time">
-                                            <h7 id="tempsPreparation"></h7>
+                                            <h7 id="tempsPreparation">
+                                                {{recipe-prepDuration}}
+                                            </h7>
                                         </div>
                                     </div>
                                 </div>
@@ -404,7 +428,9 @@
                                             <h6>Repos</h6>
                                         </div>
                                         <div class="timing__time">
-                                            <h7 id="tempsRepos"></h7>
+                                            <h7 id="tempsRepos">
+                                                {{recipe-restDuration}}
+                                            </h7>
                                         </div>
                                     </div>
                                 </div>
@@ -425,7 +451,9 @@
                                             <h6>Cuisson</h6>
                                         </div>
                                         <div class="timing__time">
-                                            <h7 id="tempsCuisson"></h7>
+                                            <h7 id="tempsCuisson">
+                                                {{recipe-cookDuration}}
+                                            </h7>
                                         </div>
                                     </div>
                                 </div>
@@ -436,7 +464,9 @@
                                                 <h6>Temps total</h6>
                                             </div>
                                             <div class="timing__time">
-                                                <h7 id="tempsTotal_large"></h7>
+                                                <h7 id="tempsTotal_large">
+                                                    {{recipe-totalDuration}}
+                                                </h7>
                                             </div>
                                         </div>
                                     </div>
@@ -449,7 +479,9 @@
                                             <h6>Temps total</h6>
                                         </div>
                                         <div class="timing__time">
-                                            <h7 id="tempsTotal_small"></h7>
+                                            <h7 id="tempsTotal_small">
+                                                {{recipe-totalDuration}}
+                                            </h7>
                                         </div>
                                     </div>
                                 </div>
@@ -458,6 +490,7 @@
                     </div>
                 </div>
                 <div id="preparationEtapes">
+                    {{recipe-preparationEtapes}}
                 </div>
 
             </div>
@@ -465,16 +498,286 @@
     </div>
     </main>
     <div id="footer"></div>
+    <script>
+        // Récupération des ingrédients pour la mise à jour
+        const originalIngredients = {{recipe-ingredientsListContent}};
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+            document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
+                if (input.value.includes('.')) {
+                    input.value = convertPointToComma(input.value);
+                }
+            });
+            // Ajustement initial des styles des inputs
+            adjustPortionInputStyle(); // Ajuster l'input des portions
+
+            // Appliquer l'ajustement de style initial pour tous les ingédients
+            initializeIngredientStyles();
+        });
+
+        function updatePortions(delta) {
+            const input = document.getElementById("portion-input");
+            let currentValue = parseFloat(input.value.replace(',', '.')); // Remplacer la virgule par un point pour le calcul
+            console.log("Valeur actuelle des portions :", currentValue);
+
+            if (currentValue + delta > 0) {
+                let newValue = currentValue + delta;
+                input.value = convertPointToComma(newValue); // Utiliser la virgule pour l'affichage
+                adjustPortionInputStyle(); // Ajuster le style après la mise à jour
+                updateIngredients();
+            } else {
+                console.log("Modification des portions ignorée car elle donnerait une valeur négative ou nulle.");
+            }
+        }
+
+        function updateIngredients() {
+            const input = document.getElementById("portion-input");
+            let portionValue = parseFloat(input.value.replace(',', '.')); // Remplacer la virgule par un point pour le calcul
+            console.log("Nouvelle valeur des portions :", portionValue);
+
+            // Mise à jour des attributs Bring
+            const bringContainer = document.getElementById("bring-import-container");
+            if (bringContainer) {
+                bringContainer.setAttribute("data-bring-base-quantity", portionValue);
+                bringContainer.setAttribute("data-bring-requested-quantity", portionValue);
+                console.log("Attributs data-bring mis à jour :", bringContainer.getAttribute("data-bring-base-quantity"), bringContainer.getAttribute("data-bring-requested-quantity"));
+            }
+
+            // Création de la liste des IDs d'ingrédients et mise à jour des quantités
+            originalIngredients.forEach(ingredient => {
+                let newQuantite;
+
+                // Calcul de la nouvelle quantité
+                if (ingredient.quantite === null || ingredient.quantite === 0) {
+                    newQuantite = '';
+                } else {
+                    let calculateNewQuantite = (ingredient.quantite * portionValue / 6);
+                    console.log("Quantité calculée pour l'ingrédient :", ingredient.nom, "->", calculateNewQuantite);
+
+                    newQuantite = Number.isInteger(calculateNewQuantite) ? calculateNewQuantite.toFixed(0) : calculateNewQuantite.toFixed(2);
+                }
+
+                console.log("Nouvelle quantité pour l'ingrédient :", ingredient.nom, "->", newQuantite);
+
+                // Conversion du point en virgule pour l'affichage
+                newQuantite = convertPointToComma(newQuantite);
+
+                // Recherche et mise à jour de tous les éléments avec cet ID dans le DOM
+                const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                if (ingredientElements.length > 0) {
+                    ingredientElements.forEach(ingredientSpan => {
+                        const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
+                        if (quantityInput) {
+                            quantityInput.value = newQuantite;
+                            adjustInputWidth(quantityInput); // Ajuster la largeur après la mise à jour
+                            console.log("Quantité mise à jour dans le DOM pour :", ingredient.nom);
+                        } else {
+                            console.log("Élément .highlight-quantity input introuvable pour l'ingrédient :", ingredient.nom);
+                        }
+                    });
+                } else {
+                    console.log(`Élément avec l'ID ingredient-${ingredient.ordernb} introuvable dans le DOM pour l'ingrédient :`, ingredient.nom);
+                }
+            });
+        }
+
+        function adjustPortionInputStyle() {
+            const input = document.getElementById("portion-input");
+            input.style.width = ((input.value.length + 1) * 0.5) + "em";
+            input.style.textAlign = "center";
+            input.style.border = "none";
+            input.style.outline = "none";
+        }
+
+        function adjustInputWidth(input) {
+            input.style.width = ((input.value.length + 1) * 0.5) + "em";
+            input.style.textAlign = "center";
+            input.style.border = "none";
+        }
+
+        function initializeIngredientStyles() {
+            // Parcourir tous les ingrédients et ajuster les styles initialement
+            originalIngredients.forEach(ingredient => {
+                const ingredientElements = document.querySelectorAll(`#ingredient-${ingredient.ordernb}`);
+                if (ingredientElements.length > 0) {
+                    ingredientElements.forEach(ingredientSpan => {
+                        const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
+                        if (quantityInput) {
+                            adjustInputWidth(quantityInput); // Ajuster la largeur initiale du champ input
+                            quantityInput.style.backgroundColor = "transparent";
+                            quantityInput.style.border = "none";
+                            quantityInput.style.textAlign = "center";
+                        }
+                    });
+                }
+            });
+
+            // Ajustement des styles d'encadrement et focus pour chaque ingrédient
+            document.querySelectorAll(".card-ingredient").forEach(card => {
+                const input = card.querySelector(".highlight-quantity input");
+                if (input) {
+                    input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
+
+                    // Gestion des styles d'encadrement et focus
+                    card.addEventListener("mouseover", function () {
+                        input.style.border = "1px solid #ccc";
+                        input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
+                    });
+                    card.addEventListener("mouseout", function () {
+                        input.style.border = "1px solid transparent";
+                        input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
+                    });
+                    card.addEventListener("click", function () {
+                        input.focus();
+                        input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
+                    });
+
+                    input.addEventListener("blur", function () {
+                        if (this.value !== "") {
+                            const ingredientId = parseInt(this.closest("[id^='ingredient-']").id.replace("ingredient-", ""), 10);
+                            const ingredient = originalIngredients.find(ing => ing.ordernb === ingredientId);
+                            if (ingredient) {
+                                const newPortionValue = (parseFloat(this.value.replace(',', '.')) / ingredient.quantite) * 6;
+                                document.getElementById("portion-input").value = convertPointToComma(Number.isInteger(newPortionValue) ? newPortionValue : newPortionValue.toFixed(2));
+                                updateIngredients();
+                                adjustPortionInputStyle(); // Ajuster le style après la mise à jour
+                            }
+                        }
+                    });
+
+                    input.addEventListener("keydown", function (e) {
+                        if (e.key === "Enter") {
+                            this.blur();
+                        }
+                    });
+
+                    // Ajustement de la largeur du champ input en fonction du texte
+                    input.addEventListener("input", function () {
+                        adjustInputWidth(this);
+                    });
+                    // Ajustement initial
+                    adjustInputWidth(input);
+                }
+            });
+        }
+
+        document.getElementById("portion-input").addEventListener("input", function (e) {
+            this.value = this.value.replace(/[^0-9,]/g, ''); // N'accepte que les chiffres et les virgules
+            if (this.value !== "") {
+                let newValue = parseFloat(this.value.replace(',', '.'));
+                this.value = convertPointToComma(Number.isInteger(newValue) ? newValue : newValue.toFixed(2));
+                adjustPortionInputStyle(); // Ajuster la largeur en fonction du texte
+                updateIngredients();
+            }
+        });
+
+        document.querySelector(".portion-control__value").addEventListener("mouseover", function () {
+            const input = document.getElementById("portion-input");
+            input.style.border = "1px solid #ccc";
+        });
+
+        document.querySelector(".portion-control__value").addEventListener("mouseout", function () {
+            const input = document.getElementById("portion-input");
+            input.style.border = "none";
+        });
+
+        document.querySelector(".portion-control__value").addEventListener("click", function () {
+            const input = document.getElementById("portion-input");
+            input.focus();
+            input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
+        });
+
+        document.querySelectorAll(".preparation-instruction .highlight-quantity input").forEach(input => {
+            adjustInputWidth(input);
+            input.style.backgroundColor = "transparent";
+            input.style.border = "none";
+            input.style.outline = "none";
+
+            input.addEventListener("input", function () {
+                adjustInputWidth(this);
+            });
+        });
+
+        // Function reset nb. portion à l'initiale
+        function resetPortion() {
+            const input = document.getElementById("portion-input");
+            const initialValue = input.getAttribute("value"); // Récupérer la valeur initiale depuis l'attribut 'value'
+            input.value = initialValue; // Réinitialiser l'input à la valeur initiale
+            adjustPortionInputStyle(); // Ajuster le style de l'input après la mise à jour
+            updateIngredients(); // Mettre à jour les ingrédients
+        }
+
+        // Fonction de conversion du point en virgule pour l'affichage
+        function convertPointToComma(value) {
+            if (typeof value === 'number') {
+                value = value.toString();
+            }
+            return value.replace('.', ',');
+        }
+    </script>
 
 
+    <!-- Script le bouton toggleViewButton qui switch entre grille et liste -->
+    <script>
+        document.getElementById("toggleViewButtonContainer").addEventListener("click", function () {
+            const containers = document.querySelectorAll(".recette_ingredients-items");
 
+            // Définir les deux SVG (Grid et List)
+            const gridSVG = `
+                <svg class="titre-section-image" id="toggleViewButton" height="64px" width="64px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-122.88 -122.88 757.76 757.76" xml:space="preserve" fill="#CB6863"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#CB6863;} </style> <g> <path class="st0" d="M512,182.161c0-12.088-4.164-23.909-11.996-33.389c-9.964-12.046-24.792-19.027-40.42-19.027H349.003 c-2.382-8.597-7.88-15.895-15.245-20.56l-0.133-66.82l-0.017-0.124c-0.283-13.546-7.797-25.892-19.71-32.323 c-5.582-3.016-11.763-4.532-17.895-4.532c-6.697,0-13.429,1.832-19.377,5.423l-0.016-0.025l-65.146,37.538l-0.216,0.15 c-15.696,9.78-25.725,26.492-27.041,44.919l-0.033,0.624v35.764c-20.844,0.1-40.904,7.864-56.366,21.826l-108.732,98.21 C6.732,260.969,0,276.639,0,292.726c0,5.839,0.883,11.763,2.732,17.511L54.499,472.9c6.381,20.077,25.008,33.714,46.085,33.714 h230.092c25.208,0,49.45-9.706,67.711-27.083l66.995-63.813c8.714-8.314,14.628-19.11,16.911-30.939l0.066-0.383l28.841-193.054 h-0.033C511.701,188.3,512,185.227,512,182.161z M218.996,95.539c0.6-7.164,4.515-13.628,10.597-17.477l64.696-37.288l0.266-0.159 c0.45-0.275,0.916-0.425,1.449-0.425c0.45,0,0.883,0.101,1.316,0.351h0.017c0.883,0.483,1.433,1.399,1.466,2.365l0.149,64.404 c-9.014,4.44-15.861,12.571-18.577,22.435h-36.105v34.813h215.313c2.632,0,5.198,0.592,7.514,1.683l-93.636,86.863 c-9.964,9.03-22.959,14.012-36.388,14.012h-92.07c-2.749-14.778-12.696-26.991-26.075-32.93L218.996,95.539z M151.134,177.438 c9.064-8.188,20.826-12.721,33.022-12.862l-0.033,68.902c-14.245,5.616-24.925,18.244-27.791,33.639H51.85L151.134,177.438z M48.901,340.56l-13.013-40.87c-0.666-2.15-0.999-4.298-1.016-6.464h64.629l5.998,47.334H48.901z M55.832,362.311h52.417 l5.348,42.378H69.328L55.832,362.311z M100.584,471.809c-5.898,0-11.13-3.84-12.912-9.456l-11.43-35.888h40.104l5.732,45.344 H100.584z M188.922,471.809h-44.918l-5.732-45.344h50.65V471.809z M188.922,404.689h-53.399l-5.348-42.378h58.747V404.689z M188.922,340.56h-61.497l-5.998-47.334h67.494V340.56z M198.802,277.28c-6.615,0-11.98-5.381-11.98-11.971 c0-6.623,5.365-11.971,11.98-11.971c6.597,0,11.962,5.348,11.962,11.971C210.765,271.899,205.4,277.28,198.802,277.28z M265.564,471.809h-54.882v-45.344h56.015L265.564,471.809z M267.246,404.689h-56.564v-42.378h57.631L267.246,404.689z M268.846,340.56h-58.164v-47.334h59.364L268.846,340.56z M336.541,471.517c-1.949,0.176-3.916,0.292-5.864,0.292h-43.352 l1.133-45.344h50.666L336.541,471.517z M340.373,404.689h-51.367l1.066-42.378h52.733L340.373,404.689z M344.055,340.56h-53.432 l1.182-47.334h45.27c3.282,0,6.514-0.276,9.747-0.658L344.055,340.56z M399.288,430.598l-24.909,23.716 c-3.416,3.25-7.198,6.041-11.196,8.44l2.449-42.52l36.538-29.357L399.288,430.598z M404.336,361.22l-37.005,29.732l2.315-40.445 l37.655-30.274L404.336,361.22z M409.451,290.593l-38.122,30.64l2.1-36.738c6.298-3.191,12.212-7.19,17.528-11.996l21.243-19.71 L409.451,290.593z M448.055,378.322c-0.917,4.657-3.249,8.906-6.682,12.204l-18.66,17.744l2.616-36.022l26.874-21.592 L448.055,378.322z M456.935,318.966l-29.44,23.643l2.966-40.995l33.022-26.516L456.935,318.966z M468.214,243.366l-35.588,28.616 l2.966-40.886l40.004-37.122L468.214,243.366z"></path> </g> </g></svg>   
+            `;
 
+            const listSVG = `
+                <svg class="titre-section-image" width="64px" height="64px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.5 10.5H5L6.5 19.5H18.5L20 10.5H16.5M8.5 10.5L10.2721 5.18377C10.4082 4.77543 10.7903 4.5 11.2208 4.5H13.7792C14.2097 4.5 14.5918 4.77543 14.7279 5.18377L16.5 10.5M8.5 10.5H16.5" stroke="#CB6863" stroke-width="1.2"></path> <path d="M12.5 10.5V19.5" stroke="#CB6863" stroke-width="1.2"></path> <path d="M9.5 19.5L8.5 10.5" stroke="#CB6863" stroke-width="1.2"></path> <path d="M15.5 19.5L16.5 10.5" stroke="#CB6863" stroke-width="1.2"></path> <path d="M19.5 13.5H5.5" stroke="#CB6863" stroke-width="1.2"></path> <path d="M19 16.5H6" stroke="#CB6863" stroke-width="1.2"></path> </g></svg>    
+            `;
 
+            // Basculer la classe 'list-view' sur chaque conteneur
+            containers.forEach(container => {
+                container.classList.toggle("list-view");
+            });
+
+            // Sélectionner le conteneur du bouton
+            const buttonContainer = document.getElementById("toggleViewButtonContainer");
+
+            // Vérifier l'état actuel en utilisant le dataset
+            if (buttonContainer.dataset.view === "grid") {
+                // Passer à l'affichage List
+                buttonContainer.innerHTML = listSVG;
+                buttonContainer.dataset.view = "list";
+            } else {
+                // Passer à l'affichage Grid
+                buttonContainer.innerHTML = gridSVG;
+                buttonContainer.dataset.view = "grid";
+            }
+        });
+    </script>
 
 
     <script src="/js/script.js" type="module" defer></script>
-    <script src="/js/recette_gen.js" type="module" defer></script>
     <script src="/js/recette.js" type="module" defer></script>
+
+
+    <!-- Script pour forcer le nom du bouton Bring! et remplacer l'image -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkElement = setInterval(function () {
+                const textElement = document.querySelector('.bring-import-text-light');
+                const imageElement = document.querySelector('.bring-import-image-light img');
+
+                if (textElement) {
+                    console.log("Text element found.");
+                    textElement.textContent = 'Bring!';
+                    clearInterval(checkElement);
+                }
+            }, 5); // Vérification toutes les 500 ms
+        });
+    </script>
+
+
+
+
+
 
 
 </body>
