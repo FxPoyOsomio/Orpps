@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
         .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
         .toLowerCase()
         .replace(/\s+/g, '-') // Remplacer les espaces par des tirets
-        .replace(/[^\w-]+/g, ''); // Supprimer les caractères non alphanumériques
+        .replace(/[^\w-]+/g, '-'); // Supprimer les caractères non alphanumériques
     }
 
     // Appliquer le filtrage par termes de recherche en local

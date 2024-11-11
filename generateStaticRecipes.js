@@ -316,7 +316,12 @@ async function generateStaticPages() {
     }
 
     for (const recipe of recipes) {
-        const slug = recipe.fields['Titre recettes'].toLowerCase().replace(/\s+/g, '-');
+        const slug = recipe.fields['Titre recettes']
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Remplacer les espaces par des tirets
+        .replace(/[^\w-]+/g, '-'); // Supprimer les caractères non alphanumériques
         let finalHTML = templateContent;
 
         // Vérification des catégories et sous-catégories

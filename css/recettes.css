@@ -12,63 +12,42 @@
     align-items: center;
     padding: 15px;
     cursor: pointer;
+    border-radius: 20px;
+    background-color: #FBFBFB;
 }
+
+.recette-item__container_img .secondary-buttons {
+    position: absolute;
+    top: 0; /* Ajustez selon l’espace que vous souhaitez en haut */
+    right: 0; /* Ajustez selon l’espace que vous souhaitez à droite */
+    display: flex;
+    gap: 10px; /* Espacement entre les boutons */
+    padding: 5px 0;
+    z-index: 2;
+}
+
 
 .recette-item__container_img {
-    height: 200px;
     width: 100%;
+    aspect-ratio: 21 / 9; 
     border-radius: 8px;
     overflow: hidden;
-    position: relative; /* Pour positionner les éléments absolument */
+    position: relative; 
 }
 
-/* Superposition pour le fond au-dessus de l'image */
-.recette-item__container_img::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.6); /* Fond semi-transparent */
-    backdrop-filter: blur(25px);
-    opacity: 0; /* Initialement masqué */
-    transition: opacity 1s ease;
-    border-radius: inherit; /* Hérite des coins arrondis du parent */
-    z-index: 1; /* Derrière la description mais au-dessus de l'image */
+.recette-item:hover {
+    box-shadow: 0px 40px 80px rgba(0, 0, 0, 0.05) ;
 }
 
-.recette-item:hover .recette-item__container_img::before {
-    opacity: 1; /* Affiche le fond au survol */
-}
 
-.recette-description {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: inherit;
-    opacity: 0; /* Initialement masqué */
-    transition: opacity 0.5s ease;
-    text-align: center;
-    z-index: 2; /* Au-dessus du fond */
-}
-
-.recette-item:hover .recette-description {
-    opacity: 1; /* Affiche la description au survol */
-}
 
 .recette-image {
     height: 100%;
     width: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-    box-shadow: 0px 40px 80px rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+    z-index: 1;
 }
 
 .recette-item:hover .recette-image {
@@ -77,10 +56,46 @@
 
 
 
-
-
-.recette_titre {
-    /* font-size: 1.2em; */
+.infos__recette {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    margin: 5px 0;
+    padding-top: 5px;
 }
 
+.top-infos__recette {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap ;
+    row-gap: 10px;
+    column-gap: 20px;
+    max-width: 100% ;
+}
+.top-info {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+}
+.top-info__img {
+    height: 22px;
+    width: 22px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.top-info__label {
+    padding: 0 0 0 10px;
+}
 
+.recette-item h7 {
+    font-size: 0.8em;
+}
+
+.recette-item h3 {
+    font-size: 1em;
+    width: 100%;
+    text-align: left;
+    margin: 5px 0 ;
+    padding-bottom: 5px;
+}

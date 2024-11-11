@@ -5,6 +5,7 @@ exports.handler = async (event, context) => {
   const baseId = process.env.AIRTABLE_BASE_ID;
   const subcategoriesTableId = process.env.AIRTABLE__MENUS_SOUS_CATEGORIE__TABLE_ID;
 
+  // Vérifier les variables d'environnement
   if (!apiKey || !baseId || !subcategoriesTableId) {
     console.error("Erreur : Variables d'environnement manquantes");
     return {
@@ -13,14 +14,17 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Récupérer le `recordId` passé dans la requête, si présent
-  const recordId = event.queryStringParameters.id || null;
+  // Récupérer les IDs fournis dans les paramètres d'URL
+  const ids = event.queryStringParameters.ids;
   let url = `https://api.airtable.com/v0/${baseId}/${subcategoriesTableId}`;
 
-  // Si un `recordId` est fourni, ajouter un filtre pour récupérer uniquement cette sous-catégorie
-  if (recordId) {
-    url += `?filterByFormula=RECORD_ID()='${recordId}'`;
+  // Si des IDs sont fournis, appliquer le filtre
+  if (ids) {
+    const idList = ids.split(',').map(id => `RECORD_ID()='${id}'`).join(',');
+    url += `?filterByFormula=OR(${idList})`;
   }
+
+  console.log("URL de requête vers Airtable (Sous-catégories) :", url);
 
   try {
     const response = await fetch(url, {
@@ -30,7 +34,8 @@ exports.handler = async (event, context) => {
     });
 
     if (!response.ok) {
-      return { statusCode: response.status, body: `Error fetching data: ${response.statusText}` };
+      console.error(`Erreur lors de la récupération des sous-catégories : ${response.statusText}`);
+      return { statusCode: response.status, body: `Error fetching data from Airtable: ${response.statusText}` };
     }
 
     const data = await response.json();
@@ -46,6 +51,12 @@ exports.handler = async (event, context) => {
     };
   } catch (error) {
     console.error("Erreur interne :", error.message);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error', details: error.message }) };
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ error: 'Internal Server Error', details: error.message })
+    };
   }
 };

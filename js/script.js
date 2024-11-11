@@ -495,7 +495,8 @@ class SecondaryButton extends HTMLElement {
         // Créer un bouton
         this.button = document.createElement('button');
         this.button.style.color = '#CB6863'; // Couleur du texte
-        this.button.style.backgroundColor = 'unset'; // Supprimer la couleur de fond
+        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Supprimer la couleur de fond
+        this.button.style.backdropFilter = 'blur(5px)';
         this.button.style.borderRadius = '50px'; // Arrondi des coins
         this.button.style.padding = '10px 20px'; // Espacement interne
         this.button.style.border = '1px solid #CB6863'; // Bordure de 1px de couleur #CB6863
@@ -517,7 +518,6 @@ class SecondaryButton extends HTMLElement {
         this.iconContainer.style.display = 'flex';
         this.iconContainer.style.alignItems = 'center';
         this.iconContainer.style.justifyContent = 'center';
-        this.iconContainer.style.marginRight = '10px';
 
         // Vérifier s'il y a un SVG
         const svg = this.querySelector('svg');
@@ -596,13 +596,25 @@ class SecondaryButton extends HTMLElement {
         // Appelée lorsque l'élément est ajouté au DOM
         const buttonText = this.getAttribute('text');
         if (buttonText) {
+            // Si le texte est présent
             this.textElement = document.createElement('span');
-            this.textElement.textContent = buttonText; // Utiliser le texte fourni
-            this.textElement.style.color = '#CB6863'; // Couleur du texte
-            this.textElement.style.fontFamily = "'Montserrat Alternates'"; // Police du texte
-            this.textElement.style.fontSize = '1.1em'; // Taille de la police
-            this.textElement.style.fontWeight = '400'; // Graisse de la police
+            this.textElement.textContent = buttonText;
+            this.textElement.style.color = '#CB6863';
+            this.textElement.style.fontFamily = "'Montserrat Alternates'";
+            this.textElement.style.fontSize = '1.1em';
+            this.textElement.style.fontWeight = '400';
             this.button.appendChild(this.textElement);
+
+            // Ajuster les styles pour le bouton avec texte
+            this.button.style.padding = '10px 20px';
+            this.button.style.width = 'auto';
+            this.iconContainer.style.marginRight = '10px'; // Espace entre l'icône et le texte
+        } else {
+            // Si aucun texte n'est présent
+            this.button.style.padding = '10px'; // Réduire le padding pour garder le bouton en cercle
+            this.button.style.width = '40px'; // Largeur et hauteur égales pour un cercle
+            this.button.style.height = '40px';
+            this.iconContainer.style.marginRight = '0'; // Pas de marge pour centrer
         }
     }
 
