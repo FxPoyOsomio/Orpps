@@ -5,6 +5,12 @@
 
 }
 
+.subCategories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px; /* Espacement entre les boutons */
+}
 
 .recette-item {
     display: flex;
@@ -16,16 +22,58 @@
     background-color: #FBFBFB;
 }
 
-.recette-item__container_img .secondary-buttons {
+.recette-item .subCategories {
     position: absolute;
     top: 0; /* Ajustez selon l’espace que vous souhaitez en haut */
-    right: 0; /* Ajustez selon l’espace que vous souhaitez à droite */
+    left: 0; /* Ajustez selon l’espace que vous souhaitez à droite */
     display: flex;
     gap: 10px; /* Espacement entre les boutons */
-    padding: 5px 0;
+    padding-top: 5px;
+    padding-left: 5px;
     z-index: 2;
 }
 
+.subCategory {
+    padding: 3px 10px;
+    backdrop-filter: blur(2px);
+    border-radius: 8px;
+    outline: 1px solid #696969;
+    outline-offset: -1px;
+}
+
+#subCategories .subCategory:hover {
+    outline: 1px solid #CB6863;
+}
+
+#subCategories .subCategory:hover h7{
+    color: #CB6863;
+}
+
+#subCategories .subCategory.active {
+    border: none;
+    background-color: rgba(27, 27, 27, 0.5);
+    outline: unset;
+}
+
+#subCategories .subCategory.active h7{
+    color: #FFFFFF;
+}
+
+.recette-item .subCategory {
+    background-color: rgba(27, 27, 27, 0.5);
+    backdrop-filter: blur(2px);
+
+}
+
+.subCategory h7 {
+    color: #696969;
+    font-size: 0.7em;
+}
+
+.recette-item .subCategory h7 {
+    color: #FFFFFF;
+
+}
 
 .recette-item__container_img {
     width: 100%;

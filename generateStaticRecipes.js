@@ -1,11 +1,17 @@
 require('dotenv').config();
 
+const { exec } = require('child_process');
+
+
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
 
 const TEMPLATE_PATH = path.join(__dirname, 'recipeTemplate.html');
 const OUTPUT_DIR = path.join(__dirname, 'dist', 'recettes');
+
+
+
 
 // Fonction pour récupérer les recettes depuis Airtable
 async function fetchRecipes() {
@@ -359,7 +365,7 @@ async function generateStaticPages() {
             </a>`).join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
 
         const subCategorieMenu = subCategoryNames.map(subCategory => 
-            `<a href="/recettes?categorie=${subCategory.name}" class="bread-crumbs__link">
+            `<a href="/recettes?subcategorie=${subCategory.name}" class="bread-crumbs__link">
                 <h6>${subCategory.name}</h6>
             </a>`).join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
 
@@ -416,6 +422,16 @@ async function generateStaticPages() {
 
         fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), finalHTML);
         console.log(`Page générée pour la recette: ${slug}`);
+
+        // Appel du script de génération de carte avec l'ID de la recette
+        exec(`node generateRecipeCard.js ${recipe.id}`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Erreur lors de la génération de la carte de recette ${recipe.id}: ${error}`);
+                return;
+            }
+            console.log(stdout);
+            if (stderr) console.error(stderr);
+        });
     }
 }
 

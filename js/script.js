@@ -1,4 +1,4 @@
-import { initializeRecipes, loadRecipes } from './recettes.js';
+import { initializeRecipes } from './recettes.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header fetch...");
@@ -10,14 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             loadHeaderCategories().then(() => {
                 initializeHeader();
-
-                // Initialiser les événements de recherche lorsque le menu est ouvert
                 applySearchEventsOnHeaderOpen();
             });
 
-            // Vérifie si on est sur la page des recettes ou si l'URL contient des filtres
+            // Initialiser l'affichage des recettes filtrées, si on est sur la page des recettes
             if (window.location.pathname === "/recettes.html" || window.location.search.includes("categorie") || window.location.search.includes("searchTerms")) {
-                initializeRecipes(); // Affiche toutes les recettes ou les recettes filtrées immédiatement
+                initializeRecipes();
             }
         })
         .catch(error => console.error("Error loading header:", error));
@@ -30,19 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
-
 // Fonction pour charger les catégories dans le header
 async function loadHeaderCategories() {
     try {
-        console.log("Fetching categories for header...");
         const response = await fetch('/.netlify/functions/get-menu_categories');
         if (!response.ok) {
             throw new Error('Erreur lors de la récupération des catégories');
         }
 
         const data = await response.json();
-        console.log("Header categories received:", data);
-
         const categoriesContainer = document.querySelector('.Menu_categorie');
         if (!categoriesContainer) {
             console.error("Element with class 'Menu_categorie' not found.");
@@ -51,36 +45,14 @@ async function loadHeaderCategories() {
 
         categoriesContainer.innerHTML = '';
 
-        // Ajouter chaque catégorie en tant que <secondary-button>
         data.forEach(record => {
             const category = record.fields;
             const categoryName = category['Nom Menu'] || 'Sans nom';
-        
+
+            // Utiliser un bouton de catégorie avec un lien direct
             const categoryButton = document.createElement('secondary-button');
             categoryButton.setAttribute('text', categoryName);
             categoryButton.setAttribute('href', `/recettes?categorie=${encodeURIComponent(categoryName)}`);
-        
-            categoryButton.addEventListener('click', (event) => {
-                event.preventDefault();
-        
-                const allButtons = categoriesContainer.querySelectorAll('secondary-button');
-                allButtons.forEach(button => button.classList.remove('active'));
-        
-                categoryButton.classList.add('active');
-        
-                // Récupère les termes de recherche existants
-                const searchInput = document.querySelector(".header__search-content input");
-                const searchTerms = searchInput ? searchInput.value.trim() : '';
-        
-                // Construit l'URL avec la catégorie et les termes de recherche
-                let url = `/recettes?categorie=${encodeURIComponent(categoryName)}`;
-                if (searchTerms) {
-                    url += `&searchTerms=${encodeURIComponent(searchTerms)}`;
-                }
-        
-                window.location.href = url;
-            });
-        
             categoriesContainer.appendChild(categoryButton);
         });
     } catch (error) {
@@ -88,62 +60,41 @@ async function loadHeaderCategories() {
     }
 }
 
-// Fonction pour initialiser les éléments du header après leur chargement
+// Reste des fonctions pour l'affichage et la gestion des interactions
 function initializeHeader() {
+    // Configuration du menu burger et gestion de l'overlay
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
     const header = document.querySelector(".header");
-    const headerContainer = document.querySelector(".header__container");
-    const searchBarContainer = document.getElementById("headerSearchBar");
 
     if (burgerMenu && overlayMenu) {
         burgerMenu.addEventListener("click", () => {
             header.classList.toggle("modal-burger-open");
             overlayMenu.classList.toggle("active");
             burgerMenu.classList.toggle("active");
-
-            handleSearchBarToggle(searchBarContainer);
-            animateCategoryButtons(overlayMenu.classList.contains("active"));
-
-            // Initialize recipes and search events only when the menu is opened
-            if (overlayMenu.classList.contains("active")) {
-                initializeRecipes(); // Load recipes with the current filters
-                applySearchEvents(searchBarContainer); // Apply search bar event listeners
-            }
-        });
-
-        document.addEventListener("click", (event) => {
-            if (shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer)) {
-                closeMenu(header, overlayMenu, burgerMenu);
-                handleSearchBarReset(searchBarContainer);
-                animateCategoryButtons(false);
-            }
         });
     }
 }
 
 
+// Fonction pour ajouter les événements de recherche
 function applySearchEventsOnHeaderOpen() {
-    const burgerMenu = document.getElementById("burgerMenu");
-    const overlayMenu = document.getElementById("overlayMenu");
+    const searchButton = document.getElementById("SearchBarButton");
+    const searchInput = document.getElementById("searchInput");
 
-    if (burgerMenu && overlayMenu) {
-        burgerMenu.addEventListener("click", () => {
-            if (overlayMenu.classList.contains("active")) {
-                const searchInput = document.getElementById('searchInput');
-                if (searchInput) {
-                    searchInput.addEventListener('input', () => {
-                        console.log("Contenu de l'input en temps réel :", searchInput.value);
-                    });
-                }
+    if (searchButton && searchInput) {
+        searchButton.addEventListener("click", () => {
+            const searchTerms = searchInput.value.trim();
+            if (searchTerms) {
+                window.location.href = `/recettes?searchTerms=${encodeURIComponent(searchTerms)}`;
+            }
+        });
 
-                const searchButton = document.getElementById("SearchBarButton");
-                if (searchButton) {
-                    searchButton.addEventListener('click', () => {
-                        const selectedCategory = new URLSearchParams(window.location.search).get('categorie');
-                        const searchTerms = searchInput ? searchInput.value.trim().split(' ') : [];
-                        loadRecipes(selectedCategory ? [selectedCategory] : null, searchTerms);
-                    });
+        searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                const searchTerms = searchInput.value.trim();
+                if (searchTerms) {
+                    window.location.href = `/recettes?searchTerms=${encodeURIComponent(searchTerms)}`;
                 }
             }
         });

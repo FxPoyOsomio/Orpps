@@ -14,14 +14,29 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Récupérer les IDs fournis dans les paramètres d'URL
+  // Récupérer les paramètres d'URL pour les IDs de sous-catégories et le nom de catégorie
   const ids = event.queryStringParameters.ids;
+  const categoryName = event.queryStringParameters.categoryName; // Nom de la catégorie pour le filtre
   let url = `https://api.airtable.com/v0/${baseId}/${subcategoriesTableId}`;
 
-  // Si des IDs sont fournis, appliquer le filtre
+  // Construire le filtre en fonction des paramètres
+  let filterByFormula = '';
+
   if (ids) {
+    // Filtre pour des IDs de sous-catégories spécifiques
     const idList = ids.split(',').map(id => `RECORD_ID()='${id}'`).join(',');
-    url += `?filterByFormula=OR(${idList})`;
+    filterByFormula = `OR(${idList})`;
+  }
+
+  if (categoryName) {
+    // Ajouter un filtre pour rechercher le nom de catégorie dans le champ "Nom Catégorie Menu"
+    const categoryFilter = `SEARCH('${categoryName}', {Nom Catégorie Menu})`;
+    filterByFormula = filterByFormula ? `AND(${filterByFormula}, ${categoryFilter})` : categoryFilter;
+  }
+
+  // Ajouter le filtre à l'URL s'il est défini
+  if (filterByFormula) {
+    url += `?filterByFormula=${encodeURIComponent(filterByFormula)}`;
   }
 
   console.log("URL de requête vers Airtable (Sous-catégories) :", url);
@@ -38,8 +53,24 @@ exports.handler = async (event, context) => {
       return { statusCode: response.status, body: `Error fetching data from Airtable: ${response.statusText}` };
     }
 
-    const data = await response.json();
+    let data = await response.json();
     console.log("Données reçues de Airtable (Sous-catégories) :", JSON.stringify(data, null, 2));
+
+    // Éliminer les doublons de sous-catégories basés sur le nom, si aucune catégorie spécifique n'est fournie
+    if (!categoryName) {
+      const uniqueSubCategories = [];
+      const namesSeen = new Set();
+
+      data.records.forEach(record => {
+        const name = record.fields['Nom sous-catégorie menus'];
+        if (!namesSeen.has(name)) {
+          namesSeen.add(name);
+          uniqueSubCategories.push(record);
+        }
+      });
+
+      data.records = uniqueSubCategories;
+    }
 
     return {
       statusCode: 200,
