@@ -8,7 +8,6 @@ export function initializeRecipes() {
     console.log("Paramètre de sous-catégorie active :", activeSubCategory);
     console.log("Paramètre de recherche initial :", searchTerms);
 
-    // Modifier le contenu de l'élément H1 en fonction de la catégorie sélectionnée
     const categoryTitleElement = document.querySelector('.display_categorie__titre');
     if (categoryTitleElement && selectedCategory) {
         categoryTitleElement.textContent = selectedCategory;
@@ -16,11 +15,11 @@ export function initializeRecipes() {
         categoryTitleElement.textContent = 'Toutes les recettes';
     }
 
-    // Afficher les sous-catégories
-    displaySubCategories(selectedCategory || '', activeSubCategory);
-
-    // Charger les recettes statiques et appliquer les filtres en fonction des paramètres d'URL
-    loadRecipes(selectedCategory, searchTerms);
+    // Afficher les sous-catégories et ensuite charger les recettes avec le filtre
+    displaySubCategories(selectedCategory || '', activeSubCategory)
+        .then(() => {
+            loadRecipes(selectedCategory, searchTerms);
+        });
 }
 
 
@@ -77,30 +76,17 @@ async function displaySubCategories(categoryName, activeSubCategory = null) {
                     activeSubCategories.push(subCategoryName);
                     subCategoryDiv.classList.add('active');
                 }
-                applyCombinedFilters(); // Appliquer le filtre immédiatement après la modification
+                applyCombinedFilters(categoryName, searchTerms); // Utiliser les paramètres de filtre
             });
 
             subCategoriesContainer.appendChild(subCategoryDiv);
         });
 
-        // Appel initial pour appliquer le filtre en fonction de la sous-catégorie active définie dans l'URL
-        applyCombinedFilters();
-        
         console.log("Sous-catégories ajoutées au DOM.");
     } catch (error) {
         console.error("Erreur lors de l'affichage des sous-catégories :", error);
     }
 }
-
-
-
-
-
-
-
-
-
-
 async function loadRecipes(selectedCategory = '', searchTerms = '') {
     try {
         const recipesContainer = document.querySelector('#recettes-list');
@@ -117,6 +103,7 @@ async function loadRecipes(selectedCategory = '', searchTerms = '') {
         const staticContent = await response.text();
         recipesContainer.innerHTML = staticContent;
 
+        // Appliquer les filtres en fonction de la catégorie et des termes de recherche
         applyCombinedFilters(selectedCategory, searchTerms);
     } catch (error) {
         console.error('Erreur lors du chargement des recettes statiques :', error);
@@ -167,7 +154,6 @@ async function fetchSubCategories(subCategoryIds) {
 }
 
 
-// Fonction de filtrage combiné pour les catégories, sous-catégories et recherche
 function applyCombinedFilters(category = '', searchTerms = '') {
     const recipes = document.querySelectorAll('.recette-item');
 
