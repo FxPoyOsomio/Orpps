@@ -665,7 +665,8 @@ p2 {
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
         height: calc(100vh - 20px); /* Ajustez 80px à la hauteur réelle de votre header */
-        padding: 0 15px;
+        padding: 15px 15px 0 15px !important; 
+        justify-content: unset !important;
     }
 
     .header__burger {

@@ -755,9 +755,7 @@ html {
     .section-ingredient {
         grid-template-columns: 1fr; /* 1 colonne sur les écrans plus petits */
     }
-    .toggleViewButtonContainer {
-        
-    }
+
     .portion-control {
         margin-left: auto;
         margin-right: auto;
