@@ -916,24 +916,33 @@ Le saumon gravlax peut être servi avec une Sauce gravlax (mayonnaise sucrée fo
         const originalIngredients = [{"quantite":500,"unite":"","nom":" de saumon","simplename":["Saumon"],"order":"[1]","ordernb":1,"img":"/assets/images/img_ingredients/Viandes et Poissons/Poissonnerie/Filets et pavés/Saumon.jpg"},{"quantite":100,"unite":"","nom":" de sel fin","simplename":["Sel fin"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg"},{"quantite":50,"unite":"","nom":" de sucre semoule","simplename":["Sucre semoule"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Sucre, farine/Sucre%20semoule.jpg"},{"quantite":10,"unite":"","nom":" de baies roses","simplename":["Baies roses"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Baies%20roses.jpg"},{"quantite":0.5,"unite":"","nom":" d'aneth","simplename":["Aneth"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Herbes aromatiques/Aneth.jpg"},{"quantite":1,"unite":"","nom":"orange","simplename":["Orange"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Orange.jpg"},{"quantite":25,"unite":"","nom":" de sirop d'érable","simplename":["Sirop d'érable"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Sirop%20d'%C3%A9rable.jpg"},{"quantite":10,"unite":"","nom":" de gin","simplename":["Gin"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Boissons/Boissons alcoolisées/Apéritif et spiritueux/Gin.jpg"},{"quantite":50,"unite":"","nom":" de betteraves cuites","simplename":["Betteraves cuites"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes racines/Betteraves%20cuites.jpg"}];
 
         document.addEventListener("DOMContentLoaded", function () {
-            const bringContainer = document.getElementById("bring-import-container");
-            // Initialiser la quantité de base pour le widget Bring!
-            const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
-            window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+            setTimeout(() => {
+                const bringContainer = document.getElementById("bring-import-container");
+                
+                // Initialiser la quantité de base pour le widget Bring!
+                const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
+                window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+                window.bringwidgets.import.setRequestedQuantity(initialPortion);
 
-            // Mettre aussi à jour la quantité demandée initialement
-            window.bringwidgets.import.setRequestedQuantity(initialPortion);
-            // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
-            document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
-                if (input.value.includes('.')) {
-                    input.value = convertPointToComma(input.value);
-                }
-            });
-            // Ajustement initial des styles des inputs
-            adjustPortionInputStyle(); // Ajuster l'input des portions
+                // Forcer un reflow pour Safari
+                const portionInput = document.getElementById("portion-input");
+                portionInput.offsetHeight; // Lecture de l'offsetHeight pour forcer Safari à recalculer le style
 
-            // Appliquer l'ajustement de style initial pour tous les ingédients
-            initializeIngredientStyles();
+                // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+                document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
+                    if (input.value.includes('.')) {
+                        input.value = convertPointToComma(input.value);
+                    }
+                });
+                
+                // Ajustement initial des styles des inputs
+                adjustPortionInputStyle(); // Premier appel pour ajuster l'input des portions
+                adjustPortionInputStyle(); // Deuxième appel pour renforcer l'application dans Safari
+                
+                // Appliquer l'ajustement de style initial pour tous les ingrédients
+                initializeIngredientStyles();
+                initializeIngredientStyles(); // Deuxième appel pour Safari
+            }, 50); // Délai de 50 ms pour laisser Safari traiter le DOM
         });
 
         function updatePortions(delta) {

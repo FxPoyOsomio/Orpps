@@ -852,24 +852,33 @@
         const originalIngredients = [{"quantite":2,"unite":"","nom":"magrets de canard","simplename":["Magret de canard"],"order":"[1]","ordernb":1,"img":"/assets/images/img_ingredients/Viandes et Poissons/Volaille/Canard/Magret%20de%20canard.jpg"},{"quantite":1,"unite":"","nom":" de piment d'espellette","simplename":["Piment d'Espellette"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/Piment%20d'Espellette.jpg"},{"quantite":4,"unite":"","nom":" de miel de montagne","simplename":["Miel de montagne"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"},{"quantite":0.25,"unite":"","nom":"citron jaune","simplename":["Citron jaune"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20jaune.jpg"},{"quantite":20,"unite":"","nom":" de fond de veau","simplename":["Fond de veau"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Bouillon et fond de sauce/Fond%20de%20veau.jpg"},{"quantite":"","unite":"","nom":["Poivre noir"],"simplename":["Poivre noir"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"},{"quantite":40,"unite":"","nom":" de beurre doux","simplename":["Beurre Doux"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Doux.jpg"},{"quantite":"","unite":"","nom":["Sel fin"],"simplename":["Sel fin"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Sel%20fin.jpg"},{"quantite":4,"unite":"","nom":" de vinaigre de vin rouge","simplename":["Vinaigre de vin rouge"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Vinaigre%20de%20vin%20rouge.jpg"}];
 
         document.addEventListener("DOMContentLoaded", function () {
-            const bringContainer = document.getElementById("bring-import-container");
-            // Initialiser la quantité de base pour le widget Bring!
-            const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
-            window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+            setTimeout(() => {
+                const bringContainer = document.getElementById("bring-import-container");
+                
+                // Initialiser la quantité de base pour le widget Bring!
+                const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
+                window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+                window.bringwidgets.import.setRequestedQuantity(initialPortion);
 
-            // Mettre aussi à jour la quantité demandée initialement
-            window.bringwidgets.import.setRequestedQuantity(initialPortion);
-            // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
-            document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
-                if (input.value.includes('.')) {
-                    input.value = convertPointToComma(input.value);
-                }
-            });
-            // Ajustement initial des styles des inputs
-            adjustPortionInputStyle(); // Ajuster l'input des portions
+                // Forcer un reflow pour Safari
+                const portionInput = document.getElementById("portion-input");
+                portionInput.offsetHeight; // Lecture de l'offsetHeight pour forcer Safari à recalculer le style
 
-            // Appliquer l'ajustement de style initial pour tous les ingédients
-            initializeIngredientStyles();
+                // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+                document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
+                    if (input.value.includes('.')) {
+                        input.value = convertPointToComma(input.value);
+                    }
+                });
+                
+                // Ajustement initial des styles des inputs
+                adjustPortionInputStyle(); // Premier appel pour ajuster l'input des portions
+                adjustPortionInputStyle(); // Deuxième appel pour renforcer l'application dans Safari
+                
+                // Appliquer l'ajustement de style initial pour tous les ingrédients
+                initializeIngredientStyles();
+                initializeIngredientStyles(); // Deuxième appel pour Safari
+            }, 50); // Délai de 50 ms pour laisser Safari traiter le DOM
         });
 
         function updatePortions(delta) {

@@ -507,24 +507,33 @@
         const originalIngredients = {{recipe-ingredientsListContent}};
 
         document.addEventListener("DOMContentLoaded", function () {
-            const bringContainer = document.getElementById("bring-import-container");
-            // Initialiser la quantité de base pour le widget Bring!
-            const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
-            window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+            setTimeout(() => {
+                const bringContainer = document.getElementById("bring-import-container");
+                
+                // Initialiser la quantité de base pour le widget Bring!
+                const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
+                window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+                window.bringwidgets.import.setRequestedQuantity(initialPortion);
 
-            // Mettre aussi à jour la quantité demandée initialement
-            window.bringwidgets.import.setRequestedQuantity(initialPortion);
-            // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
-            document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
-                if (input.value.includes('.')) {
-                    input.value = convertPointToComma(input.value);
-                }
-            });
-            // Ajustement initial des styles des inputs
-            adjustPortionInputStyle(); // Ajuster l'input des portions
+                // Forcer un reflow pour Safari
+                const portionInput = document.getElementById("portion-input");
+                portionInput.offsetHeight; // Lecture de l'offsetHeight pour forcer Safari à recalculer le style
 
-            // Appliquer l'ajustement de style initial pour tous les ingédients
-            initializeIngredientStyles();
+                // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+                document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
+                    if (input.value.includes('.')) {
+                        input.value = convertPointToComma(input.value);
+                    }
+                });
+                
+                // Ajustement initial des styles des inputs
+                adjustPortionInputStyle(); // Premier appel pour ajuster l'input des portions
+                adjustPortionInputStyle(); // Deuxième appel pour renforcer l'application dans Safari
+                
+                // Appliquer l'ajustement de style initial pour tous les ingrédients
+                initializeIngredientStyles();
+                initializeIngredientStyles(); // Deuxième appel pour Safari
+            }, 50); // Délai de 50 ms pour laisser Safari traiter le DOM
         });
 
         function updatePortions(delta) {
