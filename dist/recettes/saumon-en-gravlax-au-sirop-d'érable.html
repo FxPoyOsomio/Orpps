@@ -355,6 +355,31 @@
                 <div id="preparationIngrédients">
                     
                     <div class="preparation-ingrédients">
+                        <h3>Préparation du saumon</h3>
+                        <div class="recette_ingredients-items">
+                            
+                            <div class="card-ingredient" data-name="1">
+                                <div class="card-ingredient-image">
+                                    <img src="/assets/images/img_ingredients/Viandes et Poissons/Poissonnerie/Filets et pavés/Saumon.jpg" alt=" de saumon">
+                                </div>
+                                <span class="recette_ingredients-details" id="ingredients">
+                                    <span id="ingredient-1">
+                                        
+                                        <span class="recette_ingredients-qtunit">
+                                            <span class="highlight-quantity">
+                                                <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="500">
+                                                <span> g.</span>
+                                            </span>
+                                        </span> 
+                                         de saumon
+                                    </span>
+                                </span>
+                            </div>
+                                            
+                        </div>
+                    </div>
+                
+                    <div class="preparation-ingrédients">
                         <h3>Préparation de la saumure</h3>
                         <div class="recette_ingredients-items">
                             
@@ -655,6 +680,39 @@
                 <div id="preparationEtapes">
                     
             <div class="preparation-instruction">
+                <h3>Préparation du saumon</h3>
+                
+                        <div class="etape">
+                            <h4>ÉTAPE 1</h4>
+                            <p>Si ce n'est pas déjà fait par votre poissonnerie, écailler et lever les filets de saumon. Parer les restes de nageoires, les parties graisseuses, noirâtres ou blanches.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 2</h4>
+                            <p>Rincer abondamment le filet de <span id="ingredients" class="ingredient-preparation">
+                            <span id="ingredient-1">
+                                
+                                    <span class="highlight-quantity">
+                                        <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="500">
+                                        <span> g.</span>
+                                    </span>
+                                 
+                                 de saumon
+                            </span>
+                        </span> à l'eau glacée.
+</p>
+                        </div>
+                    
+                        <div class="etape">
+                            <h4>ÉTAPE 3</h4>
+                            <p>Essuyer soigneusement les filets avec du papier absorbant pour bien les sécher.
+</p>
+                        </div>
+                    
+            </div>
+        
+            <div class="preparation-instruction">
                 <h3>Préparation de la saumure</h3>
                 
                         <div class="etape">
@@ -859,11 +917,12 @@ Le saumon gravlax peut être servi avec une Sauce gravlax (mayonnaise sucrée fo
 
         document.addEventListener("DOMContentLoaded", function () {
             const bringContainer = document.getElementById("bring-import-container");
-            const basePortionInput = document.getElementById("portion-input").value.replace(',', '.'); // Conversion pour s'assurer d'un format correct
-            if (bringContainer) {
-                bringContainer.setAttribute("data-bring-base-quantity", basePortionInput);
-                bringContainer.setAttribute("data-bring-requested-quantity", basePortionInput);
-            }
+            // Initialiser la quantité de base pour le widget Bring!
+            const initialPortion = parseFloat(document.getElementById("portion-input").value.replace(',', '.'));
+            window.bringwidgets.import.setBaseQuantity(initialPortion); // Définir la base une fois
+
+            // Mettre aussi à jour la quantité demandée initialement
+            window.bringwidgets.import.setRequestedQuantity(initialPortion);
             // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
             document.querySelectorAll(".highlight-quantity input, #portion-input").forEach(input => {
                 if (input.value.includes('.')) {
@@ -897,12 +956,10 @@ Le saumon gravlax peut être servi avec une Sauce gravlax (mayonnaise sucrée fo
             let portionValue = parseFloat(input.value.replace(',', '.')); // Remplacer la virgule par un point pour le calcul
             console.log("Nouvelle valeur des portions :", portionValue);
 
-            // Mise à jour de la quantité demandée dans le widget Bring!
-            const bringContainer = document.getElementById("bring-import-container");
-            if (bringContainer) {
-                bringContainer.setAttribute("data-bring-requested-quantity", portionValue);
-                console.log("Quantité demandée dans Bring! mise à jour :", bringContainer.getAttribute("data-bring-requested-quantity"));
-            }
+            // Utiliser setRequestedQuantity pour mettre à jour la quantité demandée dans le widget Bring!
+            window.bringwidgets.import.setRequestedQuantity(portionValue);
+            console.log("Quantité demandée dans Bring! mise à jour :", portionValue);
+
 
             // Création de la liste des IDs d'ingrédients et mise à jour des quantités
             originalIngredients.forEach(ingredient => {
