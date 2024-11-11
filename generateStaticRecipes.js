@@ -104,18 +104,15 @@ async function fetchIngredients(ingredientIds) {
         const ingredient = await response.json();
 
         // Vérification de l'image
-        const imgUrlArray = ingredient.fields['url_Img (from INGRÉDIENTS [Base])'];
+        const img = ingredient.fields['relative_url_img'];
         
-        const relativeImgUrl = (Array.isArray(imgUrlArray) && imgUrlArray.length > 0)
-            ? imgUrlArray[0].replace('https://fxpoyosomio.github.io/Orpps', '')
-            : '';
-        
+
         return {
             ordernb: ingredient.fields['Ordre d\'ingrédient'],
             name: ingredient.fields['Nom ingrédient (sans quantité)'],
             quantity: ingredient.fields['Qté. [base]'],
             unit: ingredient.fields['Unité'],
-            img: relativeImgUrl
+            img: img
         };
 
     }));
@@ -200,10 +197,8 @@ async function fetchIngredientsListContent(ingredientIds) {
             const order = `[${ordernb}]`;
 
             // Traitement pour l'URL de l'image
-            const imgArray = ingredient.fields['url_Img (from INGRÉDIENTS [Base])'];
-            const img = Array.isArray(imgArray) && imgArray.length > 0
-                ? imgArray[0].replace('https://fxpoyosomio.github.io/Orpps', '')
-                : "";
+            const img = ingredient.fields['relative_url_img'];
+            
 
             return { quantite, unite, nom: nomIngredient, simplename: nomSimpleIngredient, order, ordernb, img };
         } else {
