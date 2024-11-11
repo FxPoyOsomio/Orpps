@@ -422,7 +422,7 @@ p2 {
 }
 
 /* Ajout d'un effet de survol */
-.user-logo:hover .user-logo__mustache {
+.user-logo:hover .user-logo__mustache , .user-logo:active .user-logo__mustache {
     animation: bounce 1.5s ; /* Animation au survol */
 }
 
@@ -438,7 +438,7 @@ p2 {
     }
 }
 
-.user-logo:hover .user-logo__hat {
+.user-logo:hover .user-logo__hat , .user-logo:active .user-logo__hat{
     animation: lift 1.5s; /* Ajoute une animation pour le chapeau */
 }
 
@@ -665,8 +665,8 @@ p2 {
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
         height: calc(100vh - 20px); /* Ajustez 80px à la hauteur réelle de votre header */
-        padding: 15px 15px 0 15px !important; 
-        justify-content: unset !important;
+        padding: 15px 15px 0 15px ; 
+        justify-content: unset ;
     }
 
     .header__burger {
