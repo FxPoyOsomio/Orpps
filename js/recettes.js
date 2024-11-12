@@ -1,7 +1,13 @@
 export function initializeRecipes() {
+    const url = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     const selectedCategory = decodeURIComponent(urlParams.get('categorie') || '');
     const activeSubCategory = decodeURIComponent(urlParams.get('subcategorie') || '');
+
+    // Si l'URL est "/recettes" sans ".html", afficher toutes les recettes
+    if (url === '/recettes' || url === '/recettes.html') {
+        console.log("Affichage de toutes les recettes par défaut.");
+    }
 
     console.log("Paramètre de catégorie initial :", selectedCategory);
     console.log("Paramètre de sous-catégorie active :", activeSubCategory);
@@ -19,9 +25,12 @@ export function initializeRecipes() {
         if (activeSubCategory) {
             activeSubCategories.push(activeSubCategory);
             applyCombinedFilters(selectedCategory);
+        } else {
+            applyCombinedFilters(''); // Affiche toutes les recettes si aucune catégorie ni sous-catégorie
         }
     });
 }
+
 
 // Tableau pour stocker les sous-catégories actives
 let activeSubCategories = [];
