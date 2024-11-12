@@ -9,6 +9,8 @@ const fetch = require('node-fetch');
 
 const TEMPLATE_PATH = path.join(__dirname, 'recipeTemplate.html');
 const OUTPUT_DIR = path.join(__dirname, 'dist', 'recettes');
+const IMAGE_DIR = path.join(__dirname, 'assets', 'images', 'img_recette');
+
 
 
 
@@ -305,6 +307,15 @@ function generateDynamicContent(recipeData, preparationsDetails, ingredientsList
     };
 }
 
+// Fonction pour télécharger l'image depuis une URL et la sauvegarder localement
+async function downloadImage(url, outputPath) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Erreur lors du téléchargement de l'image: ${response.statusText}`);
+    const buffer = await response.buffer();
+    fs.writeFileSync(outputPath, buffer);
+    console.log(`Image téléchargée et sauvegardée : ${outputPath}`);
+}
+
 
 
 // Fonction principale pour générer les pages statiques
@@ -314,6 +325,10 @@ async function generateStaticPages() {
 
     if (!fs.existsSync(OUTPUT_DIR)) {
         fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    }
+
+    if (!fs.existsSync(IMAGE_DIR)) {
+        fs.mkdirSync(IMAGE_DIR, { recursive: true });
     }
 
     for (const recipe of recipes) {
@@ -381,10 +396,20 @@ async function generateStaticPages() {
         const dynamicContent = generateDynamicContent(recipe, recipe.preparationsDetails, ingredientsListContent);
 
 
+        // Gestion des images
         const imageUrl = Array.isArray(recipe.fields['img.']) && recipe.fields['img.'].length > 0
-        ? recipe.fields['img.'][0].url
-        : '';
+            ? recipe.fields['img.'][0].url
+            : '';
+        
+        const localImagePath = path.join(IMAGE_DIR, `${slug}.jpg`);
 
+        // Télécharger l'image si elle n'existe pas déjà localement
+        if (imageUrl && !fs.existsSync(localImagePath)) {
+            await downloadImage(imageUrl, localImagePath);
+        }
+
+        // Utiliser le chemin de l'image locale dans le HTML
+        const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
 
 
@@ -392,7 +417,7 @@ async function generateStaticPages() {
         finalHTML = finalHTML
             .replace(/{{recipe-title}}/g, recipe.fields['Titre recettes'])
             .replace(/{{recipe-description}}/g, recipe.fields['Description recette'])
-            .replace(/{{recipe-image}}/g, imageUrl)
+            .replace(/{{recipe-image}}/g, relativeImagePath)
             .replace(/{{slug}}/g, slug)
             .replace(/{{recipe-createdDate}}/g, recipe.fields['created'])
             .replace(/{{recipe-categoriesSubCategories}}/g, categoriesDisplay)
@@ -431,3 +456,5 @@ async function generateStaticPages() {
 }
 
 generateStaticPages().catch(console.error);
+
+

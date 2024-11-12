@@ -57,7 +57,6 @@ async function fetchSubCategories(ids) {
 // Fonction pour générer le HTML d'une carte de recette
 function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
     const title = recipe.fields['Titre recettes'] || 'Titre non disponible';
-    const imageUrl = recipe.fields['img.'] && recipe.fields['img.'][0] ? recipe.fields['img.'][0].url : '';
     const slug = recipe.fields['Titre recettes']
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
@@ -68,6 +67,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
     const recipeDuration = recipe.fields['Temps recette'] || '';
     const difficultiesLevel = recipe.fields['Difficulté recette'] || '';
     const pricingLevel = recipe.fields['Prix recette'] || '';
+    // Utiliser le chemin de l'image locale dans le HTML
+    const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
     // Vérifiez que categoryNames et subCategoryNames sont bien des tableaux avant de les utiliser
     const categories = Array.isArray(categoryNames) ? categoryNames.map(c => c.name).join(',') : '';
@@ -86,7 +87,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
                     </div>
 
                     <div class="recette-image_overlay"></div>
-                    ${imageUrl ? `<img class="recette-image" src="${imageUrl}" alt="${title}">` : ''}          
+                    <img class="recette-image" src="${relativeImagePath}" alt="${title}">       
                 </div>
                 <div class="infos__recette">
                     <div class="top-infos__recette">
