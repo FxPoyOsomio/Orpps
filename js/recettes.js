@@ -1,7 +1,7 @@
 export function initializeRecipes() {
     const urlParams = new URLSearchParams(window.location.search);
-    const selectedCategory = urlParams.get('categorie');
-    const activeSubCategory = urlParams.get('subcategorie');
+    const selectedCategory = decodeURIComponent(urlParams.get('categorie') || '');
+    const activeSubCategory = decodeURIComponent(urlParams.get('subcategorie') || '');
 
     console.log("Paramètre de catégorie initial :", selectedCategory);
     console.log("Paramètre de sous-catégorie active :", activeSubCategory);
@@ -13,11 +13,9 @@ export function initializeRecipes() {
         categoryTitleElement.textContent = 'Toutes les recettes';
     }
 
-    // Charger les recettes avec le filtre et ensuite afficher les sous-catégories
     loadRecipes(selectedCategory).then(() => {
         displaySubCategoriesFromCards(selectedCategory, activeSubCategory);
 
-        // Si une sous-catégorie est active dans l'URL, appliquer immédiatement le filtre
         if (activeSubCategory) {
             activeSubCategories.push(activeSubCategory);
             applyCombinedFilters(selectedCategory);
@@ -43,12 +41,15 @@ function displaySubCategoriesFromCards(categoryName, activeSubCategory = null) {
     const foundSubCategories = new Set();
 
     recipeCards.forEach(recipeCard => {
-        const cardCategory = recipeCard.getAttribute('data-ref-categorie');
-        const cardSubCategories = recipeCard.getAttribute('data-ref-subcategorie').split(',');
+        const cardCategory = decodeURIComponent(recipeCard.getAttribute('data-ref-categorie'));
+        const cardSubCategories = recipeCard
+            .getAttribute('data-ref-subcategorie')
+            .split(',')
+            .map(subCat => decodeURIComponent(subCat.trim()));
 
         // Vérifier la correspondance avec la catégorie si spécifiée
         if (!categoryName || (categoryName && cardCategory.includes(categoryName))) {
-            cardSubCategories.forEach(subCategory => foundSubCategories.add(subCategory.trim()));
+            cardSubCategories.forEach(subCategory => foundSubCategories.add(subCategory));
         }
     });
 
@@ -124,16 +125,18 @@ function applyCombinedFilters(category = '') {
     const recipes = document.querySelectorAll('.recette-item');
 
     recipes.forEach(recipe => {
-        // Vérifie si la recette correspond à la catégorie sélectionnée
-        const matchesCategory = category ? recipe.getAttribute('data-ref-categorie').includes(category) : true;
+        const cardCategory = decodeURIComponent(recipe.getAttribute('data-ref-categorie'));
+        const recipeSubCategories = recipe
+            .getAttribute('data-ref-subcategorie')
+            .split(',')
+            .map(subCat => decodeURIComponent(subCat.trim()));
 
-        // Vérifie si la recette correspond aux sous-catégories actives
-        const recipeSubCategories = recipe.getAttribute('data-ref-subcategorie').split(',').map(subCat => subCat.trim());
+        const matchesCategory = category ? cardCategory.includes(category) : true;
         const matchesSubCategory = activeSubCategories.length > 0
             ? activeSubCategories.every(subCategory => recipeSubCategories.includes(subCategory))
             : true;
 
-        // Affiche ou masque la recette en fonction des filtres combinés
         recipe.style.display = matchesCategory && matchesSubCategory ? '' : 'none';
     });
 }
+

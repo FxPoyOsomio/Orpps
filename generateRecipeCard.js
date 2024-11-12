@@ -70,33 +70,35 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
     // Utiliser le chemin de l'image locale dans le HTML
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
-
-    // Conserver les virgules sans encoder chaque élément
+    // Encoder chaque catégorie et sous-catégorie avec `encodeURIComponent` 
+    // et appliquer un remplacement manuel pour les apostrophes
     const categories = Array.isArray(categoryNames)
-        ? categoryNames.map(c => c.name).join(',')
-        : '';
-    const subCategories = Array.isArray(subCategoryNames)
-        ? subCategoryNames.map(sc => sc.name).join(',')
+        ? categoryNames.map(c => encodeURIComponent(c.name).replace(/'/g, '%27')).join(',')
         : '';
 
+    const subCategories = Array.isArray(subCategoryNames)
+        ? subCategoryNames.map(sc => encodeURIComponent(sc.name).replace(/'/g, '%27')).join(',')
+        : '';
+
+    // Génération des sous-catégories pour les affichages spécifiques avec encodage standard
     const subCategory = subCategoryNames.map(subCategory =>
-        `<div class="subCategory"><h7>${subCategory.name}</h7></div>`
+        `<div class="subCategory"><h7>${encodeURIComponent(subCategory.name)}</h7></div>`
     ).join('');
 
+    // Génération de la carte recette avec encodage complet pour les `data-ref`
     return `
         <a href="${urlRecette}" 
-        class="recette-item" 
-        style="text-decoration: none;" 
-        id="${recipe.id}" 
-        data-ref-categorie="${categories}" 
-        data-ref-subcategorie="${subCategories}">
-        <div class="recette-item__container_img">
+            class="recette-item" 
+            style="text-decoration: none;" 
+            id="${recipe.id}" 
+            data-ref-categorie="${categories}" 
+            data-ref-subcategorie="${subCategories}">
+            <div class="recette-item__container_img">
+                <div class="subCategories">
+                    ${subCategory}
+                </div>
 
-                    <div class="subCategories">
-                        ${subCategory}
-                    </div>
-
-                    <div class="recette-image_overlay"></div>
+                <div class="recette-image_overlay"></div>
                     <img class="recette-image" src="${relativeImagePath}" alt="${title}">       
                 </div>
                 <div class="infos__recette">
