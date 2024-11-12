@@ -8,10 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             document.getElementById("header").innerHTML = data;
 
-            loadHeaderCategories().then(() => {
-                initializeHeader();
-                applySearchEventsOnHeaderOpen();
-            });
+            initializeHeader();
+            applySearchEventsOnHeaderOpen();
 
             // Initialiser l'affichage des recettes filtrées, si on est sur la page des recettes
             if (window.location.pathname === "/recettes.html" || window.location.search.includes("categorie") || window.location.search.includes("searchTerms")) {
@@ -28,41 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
-// Fonction pour charger les catégories dans le header
-async function loadHeaderCategories() {
-    try {
-        const response = await fetch('/.netlify/functions/get-menu_categories');
-        if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des catégories');
+// Fonction pour initialiser la barre de recherche dans la div `headerSearchBar`
+function initializeSearchBar() {
+    const searchBarContainer = document.getElementById("headerSearchBar");
+    if (searchBarContainer && !searchBarContainer.querySelector(".header__search-content")) {
+        const searchContent = createSearchContent();
+        searchBarContainer.appendChild(searchContent);
+
+        // Démarrer l'animation de la barre de recherche uniquement si elle est visible
+        if (searchBarContainer.offsetParent !== null) { // Vérifie si visible
+            setTimeout(() => animateSearchBar(searchContent), 100);
         }
-
-        const data = await response.json();
-        const categoriesContainer = document.querySelector('.Menu_categorie');
-        if (!categoriesContainer) {
-            console.error("Element with class 'Menu_categorie' not found.");
-            return;
-        }
-
-        categoriesContainer.innerHTML = '';
-
-        data.forEach(record => {
-            const category = record.fields;
-            const categoryName = category['Nom Menu'] || 'Sans nom';
-
-            // Utiliser un bouton de catégorie avec un lien direct
-            const categoryButton = document.createElement('secondary-button');
-            categoryButton.setAttribute('text', categoryName);
-            categoryButton.setAttribute('href', `/recettes?categorie=${encodeURIComponent(categoryName)}`);
-            categoriesContainer.appendChild(categoryButton);
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des catégories pour le header :', error);
     }
 }
 
-// Reste des fonctions pour l'affichage et la gestion des interactions
+// Fonction d'initialisation du header (burger menu, overlay, animation des catégories)
 function initializeHeader() {
-    // Configuration du menu burger et gestion de l'overlay
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
     const header = document.querySelector(".header");
@@ -72,10 +51,36 @@ function initializeHeader() {
             header.classList.toggle("modal-burger-open");
             overlayMenu.classList.toggle("active");
             burgerMenu.classList.toggle("active");
+
+            const isActive = overlayMenu.classList.contains("active");
+
+            // Activer/désactiver l'animation des boutons de catégorie
+            animateCategoryButtons(isActive);
+
+            if (isActive) {
+                initializeSearchBar(); // Afficher et animer la barre de recherche quand le menu s'ouvre
+                document.addEventListener("click", handleOutsideClick);
+            } else {
+                resetSearchBar(); // Rétracter la barre de recherche quand le menu se ferme
+                document.removeEventListener("click", handleOutsideClick);
+            }
         });
     }
 }
 
+// Gérer le clic en dehors du menu pour le fermer
+function handleOutsideClick(event) {
+    const overlayMenu = document.getElementById("overlayMenu");
+    const burgerMenu = document.getElementById("burgerMenu");
+    const header = document.querySelector(".header");
+    const headerContainer = document.querySelector(".header__container");
+
+    if (shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer)) {
+        closeMenu(header, overlayMenu, burgerMenu);
+        resetSearchBar(); // Assurez-vous que la barre de recherche est rétractée si le menu est fermé
+        document.removeEventListener("click", handleOutsideClick);
+    }
+}
 
 // Fonction pour ajouter les événements de recherche
 function applySearchEventsOnHeaderOpen() {
@@ -104,9 +109,10 @@ function applySearchEventsOnHeaderOpen() {
 
 
 
+
 // Fonction pour ajouter les événements de recherche à la searchBar
 function applySearchEvents(searchBarContainer) {
-    const searchInput = document.getElementById("searchInput"); // Utilisation de l'ID ici
+    const searchInput = document.getElementById("searchInput");
     const searchButton = document.getElementById("SearchBarButton");
 
     if (searchInput) {
@@ -145,6 +151,7 @@ function filterRecipesByCategoryAndSearch(selectedCategory = null) {
 }
 
 
+// Vérifier si on doit fermer le menu
 function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer) {
     return !overlayMenu.contains(event.target) &&
            !burgerMenu.contains(event.target) &&
@@ -152,12 +159,14 @@ function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer
            !headerContainer.contains(event.target);
 }
 
+// Fonction pour fermer le menu
 function closeMenu(header, overlayMenu, burgerMenu) {
     header.classList.remove("modal-burger-open");
     overlayMenu.classList.remove("active");
     burgerMenu.classList.remove("active");
 }
 
+// Fonction pour basculer la barre de recherche (ouvrir/fermer avec animation)
 function handleSearchBarToggle(searchBarContainer) {
     if (searchBarContainer) {
         if (!searchBarContainer.querySelector(".header__search-content")) {
@@ -179,6 +188,21 @@ function handleSearchBarReset(searchBarContainer) {
     }
 }
 
+// Réinitialiser la barre de recherche
+function resetSearchBar() {
+    const searchBarContainer = document.getElementById("headerSearchBar");
+    if (searchBarContainer) {
+        const searchContent = searchBarContainer.querySelector(".header__search-content");
+        if (searchContent) {
+            searchContent.querySelector("input").style.opacity = "0";
+            searchContent.style.width = "50px";
+            searchContent.style.opacity = "0";
+            setTimeout(() => searchBarContainer.innerHTML = '', 600);
+        }
+    }
+}
+
+// Fonction de création de contenu pour la barre de recherche
 function createSearchContent() {
     const searchContent = document.createElement("div");
     searchContent.className = "header__search-content";
@@ -228,7 +252,7 @@ function createSearchContent() {
 
 
 
-
+// Animation de la barre de recherche
 function animateSearchBar(searchContent) {
     searchContent.style.width = "250px";
     searchContent.style.opacity = "1";
@@ -238,35 +262,42 @@ function animateSearchBar(searchContent) {
 
 
 
-function resetSearchBar(container) {
-    const searchContent = container.querySelector(".header__search-content");
-    if (searchContent) {
-        searchContent.querySelector("input").style.opacity = "0";
-        searchContent.style.width = "50px";
-        searchContent.style.opacity = "0";
-        setTimeout(() => container.innerHTML = '', 600);
-    }
-}
 
-
+// Fonction pour animer les boutons de catégorie lors de l'ouverture/fermeture du menu
 function animateCategoryButtons(isActive) {
     const categoryButtonsContainer = document.querySelector('.Menu_categorie');
     if (categoryButtonsContainer) {
         const categoryButtons = categoryButtonsContainer.querySelectorAll('secondary-button');
-        categoryButtons.forEach((button, index) => {
-            button.style.opacity = isActive ? "1" : "0";
-            button.style.transition = `opacity 0.6s ease ${index * 0.1}s`;
-        });
+
+        if (isActive) {
+            // Afficher les boutons puis appliquer une transition d'opacité
+            categoryButtons.forEach((button, index) => {
+                button.style.display = "inline-block";
+                setTimeout(() => {
+                    button.style.opacity = "1";
+                    button.style.transition = `opacity 0.8s ease ${index * 0.1}s`;
+                }, 0);
+            });
+        } else {
+            // Masquer les boutons en supprimant leur opacité
+            categoryButtons.forEach(button => {
+                button.style.opacity = "0";
+                // Utiliser un timeout pour masquer après la transition
+                setTimeout(() => {
+                    button.style.display = "none";
+                }, 600); // Correspond à la durée de l'animation de 0.6s
+            });
+        }
     }
 }
 
+
+// Fonction principale de recherche
 function SearchRecipe() {
     console.log("SearchRecipe appelé");
 
     const searchBarInput = document.querySelector(".header__search-content input");
     if (searchBarInput) {
-        console.log("Bouton de recherche cliqué ou 'Entrée' pressé");
-
         const inputValue = searchBarInput.value.replace(/,/g, ' ');
         const searchTerms = inputValue.split(' ').map(term => term.trim()).filter(term => term !== '');
 

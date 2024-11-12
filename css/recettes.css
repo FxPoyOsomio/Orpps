@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
     gap: 15px;
+    margin-top: 50px;
 
 }
 
@@ -39,6 +40,10 @@
     border-radius: 8px;
     outline: 1px solid #696969;
     outline-offset: -1px;
+}
+
+#subCategories .subCategory {
+    cursor: pointer;
 }
 
 #subCategories .subCategory:hover {

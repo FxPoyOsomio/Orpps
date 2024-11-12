@@ -199,7 +199,7 @@ async function fetchIngredientsListContent(ingredientIds) {
             const order = `[${ordernb}]`;
 
             // Traitement pour l'URL de l'image
-            const img = ingredient.fields['relative_url_img'];
+            const img = ingredient.fields['relative_url_img'] || "";
             
 
             return { quantite, unite, nom: nomIngredient, simplename: nomSimpleIngredient, order, ordernb, img };
@@ -217,7 +217,7 @@ async function fetchIngredientsListContent(ingredientIds) {
 
 
 
-// Fonctions pour récupérer les noms de catégories et sous-catégories
+// Fonctions pour récupérer les noms des catégories
 async function fetchCategories(ids) {
     if (!ids || ids.length === 0) {
         return [];
@@ -228,17 +228,35 @@ async function fetchCategories(ids) {
     const data = await response.json();
     return data.records.map(record => ({ id: record.id, name: record.fields['Nom Menu'] }));
 }
-
+// Fonctions pour récupérer les noms des sous-catégories ainsi que les id des category parent
 async function fetchSubCategories(ids) {
     if (!ids || ids.length === 0) {
         return [];
     }
+
+    // Récupération des sous-catégories
     const response = await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__MENUS_SOUS_CATEGORIE__TABLE_ID}?filterByFormula=OR(${ids.map(id => `RECORD_ID()='${id}'`).join(',')})`, {
         headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}` }
     });
     const data = await response.json();
-    return data.records.map(record => ({ id: record.id, name: record.fields['Nom sous-catégorie menus'] }));
+
+    // Pour chaque sous-catégorie, récupérer les noms des catégories parentes
+    const subCategoriesWithCategories = await Promise.all(data.records.map(async record => {
+        const categoryIds = record.fields['CATÉGORIE MENUS [base]'] || [];
+        
+        // Récupérer les noms de catégories parentes pour chaque sous-catégorie
+        const categoryNames = await fetchCategories(categoryIds);
+        
+        return {
+            id: record.id,
+            name: record.fields['Nom sous-catégorie menus'],
+            categoryNames: categoryNames.map(category => category.name) // Ajouter les noms des catégories parentes
+        };
+    }));
+
+    return subCategoriesWithCategories;
 }
+
 
 // Fonction pour générer le contenu HTML pour les ingrédients et étapes de préparation
 function generateDynamicContent(recipeData, preparationsDetails, ingredientsListContent) {
@@ -374,10 +392,24 @@ async function generateStaticPages() {
                 <h6>${category.name}</h6>
             </a>`).join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
 
-        const subCategorieMenu = subCategoryNames.map(subCategory => 
-            `<a href="/recettes?subcategorie=${subCategory.name}" class="bread-crumbs__link">
-                <h6>${subCategory.name}</h6>
-            </a>`).join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
+        const subCategorieMenu = subCategoryNames.map(subCategory => {
+            // Pour chaque sous-catégorie, ne garder que la catégorie parente qui correspond à une des catégories de la recette
+            const relevantParentCategory = subCategory.categoryNames.find(categoryName => 
+                categoryNames.some(cat => cat.name === categoryName)
+            );
+        
+            // Générer le lien uniquement si une catégorie parente pertinente est trouvée
+            if (relevantParentCategory) {
+                return `<a href="/recettes?categorie=${encodeURIComponent(relevantParentCategory)}&subcategorie=${encodeURIComponent(subCategory.name)}" class="bread-crumbs__link">
+                            <h6>${subCategory.name}</h6>
+                        </a>`;
+            } else {
+                return ''; // Pas de lien si aucune catégorie parente pertinente n'est trouvée
+            }
+        }).filter(Boolean) // Supprimer les entrées vides
+        .join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
+            
+            
 
         
         
