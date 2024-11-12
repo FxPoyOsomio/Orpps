@@ -394,26 +394,25 @@ async function generateStaticPages() {
 
     // Traitement des catégories & sous-catégories pour le BreadCrumbs
     const categorieMenu = categoryNames.map(category =>
-        `<a href="/recettes?categorie=${category.name}" class="bread-crumbs__link">
+        `<a href="/recettes?categorie=${encodeURIComponent(category.name)}" class="bread-crumbs__link">
                 <h6>${category.name}</h6>
             </a>`).join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
 
     const subCategorieMenu = subCategoryNames.map(subCategory => {
-        // Pour chaque sous-catégorie, ne garder que la catégorie parente qui correspond à une des catégories de la recette
         const relevantParentCategory = subCategory.categoryNames.find(categoryName =>
             categoryNames.some(cat => cat.name === categoryName)
         );
 
-        // Générer le lien uniquement si une catégorie parente pertinente est trouvée
         if (relevantParentCategory) {
             return `<a href="/recettes?categorie=${encodeURIComponent(relevantParentCategory)}&subcategorie=${encodeURIComponent(subCategory.name)}" class="bread-crumbs__link">
                             <h6>${subCategory.name}</h6>
                         </a>`;
         } else {
-            return ''; // Pas de lien si aucune catégorie parente pertinente n'est trouvée
+            return '';
         }
-    }).filter(Boolean) // Supprimer les entrées vides
-        .join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
+    }).filter(Boolean)
+    .join('<span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>');
+
 
 
 

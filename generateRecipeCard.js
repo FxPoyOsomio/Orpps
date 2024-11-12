@@ -70,17 +70,27 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
     // Utiliser le chemin de l'image locale dans le HTML
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
-    // Vérifiez que categoryNames et subCategoryNames sont bien des tableaux avant de les utiliser
-    const categories = Array.isArray(categoryNames) ? categoryNames.map(c => c.name).join(',') : '';
-    const subCategories = Array.isArray(subCategoryNames) ? subCategoryNames.map(sc => sc.name).join(',') : '';
-    
+
+    // Conserver les virgules sans encoder chaque élément
+    const categories = Array.isArray(categoryNames)
+        ? categoryNames.map(c => c.name).join(',')
+        : '';
+    const subCategories = Array.isArray(subCategoryNames)
+        ? subCategoryNames.map(sc => sc.name).join(',')
+        : '';
+
     const subCategory = subCategoryNames.map(subCategory =>
         `<div class="subCategory"><h7>${subCategory.name}</h7></div>`
     ).join('');
 
     return `
-    <a href="${urlRecette}" class="recette-item" style="text-decoration: none;" id="${recipe.id}" data-ref-categorie="${categoryNames.map(s => s.name).join(',')}" data-ref-subcategorie="${subCategoryNames.map(s => s.name).join(',')}">
-                <div class="recette-item__container_img">
+        <a href="${urlRecette}" 
+        class="recette-item" 
+        style="text-decoration: none;" 
+        id="${recipe.id}" 
+        data-ref-categorie="${categories}" 
+        data-ref-subcategorie="${subCategories}">
+        <div class="recette-item__container_img">
 
                     <div class="subCategories">
                         ${subCategory}
