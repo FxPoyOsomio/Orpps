@@ -120,7 +120,6 @@ function updateURLWithoutSubCategory() {
     }
 }
 
-// Fonction de filtrage combiné pour les catégories et sous-catégories
 function applyCombinedFilters(category = '') {
     const recipes = document.querySelectorAll('.recette-item');
 
@@ -131,12 +130,23 @@ function applyCombinedFilters(category = '') {
             .split(',')
             .map(subCat => decodeURIComponent(subCat.trim()));
 
+        // Vérifier si la catégorie sélectionnée dans l'URL correspond à la catégorie du cardCategory
         const matchesCategory = category ? cardCategory.includes(category) : true;
+        
+        // Vérifier si toutes les sous-catégories actives sont présentes dans le cardSubCategories
         const matchesSubCategory = activeSubCategories.length > 0
             ? activeSubCategories.every(subCategory => recipeSubCategories.includes(subCategory))
             : true;
 
+        // Affiche ou masque l'élément recette en fonction des filtres combinés
         recipe.style.display = matchesCategory && matchesSubCategory ? '' : 'none';
     });
+
+    // Si aucun filtre de catégorie ou sous-catégorie n'est appliqué, afficher toutes les recettes
+    if (!category && activeSubCategories.length === 0) {
+        recipes.forEach(recipe => {
+            recipe.style.display = '';
+        });
+    }
 }
 
