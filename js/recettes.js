@@ -1,13 +1,7 @@
 export function initializeRecipes() {
-    const url = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     const selectedCategory = decodeURIComponent(urlParams.get('categorie') || '');
     const activeSubCategory = decodeURIComponent(urlParams.get('subcategorie') || '');
-
-    // Si l'URL est "/recettes" sans ".html", afficher toutes les recettes
-    if (url === '/recettes' || url === '/recettes.html') {
-        console.log("Affichage de toutes les recettes par défaut.");
-    }
 
     console.log("Paramètre de catégorie initial :", selectedCategory);
     console.log("Paramètre de sous-catégorie active :", activeSubCategory);
@@ -25,12 +19,9 @@ export function initializeRecipes() {
         if (activeSubCategory) {
             activeSubCategories.push(activeSubCategory);
             applyCombinedFilters(selectedCategory);
-        } else {
-            applyCombinedFilters(''); // Affiche toutes les recettes si aucune catégorie ni sous-catégorie
         }
     });
 }
-
 
 // Tableau pour stocker les sous-catégories actives
 let activeSubCategories = [];
@@ -129,6 +120,7 @@ function updateURLWithoutSubCategory() {
     }
 }
 
+// Fonction de filtrage combiné pour les catégories et sous-catégories
 function applyCombinedFilters(category = '') {
     const recipes = document.querySelectorAll('.recette-item');
 
@@ -139,23 +131,12 @@ function applyCombinedFilters(category = '') {
             .split(',')
             .map(subCat => decodeURIComponent(subCat.trim()));
 
-        // Vérifier si la catégorie sélectionnée dans l'URL correspond à la catégorie du cardCategory
         const matchesCategory = category ? cardCategory.includes(category) : true;
-        
-        // Vérifier si toutes les sous-catégories actives sont présentes dans le cardSubCategories
         const matchesSubCategory = activeSubCategories.length > 0
             ? activeSubCategories.every(subCategory => recipeSubCategories.includes(subCategory))
             : true;
 
-        // Affiche ou masque l'élément recette en fonction des filtres combinés
         recipe.style.display = matchesCategory && matchesSubCategory ? '' : 'none';
     });
-
-    // Si aucun filtre de catégorie ou sous-catégorie n'est appliqué, afficher toutes les recettes
-    if (!category && activeSubCategories.length === 0) {
-        recipes.forEach(recipe => {
-            recipe.style.display = '';
-        });
-    }
 }
 
