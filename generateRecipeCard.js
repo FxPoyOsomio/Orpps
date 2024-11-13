@@ -82,6 +82,9 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
         `<div class="subCategory"><h7>${encodeURIComponent(subCategory.name)}</h7></div>`
     ).join('');
 
+    const ingredients = recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '';
+    const instructions = recipe.fields['Instruction'] || '';
+
     // Génération de la carte recette avec encodage complet pour les `data-ref`
     return `
         <a href="${urlRecette}" 
@@ -89,8 +92,19 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             style="text-decoration: none;" 
             id="${recipe.id}" 
             data-ref-categorie="${categories}" 
-            data-ref-subcategorie="${subCategories}">
+            data-ref-subcategorie="${subCategories}" 
+            data-ref-ingredients="${ingredients}" 
+            data-ref-instructions="${instructions}">
+            <add-favorite-button href="/index.html" style="
+                    position: absolute;
+                    top: -20px;
+                    right: -30px;
+                    z-index: 3;
+                    cursor: pointer;
+                    " onclick="event.preventDefault(); addToFavorites(event)">
+                </add-favorite-button>
             <div class="recette-item__container_img">
+                
                 <div class="subCategories">
                     ${subCategory}
                 </div>

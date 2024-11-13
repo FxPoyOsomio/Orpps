@@ -1,20 +1,41 @@
 import { initializeRecipes } from './recettes.js';
 
+// Fonction pour initialiser la recherche depuis l'URL
+function initializeSearchFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTerms = urlParams.get("searchTerms");
+    
+    // Essayer de remplir l'input toutes les 100ms jusqu'à ce qu'il soit présent
+    const attemptSetSearchInput = setInterval(() => {
+        const searchInput = document.querySelector(".header__search-content input");
+        if (searchInput) {
+            searchInput.value = searchTerms ? decodeURIComponent(searchTerms) : '';
+            clearInterval(attemptSetSearchInput);
+            console.log("Termes de recherche initialisés dans l'input :", searchInput.value);
+        } else {
+            console.log("Le champ de recherche n'est pas encore accessible.");
+        }
+    }, 100); // Essayer toutes les 100 ms jusqu'à trouver l'élément
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header fetch...");
+    initializeSearchFromURL();
 
     fetch("/components/header.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById("header").innerHTML = data;
+            console.log("Header loaded successfully");
 
-            initializeHeader();
+            initializeHeader(); // Initialiser les éléments du header une fois le HTML chargé
             applySearchEventsOnHeaderOpen();
-
-            // Initialiser l'affichage des recettes filtrées, si on est sur la page des recettes
-            if (window.location.pathname === "/recettes.html" || window.location.search.includes("categorie") || window.location.search.includes("searchTerms")) {
-                initializeRecipes();
-            }
+            applySearchEvents(document.getElementById("headerSearchBar")); // Activer les événements de la barre de recherche
+            applySearchEventsOnCategories();
+            
+            // Délai pour s'assurer que le DOM est complètement prêt
+            setTimeout(initializeSearchInput, 100); // Initialiser le champ de recherche si des termes sont trouvés dans l'URL
         })
         .catch(error => console.error("Error loading header:", error));
 
@@ -26,21 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
-// Fonction pour initialiser la barre de recherche dans la div `headerSearchBar`
-function initializeSearchBar() {
-    const searchBarContainer = document.getElementById("headerSearchBar");
-    if (searchBarContainer && !searchBarContainer.querySelector(".header__search-content")) {
-        const searchContent = createSearchContent();
-        searchBarContainer.appendChild(searchContent);
 
-        // Démarrer l'animation de la barre de recherche uniquement si elle est visible
-        if (searchBarContainer.offsetParent !== null) { // Vérifie si visible
-            setTimeout(() => animateSearchBar(searchContent), 100);
-        }
-    }
-}
 
-// Fonction d'initialisation du header (burger menu, overlay, animation des catégories)
+
+// Fonction pour initialiser les éléments du header (menu, animation, barre de recherche)
 function initializeHeader() {
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
@@ -52,21 +62,64 @@ function initializeHeader() {
             overlayMenu.classList.toggle("active");
             burgerMenu.classList.toggle("active");
 
-            const isActive = overlayMenu.classList.contains("active");
+            initializeSearchBar();
+            animateCategoryButtons(overlayMenu.classList.contains("active"));
+        });
 
-            // Activer/désactiver l'animation des boutons de catégorie
-            animateCategoryButtons(isActive);
-
-            if (isActive) {
-                initializeSearchBar(); // Afficher et animer la barre de recherche quand le menu s'ouvre
-                document.addEventListener("click", handleOutsideClick);
-            } else {
-                resetSearchBar(); // Rétracter la barre de recherche quand le menu se ferme
-                document.removeEventListener("click", handleOutsideClick);
+        document.addEventListener("click", (event) => {
+            if (shouldCloseMenu(event, overlayMenu, burgerMenu, header)) {
+                closeMenu(header, overlayMenu, burgerMenu);
             }
         });
     }
 }
+
+// Fonction pour initialiser la barre de recherche dans la div `headerSearchBar`
+function initializeSearchBar() {
+    const searchBarContainer = document.getElementById("headerSearchBar");
+
+    if (searchBarContainer) {
+        // Supprimez tout contenu existant pour repartir de zéro
+        searchBarContainer.innerHTML = '';
+
+        // Créez et ajoutez la barre de recherche
+        const searchContent = createSearchContent();
+        searchBarContainer.appendChild(searchContent);
+
+        // Démarrez l'animation de la barre de recherche uniquement si elle est visible
+        if (searchBarContainer.offsetParent !== null) {
+            setTimeout(() => animateSearchBar(searchContent), 100);
+        }
+    }
+}
+
+// Fonction pour réinitialiser les styles de la barre de recherche
+function resetSearchBarAnimation(container) {
+    const searchContent = container.querySelector(".header__search-content");
+    if (searchContent) {
+        searchContent.style.width = "50px";
+        searchContent.style.opacity = "0";
+        const input = searchContent.querySelector("input");
+        if (input) input.style.opacity = "0";
+    }
+}
+
+// Fonction pour initialiser le champ de saisie de recherche avec les termes de l'URL
+function initializeSearchInput() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTerms = urlParams.get('searchTerms');
+
+    if (searchTerms) {
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.value = decodeURIComponent(searchTerms.replace(/\+/g, ' ')); // Décoder les termes et remplacer les + par des espaces
+            console.log("Terme(s) de recherche initialisé(s) :", searchInput.value);
+        } else {
+            console.log("Le champ de recherche n'a pas été trouvé au moment de l'initialisation.");
+        }
+    }
+}
+
 
 // Gérer le clic en dehors du menu pour le fermer
 function handleOutsideClick(event) {
@@ -82,29 +135,66 @@ function handleOutsideClick(event) {
     }
 }
 
-// Fonction pour ajouter les événements de recherche
+// Appliquer les événements de recherche lors de l'ouverture du header
 function applySearchEventsOnHeaderOpen() {
     const searchButton = document.getElementById("SearchBarButton");
     const searchInput = document.getElementById("searchInput");
 
     if (searchButton && searchInput) {
-        searchButton.addEventListener("click", () => {
-            const searchTerms = searchInput.value.trim();
-            if (searchTerms) {
-                window.location.href = `/recettes?searchTerms=${encodeURIComponent(searchTerms)}`;
-            }
-        });
-
+        searchButton.addEventListener("click", filterRecipesByCategoryAndSearch);
         searchInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                const searchTerms = searchInput.value.trim();
-                if (searchTerms) {
-                    window.location.href = `/recettes?searchTerms=${encodeURIComponent(searchTerms)}`;
-                }
-            }
+            if (event.key === "Enter") filterRecipesByCategoryAndSearch();
         });
     }
 }
+
+function applySearchEventsOnCategories() {
+    const categoryButtons = document.querySelectorAll('.Menu_categorie secondary-button');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault(); // Empêcher la redirection par défaut du lien
+
+            const selectedCategory = button.getAttribute('href').split('=')[1];
+            const searchBarInput = document.querySelector(".header__search-content input");
+            const searchTerms = searchBarInput ? searchBarInput.value.trim() : '';
+
+            let newUrl = `/recettes?categorie=${encodeURIComponent(selectedCategory)}`;
+            if (searchTerms) {
+                newUrl += `&searchTerms=${encodeURIComponent(searchTerms)}`;
+            }
+
+            console.log("Nouvelle URL construite :", newUrl);
+            window.location.assign(newUrl);
+        });
+    });
+}
+
+// Fonction pour filtrer par catégorie et termes de recherche
+function filterRecipesByCategoryAndSearch() {
+    const searchInput = document.querySelector(".header__search-content input");
+    const searchTerms = searchInput ? searchInput.value.trim() : '';
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCategory = urlParams.get('categorie') || '';
+
+    let newUrl = '/recettes';
+    if (selectedCategory || searchTerms) {
+        newUrl += '?';
+        if (selectedCategory) {
+            newUrl += `categorie=${encodeURIComponent(selectedCategory)}`;
+        }
+        if (searchTerms) {
+            newUrl += `${selectedCategory ? '&' : ''}searchTerms=${encodeURIComponent(searchTerms)}`;
+        }
+    }
+
+    console.log("URL finale avec recherche :", newUrl);
+    window.location.assign(newUrl);
+}
+
+
+
+
 
 
 
@@ -117,6 +207,13 @@ function applySearchEvents(searchBarContainer) {
 
     if (searchInput) {
         console.log("Input de recherche trouvé");
+
+        // Écouteur d'événements pour détecter les changements de texte en temps réel
+        searchInput.addEventListener("input", () => {
+            console.log("Modification de l'input détectée :", searchInput.value);
+            // Mettez à jour l'URL en temps réel ou préparez le filtre ici si nécessaire
+        });
+
         searchInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 filterRecipesByCategoryAndSearch();
@@ -134,29 +231,18 @@ function applySearchEvents(searchBarContainer) {
     }
 }
 
-// Fonction pour filtrer les recettes par catégorie et termes de recherche
-function filterRecipesByCategoryAndSearch(selectedCategory = null) {
-    const searchInput = document.querySelector(".header__search-content input");
-    const searchTerms = searchInput ? searchInput.value.trim() : '';
-
-    const url = `/path_to_netlify_function/get-recettes?filterByCategory=${encodeURIComponent(selectedCategory || '')}&searchTerms=${encodeURIComponent(searchTerms)}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Recettes filtrées :", data);
-            // Insérez ici le code pour afficher les recettes filtrées
-        })
-        .catch(error => console.error("Erreur lors de la récupération des recettes :", error));
-}
 
 
-// Vérifier si on doit fermer le menu
+
+
+// Fonction pour vérifier si on doit fermer le menu
 function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer) {
-    return !overlayMenu.contains(event.target) &&
-           !burgerMenu.contains(event.target) &&
-           !header.contains(event.target) &&
-           !headerContainer.contains(event.target);
+    return (
+        overlayMenu && !overlayMenu.contains(event.target) &&
+        burgerMenu && !burgerMenu.contains(event.target) &&
+        header && !header.contains(event.target) &&
+        (!headerContainer || !headerContainer.contains(event.target))
+    );
 }
 
 // Fonction pour fermer le menu
@@ -166,27 +252,7 @@ function closeMenu(header, overlayMenu, burgerMenu) {
     burgerMenu.classList.remove("active");
 }
 
-// Fonction pour basculer la barre de recherche (ouvrir/fermer avec animation)
-function handleSearchBarToggle(searchBarContainer) {
-    if (searchBarContainer) {
-        if (!searchBarContainer.querySelector(".header__search-content")) {
-            const searchContent = createSearchContent();
-            searchBarContainer.appendChild(searchContent);
-            setTimeout(() => animateSearchBar(searchContent), 100);
-        } else {
-            resetSearchBar(searchBarContainer);
-        }
-    }
-}
 
-function handleSearchBarReset(searchBarContainer) {
-    if (searchBarContainer) {
-        const searchContent = searchBarContainer.querySelector(".header__search-content");
-        if (searchContent) {
-            resetSearchBar(searchBarContainer);
-        }
-    }
-}
 
 // Réinitialiser la barre de recherche
 function resetSearchBar() {
@@ -202,7 +268,7 @@ function resetSearchBar() {
     }
 }
 
-// Fonction de création de contenu pour la barre de recherche
+// Fonction pour créer le contenu de la barre de recherche
 function createSearchContent() {
     const searchContent = document.createElement("div");
     searchContent.className = "header__search-content";
@@ -252,11 +318,12 @@ function createSearchContent() {
 
 
 
-// Animation de la barre de recherche
+// Fonction pour animer la barre de recherche
 function animateSearchBar(searchContent) {
     searchContent.style.width = "250px";
     searchContent.style.opacity = "1";
-    searchContent.querySelector("input").style.opacity = "1";
+    const input = searchContent.querySelector("input");
+    if (input) input.style.opacity = "1";
 }
 
 
@@ -292,7 +359,6 @@ function animateCategoryButtons(isActive) {
 }
 
 
-// Fonction principale de recherche
 function SearchRecipe() {
     console.log("SearchRecipe appelé");
 
@@ -301,16 +367,43 @@ function SearchRecipe() {
         const inputValue = searchBarInput.value.replace(/,/g, ' ');
         const searchTerms = inputValue.split(' ').map(term => term.trim()).filter(term => term !== '');
 
-        if (searchTerms.length > 0) {
-            const searchQuery = encodeURIComponent(searchTerms.join(' '));
-            setTimeout(() => {
-                window.location.assign(`/recettes?searchTerms=${searchQuery}`);
-            }, 100);
+        const searchQuery = searchTerms.length > 0 ? encodeURIComponent(searchTerms.join(' ')) : '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedCategory = urlParams.get('categorie') || '';
+
+        // Construire l'URL avec searchTerms et categorie, si présents
+        let newUrl = '/recettes';
+        if (searchQuery || selectedCategory) {
+            newUrl += '?';
+            if (selectedCategory) {
+                newUrl += `categorie=${encodeURIComponent(selectedCategory)}`;
+            }
+            if (searchQuery) {
+                newUrl += `${selectedCategory ? '&' : ''}searchTerms=${searchQuery}`;
+            }
         }
+
+        // Rediriger vers la nouvelle URL
+        setTimeout(() => {
+            window.location.assign(newUrl);
+        }, 100);
     } else {
         console.log("Le champ de recherche n'a pas été trouvé.");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -477,8 +570,7 @@ class SecondaryButton extends HTMLElement {
         // Créer un bouton
         this.button = document.createElement('button');
         this.button.style.color = '#CB6863'; // Couleur du texte
-        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Supprimer la couleur de fond
-        this.button.style.backdropFilter = 'blur(5px)';
+        this.button.style.backgroundColor = 'transparent'; // Supprimer la couleur de fond
         this.button.style.borderRadius = '50px'; // Arrondi des coins
         this.button.style.padding = '10px 20px'; // Espacement interne
         this.button.style.border = '1px solid #CB6863'; // Bordure de 1px de couleur #CB6863
@@ -627,7 +719,7 @@ class AddFavoriteButton extends HTMLElement {
         // Créer un bouton
         this.button = document.createElement('button');
         this.button.style.color = '#CB6863';
-        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
         this.button.style.backdropFilter = 'blur(5px)';
         this.button.style.borderRadius = '50px';
         this.button.style.padding = '10px';
@@ -705,6 +797,7 @@ class AddFavoriteButton extends HTMLElement {
                 ripple.remove();
             });
         });
+
     }
 }
 
