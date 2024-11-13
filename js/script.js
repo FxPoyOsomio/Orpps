@@ -714,13 +714,12 @@ customElements.define('add-favorite-button', AddFavoriteButton);
 
 
 
-// Share Button Component
 class ShareButton extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
 
-        // Styles
+        // Styles globaux pour le composant
         const styles = document.createElement('style');
         styles.textContent = `
             .share-btn {
@@ -772,17 +771,6 @@ class ShareButton extends HTMLElement {
                 margin: 10px 0;
             }
 
-            .icon-btn {
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-            }
-
-            .icon-btn img {
-                height: 34px;
-            }
-
             .copy-section {
                 display: flex;
                 align-items: center;
@@ -796,32 +784,30 @@ class ShareButton extends HTMLElement {
                 border-radius: 4px;
             }
 
-            .copy-section .icon-btn {
-                margin-left: 5px;
+            h2, h3 {
+                font-family: 'Montserrat', sans-serif;
+                color: #1B1B1B;
             }
+
             h2 {
                 font-weight: 500;
                 font-size: 1.8em;
-                letter-spacing: -0.05em;
-                font-family: 'Montserrat', sans-serif;
-                color: #1B1B1B;
             }
+
             h3 {
                 font-weight: 500;
                 font-size: 1.4em;
-                letter-spacing: 0em;
-                font-family: 'Montserrat', sans-serif;
-                color: #1B1B1B;
-            }   
+            }
+
             .modal-divider {
                 border: none;
                 border-top: 1px solid #ddd;
                 margin: 15px 0;
-            }           
+            }
         `;
         this.shadowRoot.appendChild(styles);
 
-        // Créer un bouton
+        // Créer le bouton principal avec les styles
         this.button = document.createElement('button');
         this.button.style.color = '#CB6863';
         this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
@@ -840,7 +826,7 @@ class ShareButton extends HTMLElement {
         this.button.style.transition = 'transform 0.2s';
         this.button.style.margin = '0 10px';
 
-        // Créer une div pour l'icône SVG
+        // Conteneur pour l'icône SVG
         this.iconContainer = document.createElement('div');
         this.iconContainer.style.width = '22px';
         this.iconContainer.style.height = '22px';
@@ -850,18 +836,9 @@ class ShareButton extends HTMLElement {
 
         // Ajouter le SVG par défaut pour l'icône "partage"
         this.iconContainer.innerHTML = `
-            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path
-                        d="M15.7285 3.88396C17.1629 2.44407 19.2609 2.41383 20.4224 3.57981C21.586 4.74798 21.5547 6.85922 20.1194 8.30009L17.6956 10.7333C17.4033 11.0268 17.4042 11.5017 17.6976 11.794C17.9911 12.0863 18.466 12.0854 18.7583 11.7919L21.1821 9.35869C23.0934 7.43998 23.3334 4.37665 21.4851 2.5212C19.6346 0.663551 16.5781 0.905664 14.6658 2.82536L9.81817 7.69182C7.90688 9.61053 7.66692 12.6739 9.51519 14.5293C9.80751 14.8228 10.2824 14.8237 10.5758 14.5314C10.8693 14.2391 10.8702 13.7642 10.5779 13.4707C9.41425 12.3026 9.44559 10.1913 10.8809 8.75042L15.7285 3.88396Z"
-                        fill="#CB6863"></path>
-                    <path
-                        d="M14.4851 9.47074C14.1928 9.17728 13.7179 9.17636 13.4244 9.46868C13.131 9.76101 13.1301 10.2359 13.4224 10.5293C14.586 11.6975 14.5547 13.8087 13.1194 15.2496L8.27178 20.1161C6.83745 21.556 4.73937 21.5863 3.57791 20.4203C2.41424 19.2521 2.44559 17.1408 3.88089 15.6999L6.30473 13.2667C6.59706 12.9732 6.59614 12.4984 6.30268 12.206C6.00922 11.9137 5.53434 11.9146 5.24202 12.2081L2.81818 14.6413C0.906876 16.5601 0.666916 19.6234 2.51519 21.4789C4.36567 23.3365 7.42221 23.0944 9.33449 21.1747L14.1821 16.3082C16.0934 14.3895 16.3334 11.3262 14.4851 9.47074Z"
-                        fill="#CB6863"></path>
-                </g>
+            <svg width="22px" height="22px" fill="#CB6863" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.7285 3.88396C17.1629 2.44407 19.2609 2.41383 20.4224 3.57981C21.586 4.74798 21.5547 6.85922 20.1194 8.30009L17.6956 10.7333C17.4033 11.0268 17.4042 11.5017 17.6976 11.794C17.9911 12.0863 18.466 12.0854 18.7583 11.7919L21.1821 9.35869C23.0934 7.43998 23.3334 4.37665 21.4851 2.5212C19.6346 0.663551 16.5781 0.905664 14.6658 2.82536L9.81817 7.69182C7.90688 9.61053 7.66692 12.6739 9.51519 14.5293C9.80751 14.8228 10.2824 14.8237 10.5758 14.5314C10.8693 14.2391 10.8702 13.7642 10.5779 13.4707C9.41425 12.3026 9.44559 10.1913 10.8809 8.75042L15.7285 3.88396Z" fill="#CB6863"></path>
+                <path d="M14.4851 9.47074C14.1928 9.17728 13.7179 9.17636 13.4244 9.46868C13.131 9.76101 13.1301 10.2359 13.4224 10.5293C14.586 11.6975 14.5547 13.8087 13.1194 15.2496L8.27178 20.1161C6.83745 21.556 4.73937 21.5863 3.57791 20.4203C2.41424 19.2521 2.44559 17.1408 3.88089 15.6999L6.30473 13.2667C6.59706 12.9732 6.59614 12.4984 6.30268 12.206C6.00922 11.9137 5.53434 11.9146 5.24202 12.2081L2.81818 14.6413C0.906876 16.5601 0.666916 19.6234 2.51519 21.4789C4.36567 23.3365 7.42221 23.0944 9.33449 21.1747L14.1821 16.3082C16.0934 14.3895 16.3334 11.3262 14.4851 9.47074Z" fill="#CB6863"></path>
             </svg>
         `;
         this.button.appendChild(this.iconContainer);
@@ -869,55 +846,26 @@ class ShareButton extends HTMLElement {
         // Ajouter le bouton au shadow DOM
         this.shadowRoot.appendChild(this.button);
 
-        // Styles pour le hover
-        this.button.addEventListener('mouseenter', () => {
-            this.button.style.transform = 'scale(1.1)';
-        });
+        // Création de l'overlay et du modal pour le fallback
+        this.createModal();
 
-        this.button.addEventListener('mouseleave', () => {
-            this.button.style.transform = 'scale(1)';
-        });
+        // Événement pour ouvrir le modal au clic sur le bouton
+        this.button.addEventListener('click', () => this.shareContent());
+    }
 
-        // Effet d'animation d'onde au clic
-        this.button.addEventListener('mousedown', () => {
-            const ripple = document.createElement('span');
-            ripple.style.position = 'absolute';
-            ripple.style.borderRadius = '50%';
-            ripple.style.border = `${this.button.offsetWidth / 50}px solid #F5E1DE`;
-            ripple.style.backgroundColor = 'transparent';
-            ripple.style.pointerEvents = 'none';
-            ripple.style.width = '10px';
-            ripple.style.height = '10px';
-            ripple.style.transform = 'scale(1)';
-            ripple.style.transition = 'transform 1s cubic-bezier(0.5, 0, 0.5, 1)';
-            ripple.style.left = `${this.button.offsetWidth / 2}px`;
-            ripple.style.top = `${this.button.offsetHeight / 2}px`;
-            ripple.style.transformOrigin = 'center';
-            ripple.style.transform = `translate(-50%, -50%) scale(1)`;
+    createModal() {
+        // Overlay de fond
+        this.overlay = document.createElement('div');
+        this.overlay.classList.add('modal-overlay');
+        this.shadowRoot.appendChild(this.overlay);
 
-            this.button.appendChild(ripple);
-
-            setTimeout(() => {
-                ripple.style.transform = 'translate(-50%, -50%) scale(100)';
-            }, 10);
-
-            ripple.addEventListener('transitionend', () => {
-                ripple.remove();
-            });
-        });
-
-       // Overlay pour fond flou
-       this.overlay = document.createElement('div');
-       this.overlay.classList.add('modal-overlay');
-       this.shadowRoot.appendChild(this.overlay);
-
-       // Modal de partage
-       this.modal = document.createElement('div');
-       this.modal.classList.add('share-modal');
-       this.modal.innerHTML = `
-           <h2>Partager</h2>
-           <hr class="modal-divider">
-           <div class="share-apps">
+        // Modal de partage
+        this.modal = document.createElement('div');
+        this.modal.classList.add('share-modal');
+        this.modal.innerHTML = `
+            <h2>Partager</h2>
+            <hr class="modal-divider">
+            <div class="share-apps">
                 <a href="mailto:?subject=Partager cette page&body=Voici le lien: ${window.location.href}" class="share-btn">
                     <img src="https://img.icons8.com/fluency/48/apple-mail.png" alt="apple-mail"/>
                 </a>
@@ -930,37 +878,46 @@ class ShareButton extends HTMLElement {
                 <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
                     <img src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="whatsapp"/>
                 </a>
-           </div>
-           <hr class="modal-divider">
-           <h3>Lien de la page</h3>
-           <div class="copy-section">
-               <input type="text" value="${window.location.href}" readonly>
-               <button id="copyButton" class="icon-btn">
-                   <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21 8C21 6.34315 19.6569 5 18 5H10C8.34315 5 7 6.34315 7 8V20C7 21.6569 8.34315 23 10 23H18C19.6569 23 21 21.6569 21 20V8ZM19 8C19 7.44772 18.5523 7 18 7H10C9.44772 7 9 7.44772 9 8V20C9 20.5523 9.44772 21 10 21H18C18.5523 21 19 20.5523 19 20V8Z" fill="#CB6863"></path> <path d="M6 3H16C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1H6C4.34315 1 3 2.34315 3 4V18C3 18.5523 3.44772 19 4 19C4.55228 19 5 18.5523 5 18V4C5 3.44772 5.44772 3 6 3Z" fill="#CB6863"></path> </g></svg>
-               </button>
-           </div>
-       `;
+            </div>
+            <hr class="modal-divider">
+            <h3>Lien de la page</h3>
+            <div class="copy-section">
+                <input type="text" value="${window.location.href}" readonly>
+                <button id="copyButton" class="icon-btn">Copier</button>
+            </div>
+        `;
 
-       this.shadowRoot.appendChild(this.modal);
+        this.shadowRoot.appendChild(this.modal);
 
-       // Événements pour ouvrir et fermer le modal
-       this.button.addEventListener('click', () => this.openModal());
-       this.overlay.addEventListener('click', () => this.closeModal());
-       this.modal.querySelector('#copyButton').addEventListener('click', () => {
-           navigator.clipboard.writeText(window.location.href);
-           alert('Lien copié dans le presse-papier');
-       });
-   }
+        // Gestion des événements pour le modal et l'overlay
+        this.overlay.addEventListener('click', () => this.closeModal());
+        this.modal.querySelector('#copyButton').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Lien copié dans le presse-papier');
+        });
+    }
 
-   openModal() {
-       this.overlay.style.display = 'block';
-       this.modal.style.display = 'block';
-   }
+    shareContent() {
+        if (navigator.share) {
+            navigator.share({
+                title: document.title,
+                text: 'Découvrez cette recette !',
+                url: window.location.href
+            }).catch((error) => console.log('Erreur de partage:', error));
+        } else {
+            this.openModal(); // Ouvrir le modal si l'API de partage Web n'est pas disponible
+        }
+    }
 
-   closeModal() {
-       this.overlay.style.display = 'none';
-       this.modal.style.display = 'none';
-   }
+    openModal() {
+        this.overlay.style.display = 'block';
+        this.modal.style.display = 'block';
+    }
+
+    closeModal() {
+        this.overlay.style.display = 'none';
+        this.modal.style.display = 'none';
+    }
 }
 
 customElements.define('share-button', ShareButton);

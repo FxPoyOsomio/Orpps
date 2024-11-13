@@ -441,7 +441,7 @@ async function generateStaticPages() {
     const localImagePath = path.join(IMAGE_DIR, `${slug}.jpg`);
 
     // Télécharger l'image si elle n'existe pas déjà localement
-    if (imageUrl && !fs.existsSync(localImagePath)) {
+    if (imageUrl) {
         await downloadImage(imageUrl, localImagePath);
     }
 
