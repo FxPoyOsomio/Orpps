@@ -3,6 +3,9 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
+
+const sharp = require('sharp'); 
+
 const TEMPLATE_PATH = path.join(__dirname, 'recipeTemplate.html');
 const OUTPUT_DIR = path.join(__dirname, 'dist', 'recettes');
 const IMAGE_DIR = path.join(__dirname, 'assets', 'images', 'img_recette');
@@ -11,10 +14,11 @@ const recipeId = process.argv[2]; // L'ID de la recette en argument
 
 
 
+
+
 // Fonction pour récupérer la recette spécifique depuis Airtable
 async function fetchRecipes(id) {
     const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTES__TABLE_ID}/${id}`;
-
     const response = await fetch(url, {
         headers: {
             Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`
@@ -326,6 +330,37 @@ function generateDynamicContent(recipeData, preparationsDetails, ingredientsList
     };
 }
 
+// Fonction pour créer des versions redimensionnées de l'image
+async function createResizedImages(inputPath, slug) {
+    const sizes = [1024, 600, 450, 300];
+    const imagePaths = {};
+    for (const size of sizes) {
+        const outputPath = path.join(IMAGE_DIR, `${slug}_${size}px.jpg`);
+        await sharp(inputPath)
+            .resize(size, size, { fit: 'cover' })
+            .toFile(outputPath);
+        console.log(`Image redimensionnée et sauvegardée : ${outputPath}`);
+        imagePaths[size] = `/assets/images/img_recette/${slug}_${size}px.jpg`;
+    }
+    return imagePaths;
+}
+
+// Fonction principale pour traiter l'image de la recette
+async function processRecipeImage(recipe) {
+    const slug = recipe.slug;
+    const imageUrl = Array.isArray(recipe.fields['img.']) && recipe.fields['img.'].length > 0
+        ? recipe.fields['img.'][0].url
+        : '';
+
+    const localImagePath = path.join(IMAGE_DIR, `${slug}.jpg`);
+    if (imageUrl) {
+        await downloadImage(imageUrl, localImagePath);
+        const imagePaths = await createResizedImages(localImagePath, slug);
+        return imagePaths;
+    }
+    return null;
+}
+
 // Fonction pour télécharger l'image depuis une URL et la sauvegarder localement
 async function downloadImage(url, outputPath) {
     const response = await fetch(url);
@@ -363,6 +398,22 @@ async function generateStaticPages() {
         .replace(/\s+/g, '-') // Remplacer les espaces par des tirets
         .replace(/[^\w-]+/g, '-'); // Supprimer les caractères non alphanumériques
     let finalHTML = templateContent;
+
+
+    // Génération de l'image principale et des versions redimensionnées
+    const imagePaths = await processRecipeImage({ ...recipe, slug });
+    if (imagePaths) {
+        const relativeImagePath = `/assets/images/img_recette/${slug}_1024px.jpg`;
+        const srcset = Object.entries(imagePaths)
+            .map(([size, path]) => `${path} ${size}w`) // Pas de `path.join` ici, car les chemins doivent être relatifs pour le HTML
+            .join(', ');
+
+
+        // Remplacer les placeholders dans le template
+        finalHTML = finalHTML
+            .replace(/{{recipe-image}}/g, relativeImagePath)
+            .replace(/{{recipe-image_srcset}}/g, srcset);
+    }
 
     // Vérification des catégories et sous-catégories
     const categoryIds = recipe.fields['CATÉGORIE MENUS [base]'] || [];
@@ -438,12 +489,12 @@ async function generateStaticPages() {
         ? recipe.fields['img.'][0].url
         : '';
 
-    const localImagePath = path.join(IMAGE_DIR, `${slug}.jpg`);
-
-    // Télécharger l'image si elle n'existe pas déjà localement
-    if (imageUrl) {
-        await downloadImage(imageUrl, localImagePath);
-    }
+        try {
+            const imagePath = await processRecipeImage(recipe);
+            console.log(`Chemin de l'image principale : ${imagePath}`);
+        } catch (error) {
+            console.error(`Erreur : ${error.message}`);
+        }
 
     // Utiliser le chemin de l'image locale dans le HTML
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
@@ -480,8 +531,12 @@ async function generateStaticPages() {
     fs.writeFileSync(path.join(OUTPUT_DIR, `${slug}.html`), finalHTML);
     console.log(`Page générée pour la recette: ${slug}`);
 
-    // Appel du script de génération de carte avec l'ID de la recette
-    exec(`node generateRecipeCard.js ${recipe.id}`, (error, stdout, stderr) => {
+    const srcset = Object.entries(imagePaths)
+        .map(([size, path]) => `${path} ${size}w`)
+        .join(', ');
+
+    // Appel du script de génération de carte avec l'ID de la recette et `srcset`
+    exec(`node generateRecipeCard.js ${recipe.id} "${srcset}"`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Erreur lors de la génération de la carte de recette ${recipe.id}: ${error}`);
             return;
@@ -490,9 +545,7 @@ async function generateStaticPages() {
         if (stderr) console.error(stderr);
     });
 
-    // À la fin du processus de génération
-    console.log(`Génération terminée pour : ${recipeId}`);
-
+   console.log(`Génération terminée pour : ${recipeId}`);
 }
 
 generateStaticPages().catch(console.error);

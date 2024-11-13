@@ -33,7 +33,6 @@ async function fetchRecipeWithCategories(recordId) {
     return { recipe, categoryNames, subCategoryNames };
 }
 
-
 // Fonction pour récupérer les noms de catégories
 async function fetchCategories(ids) {
     if (!ids || ids.length === 0) return [];
@@ -55,7 +54,7 @@ async function fetchSubCategories(ids) {
 }
 
 // Fonction pour générer le HTML d'une carte de recette
-function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
+function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset) {
     const title = recipe.fields['Titre recettes'] || 'Titre non disponible';
     const slug = recipe.fields['Titre recettes']
         .normalize("NFD")
@@ -67,11 +66,9 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
     const recipeDuration = recipe.fields['Temps recette'] || '';
     const difficultiesLevel = recipe.fields['Difficulté recette'] || '';
     const pricingLevel = recipe.fields['Prix recette'] || '';
-    // Utiliser le chemin de l'image locale dans le HTML
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
     // Encoder chaque catégorie et sous-catégorie avec `encodeURIComponent` 
-    // et appliquer un remplacement manuel pour les apostrophes
     const categories = Array.isArray(categoryNames)
         ? categoryNames.map(c => encodeURIComponent(c.name).replace(/'/g, '%27')).join(',')
         : '';
@@ -99,7 +96,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
                 </div>
 
                 <div class="recette-image_overlay"></div>
-                    <img class="recette-image" src="${relativeImagePath}" alt="${title}">       
+                    <img class="recette-image" src="${relativeImagePath}" srcset="${srcset}" alt="${title}">       
                 </div>
                 <div class="infos__recette">
                     <div class="top-infos__recette">
@@ -204,11 +201,11 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames) {
 
 
 // Fonction principale pour ajouter ou mettre à jour la carte de recette
-async function addOrUpdateRecipeCard(recordId) {
+async function addOrUpdateRecipeCard(recordId, srcset) {
     const { recipe, categoryNames, subCategoryNames } = await fetchRecipeWithCategories(recordId);
 
     const existingContent = fs.existsSync(RECIPES_LIST_PATH) ? fs.readFileSync(RECIPES_LIST_PATH, 'utf-8') : '';
-    const newCardHTML = generateRecipeCardHTML(recipe, categoryNames, subCategoryNames);
+    const newCardHTML = generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset);
 
     if (recipeExistsInHTML(existingContent, recordId)) {
         const updatedContent = existingContent.replace(
@@ -224,12 +221,11 @@ async function addOrUpdateRecipeCard(recordId) {
     }
 }
 
-// Récupération de l'ID de la recette depuis les arguments en ligne de commande
+// Récupération de l'ID de la recette et du srcset depuis les arguments en ligne de commande
 const recordId = process.argv[2];
+const srcset = process.argv[3]; // Utiliser directement la chaîne de texte passée
 if (recordId) {
-    addOrUpdateRecipeCard(recordId).catch(console.error);
+    addOrUpdateRecipeCard(recordId, srcset).catch(console.error);
 } else {
     console.log("Aucun ID de recette spécifié.");
 }
-
-
