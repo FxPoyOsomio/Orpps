@@ -618,4 +618,349 @@ customElements.define('secondary-button', SecondaryButton);
 
 
 
+// AddFavorite Button Component
+class AddFavoriteButton extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
 
+        // Créer un bouton
+        this.button = document.createElement('button');
+        this.button.style.color = '#CB6863';
+        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        this.button.style.backdropFilter = 'blur(5px)';
+        this.button.style.borderRadius = '50px';
+        this.button.style.padding = '10px';
+        this.button.style.border = '1px solid #CB6863';
+        this.button.style.cursor = 'pointer';
+        this.button.style.display = 'flex';
+        this.button.style.alignItems = 'center';
+        this.button.style.justifyContent = 'center';
+        this.button.style.height = '40px';
+        this.button.style.width = '40px'; // Bouton circulaire
+        this.button.style.position = 'relative';
+        this.button.style.overflow = 'hidden';
+        this.button.style.transition = 'transform 0.2s';
+        this.button.style.margin = '0 10px';
+
+        // Créer une div pour l'icône SVG
+        this.iconContainer = document.createElement('div');
+        this.iconContainer.style.width = '22px';
+        this.iconContainer.style.height = '22px';
+        this.iconContainer.style.display = 'flex';
+        this.iconContainer.style.alignItems = 'center';
+        this.iconContainer.style.justifyContent = 'center';
+
+        // Ajouter le SVG par défaut pour l'icône "favoris"
+        this.iconContainer.innerHTML = `
+            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241ZM12 4.45873C9.68795 2.39015 7.09896 2.10078 5.00076 3.05987C2.78471 4.07283 1.25 6.42494 1.25 9.13701C1.25 11.8025 2.3605 13.836 3.81672 15.4757C4.98287 16.7888 6.41022 17.8879 7.67083 18.8585C7.95659 19.0785 8.23378 19.292 8.49742 19.4998C9.00965 19.9036 9.55954 20.3342 10.1168 20.6598C10.6739 20.9853 11.3096 21.2499 12 21.2499C12.6904 21.2499 13.3261 20.9853 13.8832 20.6598C14.4405 20.3342 14.9903 19.9036 15.5026 19.4998C15.7662 19.292 16.0434 19.0785 16.3292 18.8585C17.5898 17.8879 19.0171 16.7888 20.1833 15.4757C21.6395 13.836 22.75 11.8025 22.75 9.13701C22.75 6.42494 21.2153 4.07283 18.9992 3.05987C16.901 2.10078 14.3121 2.39015 12 4.45873Z"
+                        fill="#CB6863"></path>
+                </g>
+            </svg>
+        `;
+        this.button.appendChild(this.iconContainer);
+
+        // Ajouter le bouton au shadow DOM
+        this.shadowRoot.appendChild(this.button);
+
+        // Styles pour le hover
+        this.button.addEventListener('mouseenter', () => {
+            this.button.style.transform = 'scale(1.1)';
+        });
+
+        this.button.addEventListener('mouseleave', () => {
+            this.button.style.transform = 'scale(1)';
+        });
+
+        // Effet d'animation d'onde au clic
+        this.button.addEventListener('mousedown', () => {
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.border = `${this.button.offsetWidth / 50}px solid #F5E1DE`;
+            ripple.style.backgroundColor = 'transparent';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.width = '10px';
+            ripple.style.height = '10px';
+            ripple.style.transform = 'scale(1)';
+            ripple.style.transition = 'transform 1s cubic-bezier(0.5, 0, 0.5, 1)';
+            ripple.style.left = `${this.button.offsetWidth / 2}px`;
+            ripple.style.top = `${this.button.offsetHeight / 2}px`;
+            ripple.style.transformOrigin = 'center';
+            ripple.style.transform = `translate(-50%, -50%) scale(1)`;
+
+            this.button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.style.transform = 'translate(-50%, -50%) scale(100)';
+            }, 10);
+
+            ripple.addEventListener('transitionend', () => {
+                ripple.remove();
+            });
+        });
+    }
+}
+
+customElements.define('add-favorite-button', AddFavoriteButton);
+
+
+
+
+
+// Share Button Component
+class ShareButton extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+
+        // Styles
+        const styles = document.createElement('style');
+        styles.textContent = `
+            .share-btn {
+                background: #FFFFFF;
+                border: 1px solid #FFFFFF;
+                border-radius: 50px;
+                padding: 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 40px;
+                width: 40px;
+                transition: transform 0.2s;
+            }
+
+            .modal-overlay {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100vw;
+                height: calc(100vh - 80px);
+                background: rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(5px);
+                display: none;
+                z-index: 999;
+            }
+
+            .share-modal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                display: none;
+                z-index: 1000;
+            }
+
+            .share-apps {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 5px;
+                justify-content: space-around;
+                margin: 10px 0;
+            }
+
+            .icon-btn {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+            }
+
+            .icon-btn img {
+                height: 34px;
+            }
+
+            .copy-section {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+            }
+
+            .copy-section input {
+                flex: 1;
+                padding: 5px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .copy-section .icon-btn {
+                margin-left: 5px;
+            }
+            h2 {
+                font-weight: 500;
+                font-size: 1.8em;
+                letter-spacing: -0.05em;
+                font-family: 'Montserrat', sans-serif;
+                color: #1B1B1B;
+            }
+            h3 {
+                font-weight: 500;
+                font-size: 1.4em;
+                letter-spacing: 0em;
+                font-family: 'Montserrat', sans-serif;
+                color: #1B1B1B;
+            }   
+            .modal-divider {
+                border: none;
+                border-top: 1px solid #ddd;
+                margin: 15px 0;
+            }           
+        `;
+        this.shadowRoot.appendChild(styles);
+
+        // Créer un bouton
+        this.button = document.createElement('button');
+        this.button.style.color = '#CB6863';
+        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        this.button.style.backdropFilter = 'blur(5px)';
+        this.button.style.borderRadius = '50px';
+        this.button.style.padding = '10px';
+        this.button.style.border = '1px solid #CB6863';
+        this.button.style.cursor = 'pointer';
+        this.button.style.display = 'flex';
+        this.button.style.alignItems = 'center';
+        this.button.style.justifyContent = 'center';
+        this.button.style.height = '40px';
+        this.button.style.width = '40px'; // Bouton circulaire
+        this.button.style.position = 'relative';
+        this.button.style.overflow = 'hidden';
+        this.button.style.transition = 'transform 0.2s';
+        this.button.style.margin = '0 10px';
+
+        // Créer une div pour l'icône SVG
+        this.iconContainer = document.createElement('div');
+        this.iconContainer.style.width = '22px';
+        this.iconContainer.style.height = '22px';
+        this.iconContainer.style.display = 'flex';
+        this.iconContainer.style.alignItems = 'center';
+        this.iconContainer.style.justifyContent = 'center';
+
+        // Ajouter le SVG par défaut pour l'icône "partage"
+        this.iconContainer.innerHTML = `
+            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M15.7285 3.88396C17.1629 2.44407 19.2609 2.41383 20.4224 3.57981C21.586 4.74798 21.5547 6.85922 20.1194 8.30009L17.6956 10.7333C17.4033 11.0268 17.4042 11.5017 17.6976 11.794C17.9911 12.0863 18.466 12.0854 18.7583 11.7919L21.1821 9.35869C23.0934 7.43998 23.3334 4.37665 21.4851 2.5212C19.6346 0.663551 16.5781 0.905664 14.6658 2.82536L9.81817 7.69182C7.90688 9.61053 7.66692 12.6739 9.51519 14.5293C9.80751 14.8228 10.2824 14.8237 10.5758 14.5314C10.8693 14.2391 10.8702 13.7642 10.5779 13.4707C9.41425 12.3026 9.44559 10.1913 10.8809 8.75042L15.7285 3.88396Z"
+                        fill="#CB6863"></path>
+                    <path
+                        d="M14.4851 9.47074C14.1928 9.17728 13.7179 9.17636 13.4244 9.46868C13.131 9.76101 13.1301 10.2359 13.4224 10.5293C14.586 11.6975 14.5547 13.8087 13.1194 15.2496L8.27178 20.1161C6.83745 21.556 4.73937 21.5863 3.57791 20.4203C2.41424 19.2521 2.44559 17.1408 3.88089 15.6999L6.30473 13.2667C6.59706 12.9732 6.59614 12.4984 6.30268 12.206C6.00922 11.9137 5.53434 11.9146 5.24202 12.2081L2.81818 14.6413C0.906876 16.5601 0.666916 19.6234 2.51519 21.4789C4.36567 23.3365 7.42221 23.0944 9.33449 21.1747L14.1821 16.3082C16.0934 14.3895 16.3334 11.3262 14.4851 9.47074Z"
+                        fill="#CB6863"></path>
+                </g>
+            </svg>
+        `;
+        this.button.appendChild(this.iconContainer);
+
+        // Ajouter le bouton au shadow DOM
+        this.shadowRoot.appendChild(this.button);
+
+        // Styles pour le hover
+        this.button.addEventListener('mouseenter', () => {
+            this.button.style.transform = 'scale(1.1)';
+        });
+
+        this.button.addEventListener('mouseleave', () => {
+            this.button.style.transform = 'scale(1)';
+        });
+
+        // Effet d'animation d'onde au clic
+        this.button.addEventListener('mousedown', () => {
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.border = `${this.button.offsetWidth / 50}px solid #F5E1DE`;
+            ripple.style.backgroundColor = 'transparent';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.width = '10px';
+            ripple.style.height = '10px';
+            ripple.style.transform = 'scale(1)';
+            ripple.style.transition = 'transform 1s cubic-bezier(0.5, 0, 0.5, 1)';
+            ripple.style.left = `${this.button.offsetWidth / 2}px`;
+            ripple.style.top = `${this.button.offsetHeight / 2}px`;
+            ripple.style.transformOrigin = 'center';
+            ripple.style.transform = `translate(-50%, -50%) scale(1)`;
+
+            this.button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.style.transform = 'translate(-50%, -50%) scale(100)';
+            }, 10);
+
+            ripple.addEventListener('transitionend', () => {
+                ripple.remove();
+            });
+        });
+
+       // Overlay pour fond flou
+       this.overlay = document.createElement('div');
+       this.overlay.classList.add('modal-overlay');
+       this.shadowRoot.appendChild(this.overlay);
+
+       // Modal de partage
+       this.modal = document.createElement('div');
+       this.modal.classList.add('share-modal');
+       this.modal.innerHTML = `
+           <h2>Partager</h2>
+           <hr class="modal-divider">
+           <div class="share-apps">
+                <a href="mailto:?subject=Partager cette page&body=Voici le lien: ${window.location.href}" class="share-btn">
+                    <img src="https://img.icons8.com/fluency/48/apple-mail.png" alt="apple-mail"/>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+                    <img src="https://img.icons8.com/fluency/48/facebook-new.png" alt="facebook"/>
+                </a>
+                <a href="https://www.facebook.com/dialog/send?link=${encodeURIComponent(window.location.href)}&app_id=2203716320028284&redirect_uri=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+                    <img src="https://img.icons8.com/fluency/48/facebook-messenger--v2.png" alt="facebook-messenger"/>
+                </a>
+                <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
+                    <img src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="whatsapp"/>
+                </a>
+           </div>
+           <hr class="modal-divider">
+           <h3>Lien de la page</h3>
+           <div class="copy-section">
+               <input type="text" value="${window.location.href}" readonly>
+               <button id="copyButton" class="icon-btn">
+                   <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21 8C21 6.34315 19.6569 5 18 5H10C8.34315 5 7 6.34315 7 8V20C7 21.6569 8.34315 23 10 23H18C19.6569 23 21 21.6569 21 20V8ZM19 8C19 7.44772 18.5523 7 18 7H10C9.44772 7 9 7.44772 9 8V20C9 20.5523 9.44772 21 10 21H18C18.5523 21 19 20.5523 19 20V8Z" fill="#CB6863"></path> <path d="M6 3H16C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1H6C4.34315 1 3 2.34315 3 4V18C3 18.5523 3.44772 19 4 19C4.55228 19 5 18.5523 5 18V4C5 3.44772 5.44772 3 6 3Z" fill="#CB6863"></path> </g></svg>
+               </button>
+           </div>
+       `;
+
+       this.shadowRoot.appendChild(this.modal);
+
+       // Événements pour ouvrir et fermer le modal
+       this.button.addEventListener('click', () => this.openModal());
+       this.overlay.addEventListener('click', () => this.closeModal());
+       this.modal.querySelector('#copyButton').addEventListener('click', () => {
+           navigator.clipboard.writeText(window.location.href);
+           alert('Lien copié dans le presse-papier');
+       });
+   }
+
+   openModal() {
+       this.overlay.style.display = 'block';
+       this.modal.style.display = 'block';
+   }
+
+   closeModal() {
+       this.overlay.style.display = 'none';
+       this.modal.style.display = 'none';
+   }
+}
+
+customElements.define('share-button', ShareButton);
