@@ -84,6 +84,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
 
     const ingredients = recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '';
     const instructions = recipe.fields['Instruction'] || '';
+    const description = recipe.fields['Description recette'] || '';
+
 
     // Génération de la carte recette avec encodage complet pour les `data-ref`
     return `
@@ -91,6 +93,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             class="recette-item" 
             style="text-decoration: none;" 
             id="${recipe.id}" 
+            data-ref-titre="${title}"
+            data-ref-description="${description}"
             data-ref-categorie="${categories}" 
             data-ref-subcategorie="${subCategories}" 
             data-ref-ingredients="${ingredients}" 

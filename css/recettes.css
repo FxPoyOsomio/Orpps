@@ -15,6 +15,36 @@
     margin: 15px 0;
     align-items: center;
 }
+.allCategories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 5px;
+    margin: 15px 0;
+    align-items: center;
+}
+#allRecipes {
+    padding: 3px 0;
+    cursor: pointer;
+}
+#allRecipes h6 {
+    color: #a3a3a3;
+}
+#allRecipes:hover h6 {
+    color: #CB6863;
+    text-decoration: underline;
+}
+#allRecipes.active {
+    padding: 3px 10px;
+    backdrop-filter: blur(2px);
+    border-radius: 8px;
+    background-color: rgba(27, 27, 27, 0.5);
+}
+#allRecipes.active h6{
+    color: #FFFFFF;
+    font-weight: 400;
+    text-decoration: unset; 
+}
 .category {
     padding: 3px 0;
     cursor: pointer;
