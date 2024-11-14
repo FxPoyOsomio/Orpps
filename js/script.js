@@ -1,27 +1,6 @@
-import { initializeRecipes } from './recettes.js';
-
-// Fonction pour initialiser la recherche depuis l'URL
-function initializeSearchFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchTerms = urlParams.get("searchTerms");
-    
-    // Essayer de remplir l'input toutes les 100ms jusqu'à ce qu'il soit présent
-    const attemptSetSearchInput = setInterval(() => {
-        const searchInput = document.querySelector(".header__search-content input");
-        if (searchInput) {
-            searchInput.value = searchTerms ? decodeURIComponent(searchTerms) : '';
-            clearInterval(attemptSetSearchInput);
-            console.log("Termes de recherche initialisés dans l'input :", searchInput.value);
-        } else {
-            console.log("Le champ de recherche n'est pas encore accessible.");
-        }
-    }, 100); // Essayer toutes les 100 ms jusqu'à trouver l'élément
-}
-
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header fetch...");
-    initializeSearchFromURL();
 
     fetch("/components/header.html")
         .then(response => response.text())
@@ -33,9 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
             applySearchEventsOnHeaderOpen();
             applySearchEvents(document.getElementById("headerSearchBar")); // Activer les événements de la barre de recherche
             applySearchEventsOnCategories();
-            
-            // Délai pour s'assurer que le DOM est complètement prêt
-            setTimeout(initializeSearchInput, 100); // Initialiser le champ de recherche si des termes sont trouvés dans l'URL
         })
         .catch(error => console.error("Error loading header:", error));
 
@@ -104,21 +80,7 @@ function resetSearchBarAnimation(container) {
     }
 }
 
-// Fonction pour initialiser le champ de saisie de recherche avec les termes de l'URL
-function initializeSearchInput() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchTerms = urlParams.get('searchTerms');
 
-    if (searchTerms) {
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-            searchInput.value = decodeURIComponent(searchTerms.replace(/\+/g, ' ')); // Décoder les termes et remplacer les + par des espaces
-            console.log("Terme(s) de recherche initialisé(s) :", searchInput.value);
-        } else {
-            console.log("Le champ de recherche n'a pas été trouvé au moment de l'initialisation.");
-        }
-    }
-}
 
 
 // Gérer le clic en dehors du menu pour le fermer
@@ -130,15 +92,15 @@ function handleOutsideClick(event) {
 
     if (shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer)) {
         closeMenu(header, overlayMenu, burgerMenu);
-        resetSearchBar(); // Assurez-vous que la barre de recherche est rétractée si le menu est fermé
+        resetSearchBarAnimation(searchBarContainer); // Assurez-vous que la barre de recherche est rétractée si le menu est fermé
         document.removeEventListener("click", handleOutsideClick);
     }
 }
 
 // Appliquer les événements de recherche lors de l'ouverture du header
 function applySearchEventsOnHeaderOpen() {
-    const searchButton = document.getElementById("SearchBarButton");
-    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("headerSearchBarButton");
+    const searchInput = document.getElementById("headerSearchInput");
 
     if (searchButton && searchInput) {
         searchButton.addEventListener("click", filterRecipesByCategoryAndSearch);
@@ -169,6 +131,7 @@ function applySearchEventsOnCategories() {
         });
     });
 }
+
 
 // Fonction pour filtrer par catégorie et termes de recherche
 function filterRecipesByCategoryAndSearch() {
@@ -719,7 +682,7 @@ class AddFavoriteButton extends HTMLElement {
         // Créer un bouton
         this.button = document.createElement('button');
         this.button.style.color = '#CB6863';
-        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
         this.button.style.backdropFilter = 'blur(5px)';
         this.button.style.borderRadius = '50px';
         this.button.style.padding = '10px';
@@ -743,17 +706,12 @@ class AddFavoriteButton extends HTMLElement {
         this.iconContainer.style.alignItems = 'center';
         this.iconContainer.style.justifyContent = 'center';
 
-        // Ajouter le SVG par défaut pour l'icône "favoris"
+        // Ajouter le SVG par défaut pour l'icône "favoris" avec bordure uniquement (inactif)
         this.iconContainer.innerHTML = `
-            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241ZM12 4.45873C9.68795 2.39015 7.09896 2.10078 5.00076 3.05987C2.78471 4.07283 1.25 6.42494 1.25 9.13701C1.25 11.8025 2.3605 13.836 3.81672 15.4757C4.98287 16.7888 6.41022 17.8879 7.67083 18.8585C7.95659 19.0785 8.23378 19.292 8.49742 19.4998C9.00965 19.9036 9.55954 20.3342 10.1168 20.6598C10.6739 20.9853 11.3096 21.2499 12 21.2499C12.6904 21.2499 13.3261 20.9853 13.8832 20.6598C14.4405 20.3342 14.9903 19.9036 15.5026 19.4998C15.7662 19.292 16.0434 19.0785 16.3292 18.8585C17.5898 17.8879 19.0171 16.7888 20.1833 15.4757C21.6395 13.836 22.75 11.8025 22.75 9.13701C22.75 6.42494 21.2153 4.07283 18.9992 3.05987C16.901 2.10078 14.3121 2.39015 12 4.45873Z"
-                        fill="#CB6863"></path>
-                </g>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
+                <path fill="none" stroke="#CB6863" stroke-width="1.5"
+                    d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
+                />
             </svg>
         `;
         this.button.appendChild(this.iconContainer);
@@ -798,6 +756,32 @@ class AddFavoriteButton extends HTMLElement {
             });
         });
 
+        // Toggle entre inactif (bordure) et actif (rempli)
+        this.isActive = false;
+        this.button.addEventListener('click', () => {
+            this.isActive = !this.isActive;
+            this.updateIcon();
+        });        
+
+    }
+    updateIcon() {
+        if (this.isActive) {
+            this.iconContainer.innerHTML = `
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#CB6863" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
+                    />
+                </svg>
+            `;
+        } else {
+            this.iconContainer.innerHTML = `
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="none" stroke="#CB6863" stroke-width="1.5"
+                        d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
+                    />
+                </svg>
+            `;
+        }
     }
 }
 

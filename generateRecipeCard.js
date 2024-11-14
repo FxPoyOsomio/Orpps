@@ -97,8 +97,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-instructions="${instructions}">
             <add-favorite-button href="/index.html" style="
                     position: absolute;
-                    top: -20px;
-                    right: -30px;
+                    top: 20px;
+                    right: 12px;
                     z-index: 3;
                     cursor: pointer;
                     " onclick="event.preventDefault(); addToFavorites(event)">
