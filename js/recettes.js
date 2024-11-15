@@ -159,6 +159,11 @@ function updateSearchTermsAndSubCategories() {
     }
 }
 
+function sanitizeText(text) {
+    if (!text) return '';
+    return text.replace(/\\(['"\/])/g, '$1'); // Remplace les backslashes suivis d'un caractère par le caractère seul
+}
+
 // Fonction pour initialiser les sous-catégories avec un filtre basé sur les catégories et termes de recherche actifs
 function initializeSubCategories(selectedCategories = [], searchTerms = [], selectedSubCategories = []) {
     return fetch('/dist/recettes.html')
@@ -188,10 +193,11 @@ function initializeSubCategories(selectedCategories = [], searchTerms = [], sele
                     const cardSubCategories = recipeCard.getAttribute('data-ref-subcategorie')
                         .split(',')
                         .map(subCat => decodeURIComponent(subCat.trim()));
-                    const ingredients = (recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
-                    const instructions = (recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
-                    const title = (recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
-                    const description = (recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
+                    const ingredients = sanitizeText(recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
+                    const instructions = sanitizeText(recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
+                    const title = sanitizeText(recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
+                    const description = sanitizeText(recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
+                        
 
                     const matchesSearchTerms = searchTerms.every(term => {
                         const formattedTerm = term.toLowerCase().trim();
@@ -246,10 +252,10 @@ function displayFilteredRecipes(categories, searchTerms, subCategories) {
                 const cardSubCategories = recipeCard.getAttribute('data-ref-subcategorie')
                     .split(',')
                     .map(subCat => decodeURIComponent(subCat.trim()));
-                const ingredients = (recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
-                const instructions = (recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
-                const title = (recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
-                const description = (recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
+                const ingredients = sanitizeText(recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
+                const instructions = sanitizeText(recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
+                const title = sanitizeText(recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
+                const description = sanitizeText(recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
 
                 console.log("Checking recipe card:", {
                     title,
