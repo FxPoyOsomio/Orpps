@@ -6,6 +6,22 @@ const fetch = require('node-fetch');
 
 const RECIPES_LIST_PATH = path.join(__dirname, 'dist', 'recettes.html');
 
+function sanitizeText(text) {
+    if (typeof text !== 'string') {
+        text = text ? String(text) : ''; // Convertit en chaîne ou retourne une chaîne vide
+    }
+    return text
+        .replace(/\\/g, '')       // Supprime les backslashes
+        .replace(/"/g, '&quot; ')  // Échappe les guillemets doubles pour éviter les conflits HTML
+        .replace(/'/g, '&#39; ')   // Échappe les apostrophes
+        .replace(/</g, '&lt; ')    // Échappe les chevrons <
+        .replace(/>/g, '&gt; ');   // Échappe les chevrons >
+}
+
+
+
+
+
 // Fonction pour vérifier si une carte existe déjà dans recettes.html
 function recipeExistsInHTML(existingContent, recordId) {
     const regex = new RegExp(`id="${recordId}"`, 'g');
@@ -82,10 +98,23 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
         `<div class="subCategory"><h7>${encodeURIComponent(subCategory.name)}</h7></div>`
     ).join('');
 
-    const ingredients = recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '';
-    const instructions = recipe.fields['Instruction'] || '';
-    const description = recipe.fields['Description recette'] || '';
+    const ingredients = sanitizeText(recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '');
+    const instructions = sanitizeText(recipe.fields['Instruction'] || '');
+    const description = sanitizeText(recipe.fields['Description recette'] || '');
 
+    console.log('Generated HTML:', `
+        <a href="${urlRecette}" 
+            class="recette-item" 
+            style="text-decoration: none;" 
+            id="${recipe.id}" 
+            data-ref-titre="${title}"
+            data-ref-description="${description}"
+            data-ref-categorie="${categories}" 
+            data-ref-subcategorie="${subCategories}" 
+            data-ref-ingredients="${ingredients}" 
+            data-ref-instructions="${instructions}">
+        </a>
+    `);
 
     // Génération de la carte recette avec encodage complet pour les `data-ref`
     return `
@@ -237,6 +266,7 @@ async function addOrUpdateRecipeCard(recordId, srcset) {
         fs.writeFileSync(RECIPES_LIST_PATH, updatedContent);
         console.log(`Carte ajoutée pour la recette: ${recipe.fields['Titre recettes']}`);
     }
+
 }
 
 // Récupération de l'ID de la recette et du srcset depuis les arguments en ligne de commande
