@@ -660,15 +660,11 @@ html {
 
 .ingredient-preparation span , .ingredient-preparation input {
     font-weight: 300 ;     
-    font-style: italic;
+    font-style: normal;
     color: #CB6863; 
     transition: transform 1.2s ease;
 }
-.etape:hover .ingredient-preparation span , .etape:hover .ingredient-preparation input {
-    font-weight: 300 ;     
-    font-style: normal;
-    color: #CB6863;
-}
+
 
 
 

@@ -35,15 +35,10 @@
     text-decoration: underline;
 }
 #allRecipes.active {
-    padding: 3px 10px;
-    backdrop-filter: blur(2px);
-    border-radius: 8px;
-    background-color: rgba(27, 27, 27, 0.5);
+
 }
 #allRecipes.active h6{
-    color: #FFFFFF;
-    font-weight: 400;
-    text-decoration: unset; 
+    text-decoration: underline;
 }
 .category {
     padding: 3px 0;
@@ -201,7 +196,7 @@ h1{
 }
 
 .recette-item:hover {
-    box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.1) ;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1) ;
 }
 
 

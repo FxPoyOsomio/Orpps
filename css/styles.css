@@ -545,9 +545,7 @@ p2 {
 
 /* --- Styles pour le menu --- */
 
-.header__nav h3 {
-    text-align: center;
-}
+
 .Menu_categorie {
     display: flex;
     flex-direction: row;
@@ -622,14 +620,12 @@ p2 {
     background-color: rgba(255, 255, 255, 0.8); /* Fond blanc tranparent*/
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(25px); /* Applique un flou à l'arrière-plan */
-    align-items: center;
-    justify-content: center;
-    display: flex; /* Afficher le menu */
-    flex-direction: column; /* Disposer les éléments verticalement */
     opacity: 0; /* Début transparent */
     transform: translateY(-20%);
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Transition douce de descente et d'opacité */
-
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 /* Quand le menu est actif, rendre visible la navigation */
@@ -638,7 +634,26 @@ p2 {
     opacity: 1; /* Devient visible */
 }
 
+.header__nav-Recettes {
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    display: flex; /* Afficher le menu */
+    flex-direction: column; /* Disposer les éléments verticalement */
+}
 
+.header__nav a {
+    text-decoration: none; /* Supprime le soulignement */
+    color: inherit;        /* Conserve la couleur du texte */
+    cursor: pointer;       /* Rend le curseur cliquable */
+}
+.header__nav h1 {
+    margin-top: 0;
+    margin-bottom: 30;
+}
+.header__nav h3 {
+    text-align: center;
+}
 
 /* --- Styles pour le menu burger lorsqu'il est actif --- */
 .header.modal-burger-open .header__overlay {
