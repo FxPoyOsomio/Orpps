@@ -208,11 +208,19 @@ function initializeSubCategories(selectedCategories = [], searchTerms = [], sele
                 });
             }
 
-            displaySubCategories(Array.from(foundSubCategories), selectedSubCategories);
-            displayFilteredRecipes(selectedCategories, searchTerms, selectedSubCategories);
+            // Afficher les sous-catégories après un délai
+            setTimeout(() => {
+                displaySubCategories(Array.from(foundSubCategories), selectedSubCategories);
+
+                // Appeler displayFilteredRecipes avec un délai supplémentaire
+                setTimeout(() => {
+                    displayFilteredRecipes(selectedCategories, searchTerms, selectedSubCategories);
+                }, 300); // Délai pour assurer le chargement complet des sous-catégories
+            }, 300); // Délai initial pour l'affichage des sous-catégories
         })
         .catch(error => console.error("Erreur de chargement des sous-catégories :", error));
 }
+
 
 // Fonction pour afficher les recettes en fonction des filtres actifs
 function displayFilteredRecipes(categories, searchTerms, subCategories) {
