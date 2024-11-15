@@ -240,7 +240,15 @@ function displayFilteredRecipes(categories, searchTerms, subCategories) {
                 const instructions = (recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
                 const title = (recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
                 const description = (recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
-
+            
+                console.log("Checking recipe card:", {
+                    title,
+                    ingredients,
+                    instructions,
+                    description,
+                    searchTerms
+                });
+            
                 const matchesCategories = categories.length === 0 || categories.some(cat => cardCategories.includes(cat));
                 const matchesSubCategories = subCategories.length === 0 || subCategories.some(subCat => cardSubCategories.includes(subCat));
                 const matchesSearchTerms = searchTerms.every(term => {
@@ -248,7 +256,7 @@ function displayFilteredRecipes(categories, searchTerms, subCategories) {
                     const regex = new RegExp(`\\b${formattedTerm}\\w{0,2}\\b`);
                     return regex.test(ingredients) || regex.test(instructions) || regex.test(title) || regex.test(description);
                 });
-
+            
                 if (matchesCategories && matchesSubCategories && matchesSearchTerms) {
                     recettesList.appendChild(recipeCard.cloneNode(true));
                 }
