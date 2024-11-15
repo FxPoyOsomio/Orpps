@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <title id="page-title">{{recipe-title}}</title> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta name="description" id="page-description" content="{{recipe-description}}">
+    <meta name="description" id="page-description" content="{{recipe-description-with-title}}">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
 
     <link rel="canonical" href="https://votredomaine.com/recettes/{{slug}}">
@@ -16,7 +16,7 @@
     <!-- Open Graph pour l’aperçu sur les réseaux sociaux -->
     <meta property="og:title" content="{{recipe-title}}" id="og-title">
     <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta property="og:description" content="{{recipe-description}}" id="og-description">
+    <meta property="og:description" content="{{recipe-description-with-title}}" id="og-description">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
     <meta property="og:image" content="{{recipe-image}}" id="og-image"> <!-- Contenu dynimique pour champs 'img.'  -->
     <meta property="og:url" content="https://https://orpps.netlify.app/recettes/{{slug}}">
@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{recipe-title}}" id="twitter-title">
     <!-- Contenu dynimique pour champs 'Titre recettes'  -->
-    <meta name="twitter:description" content="{{recipe-description}}" id="twitter-description">
+    <meta name="twitter:description" content="{{recipe-description-with-title}}" id="twitter-description">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
     <meta name="twitter:image" content="{{recipe-image}}" id="twitter-image">
     <!-- Contenu dynimique pour champs 'img.'  -->
@@ -38,7 +38,7 @@
             "@context": "https://schema.org",
             "@type": "Recipe",
             "name": "{{recipe-title}}",
-            "description": "{{recipe-description}}",
+            "description": "{{recipe-description-with-title}}",
             "image": "{{recipe-image}}",
             "author": { "@type": "Person", "name": "François-Xavier Poy" },
             "datePublished": "{{recipe-createdDate}}",
@@ -199,7 +199,7 @@
                 </div>
             </div>
             <p2 class="desciption-recette" id="descriptionRecette">
-                {{recipe-description}}
+                {{recipe-description-with-link}}
             </p2>
             <div class="call-to-action__buttons">
                 <primary-button text="liste de course" href="/Orpps/liste_de_course.html">

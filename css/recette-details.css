@@ -160,12 +160,13 @@ p { font-weight: 200; font-size: 16px;} */
 
 
 p2 {
-    text-align: center;
+    margin: 0; 
 }
-
+.desciption-recette a {
+    color: #CB6863;
+}
 .desciption-recette {
-    display: flex;
-    justify-content: center;
+    text-align: center;
     height: auto;
     box-sizing: border-box;
     padding: 20px 35px;

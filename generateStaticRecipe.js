@@ -13,6 +13,10 @@ const IMAGE_DIR = path.join(__dirname, 'assets', 'images', 'img_recette');
 const recipeId = process.argv[2]; // L'ID de la recette en argument
 
 
+// Fonction utilitaire pour introduire un délai
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 
@@ -42,11 +46,13 @@ async function fetchRecipes(id) {
 
 
 
-// Fonction pour récupérer les détails des préparations
+// Fonction pour récupérer les détails des préparations avec délais
 async function fetchPreparations(preparationIds) {
-    // On utilise Promise.all pour exécuter chaque requête de manière asynchrone
-    const preparations = await Promise.all(preparationIds.map(async id => {
-        // URL spécifique pour chaque préparation
+    const preparations = [];
+    for (const id of preparationIds) {
+        // Introduire un délai entre chaque requête pour éviter les conflits
+        await delay(200); // Délai de 200ms
+
         const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTE_PREPARATIONS__TABLE_ID}/${id}`;
 
         try {
@@ -58,118 +64,131 @@ async function fetchPreparations(preparationIds) {
 
             if (!response.ok) {
                 console.log(`Erreur lors de la récupération de la préparation ${id}`);
-                return null; // Si erreur, on retourne null pour cet enregistrement
+                continue;
             }
 
             const data = await response.json();
 
-            // Si les données sont bien présentes, on continue avec la récupération des ingrédients et des étapes
             if (data && data.fields) {
                 const ingredientIds = data.fields['INGRÉDIENTS [RECETTES PRÉPARATION]'] || [];
                 const ingredientsDetails = await fetchIngredients(ingredientIds);
 
-                // Récupérer les étapes de préparation
                 const stepIds = data.fields['ÉTAPES PRÉPARATIONS (RECETTE) [base]'] || [];
                 const etapesDetails = await fetchPreparationSteps(stepIds, ingredientsDetails);
 
-                return {
+                preparations.push({
                     titre: data.fields['Préparation'],
                     ingredientsDetails,
                     etapes: etapesDetails
-                };
+                });
             } else {
                 console.log(`Aucune donnée trouvée pour la préparation avec l'ID: ${id}`);
-                return null;
             }
         } catch (error) {
             console.log(`Erreur lors de la récupération de la préparation ${id}: ${error}`);
-            return null; // En cas d'erreur de requête, on retourne null pour cet enregistrement
         }
-    }));
+    }
 
-    // Filtrer pour éliminer les préparations nulles (non trouvées)
-    return preparations.filter(preparation => preparation !== null);
+    return preparations;
 }
 
 
+// Fonction pour récupérer les ingrédients avec délais
 async function fetchIngredients(ingredientIds) {
-    const apiKey = process.env.AIRTABLE_API_TOKEN;
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const ingredientsTableId = process.env.AIRTABLE__RECETTE_PREPARATION_ETAPE_INGREDIENTS__TABLE_ID;
+    const ingredients = [];
+    for (const id of ingredientIds) {
+        await delay(150); // Délai de 150ms
 
-    const ingredients = await Promise.all(ingredientIds.map(async (id) => {
-        const url = `https://api.airtable.com/v0/${baseId}/${ingredientsTableId}/${id}`;
-        const response = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${apiKey}`
+        const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTE_PREPARATION_ETAPE_INGREDIENTS__TABLE_ID}/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`
+                }
+            });
+
+            if (!response.ok) {
+                console.log(`Erreur lors de la récupération de l'ingrédient ${id}`);
+                continue;
             }
-        });
-        const ingredient = await response.json();
 
-        // Vérification de l'image
-        const img = ingredient.fields['relative_url_img'] && ingredient.fields['relative_url_img'].trim() !== '' 
-        ? ingredient.fields['relative_url_img'] 
-        : '/assets/images/no_image.jpg';
+            const ingredient = await response.json();
 
+            const img = ingredient.fields['relative_url_img'] && ingredient.fields['relative_url_img'].trim() !== ''
+                ? ingredient.fields['relative_url_img']
+                : '/assets/images/no_image.jpg';
 
-        return {
-            ordernb: ingredient.fields['Ordre d\'ingrédient'],
-            name: ingredient.fields['Nom ingrédient (sans quantité)'],
-            quantity: ingredient.fields['Qté. [base]'] || "",
-            unit: ingredient.fields['Unité'] || "",
-            img: img
-        };
-
-    }));
+            ingredients.push({
+                ordernb: ingredient.fields['Ordre d\'ingrédient'],
+                name: ingredient.fields['Nom ingrédient (sans quantité)'],
+                quantity: ingredient.fields['Qté. [base]'] || "",
+                unit: ingredient.fields['Unité'] || "",
+                img: img
+            });
+        } catch (error) {
+            console.log(`Erreur lors de la récupération de l'ingrédient ${id}: ${error}`);
+        }
+    }
 
     return ingredients;
 }
 
 
-// Fonction pour récupérer les étapes de chaque préparation
+// Fonction pour récupérer les étapes avec délais
 async function fetchPreparationSteps(stepIds, ingredientsDetails) {
-    const apiKey = process.env.AIRTABLE_API_TOKEN;
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const stepsTableId = process.env.AIRTABLE__RECETTE_PREPARATION_ETAPES__TABLE_ID;
+    const steps = [];
+    for (const id of stepIds) {
+        await delay(100); // Délai de 100ms
 
-    const steps = await Promise.all(stepIds.map(async (id) => {
-        const url = `https://api.airtable.com/v0/${baseId}/${stepsTableId}/${id}`;
-        const response = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${apiKey}`
+        const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTE_PREPARATION_ETAPES__TABLE_ID}/${id}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`
+                }
+            });
+
+            if (!response.ok) {
+                console.log(`Erreur lors de la récupération de l'étape ${id}`);
+                continue;
             }
-        });
-        const step = await response.json();
 
-        // Remplacement dynamique des références d'ingrédients dans les instructions
-        const instructions = step.fields['Instructions'].replace(/\[(\d+)\]/g, (match, p1) => {
-            const ingredientOrder = parseInt(p1, 10);
-            const ingredient = ingredientsDetails.find(ing => ing.ordernb === ingredientOrder);
+            const step = await response.json();
 
-            if (ingredient) {
-                return `<span id="ingredients" class="ingredient-preparation">
-                            <span id="ingredient-${ingredient.ordernb}">
-                                ${ingredient.quantity !== "" ? `
-                                    <span class="highlight-quantity">
-                                        <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}">
-                                        ${ingredient.unit !== "" ? `<span> ${ingredient.unit}</span>` : ''} 
-                                    </span>
-                                ` : ''} 
-                                ${ingredient.name}
-                            </span>
-                        </span>`;
-            }
-            return match;
-        });
+            const instructions = step.fields['Instructions'].replace(/\[(\d+)\]/g, (match, p1) => {
+                const ingredientOrder = parseInt(p1, 10);
+                const ingredient = ingredientsDetails.find(ing => ing.ordernb === ingredientOrder);
 
-        return {
-            ordre: step.fields['Ordre étape recette'],
-            originalInstructions: instructions
-        };
-    }));
+                if (ingredient) {
+                    return `<span id="ingredients" class="ingredient-preparation">
+                                <span id="ingredient-${ingredient.ordernb}">
+                                    ${ingredient.quantity !== "" ? `
+                                        <span class="highlight-quantity">
+                                            <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="${ingredient.quantity}">
+                                            ${ingredient.unit !== "" ? `<span> ${ingredient.unit}</span>` : ''} 
+                                        </span>
+                                    ` : ''} 
+                                    ${ingredient.name}
+                                </span>
+                            </span>`;
+                }
+                return match;
+            });
+
+            steps.push({
+                ordre: step.fields['Ordre étape recette'],
+                originalInstructions: instructions
+            });
+        } catch (error) {
+            console.log(`Erreur lors de la récupération de l'étape ${id}: ${error}`);
+        }
+    }
 
     return steps;
 }
+
 
 
 // Fonction pour récupérer le contenu des ingrédients (ingredientsListContent)
@@ -370,6 +389,101 @@ async function downloadImage(url, outputPath) {
     console.log(`Image téléchargée et sauvegardée : ${outputPath}`);
 }
 
+// chat gpt
+// Fonction pour transformer un titre en slug
+function generateSlug(title) {
+    return title
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Remplacer les espaces par des tirets
+        .replace(/[^\w-]+/g, '-'); // Supprimer les caractères non alphanumériques
+}
+
+// Fonction pour remplacer les record IDs dans 'Description recette' par des liens
+async function replaceRecordIdsWithLinks(description) {
+    const recordIdRegex = /\[([a-zA-Z0-9]+)\]/g; // Regex pour trouver les IDs entre crochets
+    let match;
+    const replacements = {}; // Cache pour éviter des appels API redondants
+
+    // Trouver tous les record IDs dans la description
+    while ((match = recordIdRegex.exec(description)) !== null) {
+        const recordId = match[1];
+
+        // Si le remplacement est déjà dans le cache, ne pas refaire l'appel API
+        if (!replacements[recordId]) {
+            try {
+                // Appel API pour récupérer le titre de la recette
+                const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTES__TABLE_ID}/${recordId}`;
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const recipeData = await response.json();
+                    const recipeTitle = recipeData.fields['Titre recettes'];
+                    const recipeSlug = generateSlug(recipeTitle);
+
+                    // Générer le lien HTML
+                    replacements[recordId] = `<a href="/dist/recettes/${recipeSlug}.html">${recipeTitle}</a>`;
+                } else {
+                    console.warn(`Impossible de récupérer la recette avec ID: ${recordId}`);
+                    replacements[recordId] = `[${recordId}]`; // Garder l'ID original si l'appel échoue
+                }
+            } catch (error) {
+                console.error(`Erreur lors de la récupération de la recette avec ID ${recordId}:`, error);
+                replacements[recordId] = `[${recordId}]`; // Garder l'ID original en cas d'erreur
+            }
+        }
+    }
+
+    // Remplacer tous les IDs dans la description par les liens HTML générés
+    return description.replace(recordIdRegex, (_, recordId) => replacements[recordId]);
+}
+
+// Fonction pour remplacer les record IDs dans 'Description recette' par les titres des recettes
+async function replaceRecordIdsWithRecipeTitle(description) {
+    const recordIdRegex = /\[([a-zA-Z0-9]+)\]/g; // Regex pour trouver les IDs entre crochets
+    let match;
+    const replacements = {}; // Cache pour éviter des appels API redondants
+
+    // Trouver tous les record IDs dans la description
+    while ((match = recordIdRegex.exec(description)) !== null) {
+        const recordId = match[1];
+
+        // Si le remplacement est déjà dans le cache, ne pas refaire l'appel API
+        if (!replacements[recordId]) {
+            try {
+                // Appel API pour récupérer le titre de la recette
+                const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE__RECETTES__TABLE_ID}/${recordId}`;
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const recipeData = await response.json();
+                    const recipeTitle = recipeData.fields['Titre recettes'];
+
+                    // Stocker le titre de la recette dans le cache
+                    replacements[recordId] = recipeTitle;
+                } else {
+                    console.warn(`Impossible de récupérer la recette avec ID: ${recordId}`);
+                    replacements[recordId] = `[${recordId}]`; // Garder l'ID original si l'appel échoue
+                }
+            } catch (error) {
+                console.error(`Erreur lors de la récupération de la recette avec ID ${recordId}:`, error);
+                replacements[recordId] = `[${recordId}]`; // Garder l'ID original en cas d'erreur
+            }
+        }
+    }
+
+    // Remplacer tous les IDs dans la description par les titres des recettes
+    return description.replace(recordIdRegex, (_, recordId) => replacements[recordId]);
+}
 
 
 // Fonction principale pour générer les pages statiques
@@ -499,12 +613,16 @@ async function generateStaticPages() {
     // Utiliser le chemin de l'image locale dans le HTML
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
+    // Génération de la description mise à jour
+    const updatedDescriptionWithLinks = await replaceRecordIdsWithLinks(recipe.fields['Description recette']);
+    const updatedDescriptionWithTitle = await replaceRecordIdsWithRecipeTitle(recipe.fields['Description recette']);
 
 
     // Remplacement des placeholders dans le template
     finalHTML = finalHTML
         .replace(/{{recipe-title}}/g, recipe.fields['Titre recettes'])
-        .replace(/{{recipe-description}}/g, recipe.fields['Description recette'])
+        .replace(/{{recipe-description-with-link}}/g, updatedDescriptionWithLinks)
+        .replace(/{{recipe-description-with-title}}/g, updatedDescriptionWithTitle)
         .replace(/{{recipe-image}}/g, relativeImagePath)
         .replace(/{{slug}}/g, slug)
         .replace(/{{recipe-createdDate}}/g, recipe.fields['created'])
