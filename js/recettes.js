@@ -224,50 +224,62 @@ function initializeSubCategories(selectedCategories = [], searchTerms = [], sele
 
 // Fonction pour afficher les recettes en fonction des filtres actifs
 function displayFilteredRecipes(categories, searchTerms, subCategories) {
-    setTimeout(() => {
-        fetch('/dist/recettes.html')
-            .then(response => {
-                if (!response.ok) throw new Error("Erreur lors du chargement des recettes.");
-                return response.text();
-            })
-            .then(htmlContent => {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = htmlContent;
+    fetch('/dist/recettes.html')
+        .then(response => {
+            if (!response.ok) throw new Error("Erreur lors du chargement des recettes.");
+            return response.text();
+        })
+        .then(htmlContent => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
 
-                const recipeCards = tempDiv.querySelectorAll('.recette-item');
-                const recettesList = document.getElementById('recettes-list');
-                recettesList.innerHTML = '';
+            const recipeCards = tempDiv.querySelectorAll('.recette-item');
+            const recettesList = document.getElementById('recettes-list');
+            recettesList.innerHTML = '';
 
-                recipeCards.forEach(recipeCard => {
-                    const cardCategories = recipeCard.getAttribute('data-ref-categorie')
-                        .split(',')
-                        .map(cat => decodeURIComponent(cat.trim()));
-                    const cardSubCategories = recipeCard.getAttribute('data-ref-subcategorie')
-                        .split(',')
-                        .map(subCat => decodeURIComponent(subCat.trim()));
-                    const ingredients = (recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
-                    const instructions = (recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
-                    const title = (recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
-                    const description = (recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
+            let displayedRecipes = 0;
 
-                    const matchesCategories = categories.length === 0 || categories.some(cat => cardCategories.includes(cat));
-                    const matchesSubCategories = subCategories.length === 0 || subCategories.some(subCat => cardSubCategories.includes(subCat));
-                    const matchesSearchTerms = searchTerms.every(term => {
-                        const formattedTerm = term.toLowerCase().trim();
-                        const regex = new RegExp(`\\b${formattedTerm}\\w{0,2}\\b`);
-                        return regex.test(ingredients) || regex.test(instructions) || regex.test(title) || regex.test(description);
-                    });
+            recipeCards.forEach(recipeCard => {
+                const cardCategories = recipeCard.getAttribute('data-ref-categorie')
+                    .split(',')
+                    .map(cat => decodeURIComponent(cat.trim()));
+                const cardSubCategories = recipeCard.getAttribute('data-ref-subcategorie')
+                    .split(',')
+                    .map(subCat => decodeURIComponent(subCat.trim()));
+                const ingredients = (recipeCard.getAttribute('data-ref-ingredients') || '').toLowerCase();
+                const instructions = (recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
+                const title = (recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
+                const description = (recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
 
-                    if (matchesCategories && matchesSubCategories && matchesSearchTerms) {
-                        recettesList.appendChild(recipeCard.cloneNode(true));
-                    }
+                console.log("Checking recipe card:", {
+                    title,
+                    categories: cardCategories,
+                    subCategories: cardSubCategories,
+                    searchTerms,
+                    ingredients,
+                    instructions,
+                    description
                 });
 
-                console.log("Recettes filtrées et affichées.");
-            })
-            .catch(error => console.error("Erreur de chargement des recettes :", error));
-    }, 300); // Délai de 300 ms, ajustez si nécessaire
+                const matchesCategories = categories.length === 0 || categories.some(cat => cardCategories.includes(cat));
+                const matchesSubCategories = subCategories.length === 0 || subCategories.some(subCat => cardSubCategories.includes(subCat));
+                const matchesSearchTerms = searchTerms.every(term => {
+                    const formattedTerm = term.toLowerCase().trim();
+                    const regex = new RegExp(`\\b${formattedTerm}\\w{0,2}\\b`);
+                    return regex.test(ingredients) || regex.test(instructions) || regex.test(title) || regex.test(description);
+                });
+
+                if (matchesCategories && matchesSubCategories && matchesSearchTerms) {
+                    recettesList.appendChild(recipeCard.cloneNode(true));
+                    displayedRecipes++;
+                }
+            });
+
+            console.log(`Recettes filtrées et affichées : ${displayedRecipes}`);
+        })
+        .catch(error => console.error("Erreur de chargement des recettes :", error));
 }
+
 
 // Fonction pour obtenir les catégories actuellement actives
 function getActiveCategories() {
