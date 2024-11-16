@@ -730,21 +730,28 @@ button h5 {
 }
 
 .header__nav-Recettes {
+    width: 380px;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
 
 }
-.header__nav-en_cuisine {
+.header__nav-Cuisiner {
+    width: 380px;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
 
+}
+.header__nav-Cuisiner .Menu_categorie {
+    display: flex;
+    flex-direction: column;
 }
 .header__nav_menu-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: calc(100% - 40px);
     padding: 25px 15px;
     margin: 0 5px;
     border-radius: 38px;
