@@ -533,10 +533,7 @@ p2 {
     transform: rotate(45deg);
 }
 
-/* .Menu_categorie secondary-button {
-    display: none;
-    opacity: 0;
-} */
+
 
 
 
@@ -551,9 +548,8 @@ p2 {
     flex-direction: row;
     flex-wrap: wrap;
     row-gap: 20px;
-    align-items: center;
-    justify-content: center;
-    margin: 25px ;
+    align-items: self-start;
+
 }
 
 
@@ -607,6 +603,8 @@ p2 {
 .overlay-content {
     position: relative;
     width: 100%;
+    margin: 0 auto;
+    align-content: center;
 }
 .header__overlay.active .overlay-content {
     transform: translateY(0); /* Descend à sa position normale */
@@ -616,16 +614,113 @@ p2 {
 
 /* --- Header navigation styles --- */
 .header__nav {
-    padding: 0 15px 0 15px ; /* Espacement interne */
-    background-color: rgba(255, 255, 255, 0.8); /* Fond blanc tranparent*/
+    padding: 0 0 50px 0 ; /* Espacement interne */
+    background-color: rgba(255, 255, 255, 1); /* Fond blanc tranparent*/
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(25px); /* Applique un flou à l'arrière-plan */
     opacity: 0; /* Début transparent */
     transform: translateY(-20%);
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Transition douce de descente et d'opacité */
+    display: block;
+    margin: 0 auto;
+    justify-items: center;
+    
+}
+.header__nav_menus {
+    max-width: var(--page-max-width);
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    column-gap: 15px;
+
+
+}
+
+.header__nav_menu{
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+.menu_separator {
+    width: 1px;
+    background-color: rgba(63, 55, 53, .23);
+    margin: 0 50px;
+}
+
+.header__nav_menu-title {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    padding: 15px 0 20px 0;
+}
+.header__nav h4 {
+    text-align: center;
+    margin: 0;
+}
+.header__nav_menus button {
+    background-color: unset;
+    border: unset;
+    padding: 0 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Optionnel si vous souhaitez animer la couleur d'arrière-plan */
+}
+.header__nav_menus button a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.header__nav_menus h2 {
+    color: #696969;
+    font-family: 'Montserrat Alternates';
+    font-size: 0.9em;
+    font-weight: 400;
+}
+button h5 {
+    color: #1B1B1B;
+    font-family: 'Montserrat Alternates';
+    font-size: 1.1em;
+    font-weight: 400;
+    margin: 0;
+    transition: color 0.3s ease; /* Transition pour la couleur du texte */
+}
+.boutton_underline {
+    width: 0;
+    height: 1px;
+    background-color: #696969;
+    margin-top: 4px;
+    transition: width 0.3s ease, background-color 0.3s ease; /* Transition pour la largeur et la couleur */
+}
+.header__nav_menus button:hover h5{
+    color: #CB6863;
+}
+.header__nav_menus button:hover .boutton_underline{
+    background-color: #CB6863;
+    width: 100%;
+}
+.header__nav_menus a {
+    text-decoration: unset;
+    color: unset;
+}
+.buttons_en_cuisine {
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+    width: 100%;
+}
+.header__nav-Recettes secondary-button {
+    padding: 40px 0 0 0;
+}
+.header__search-bar{
+    width: 100%;
+    display: block;
+}
+.header__search-content {
+    margin: 0 10px;
+    margin-bottom: 20px;
+
 }
 
 /* Quand le menu est actif, rendre visible la navigation */
@@ -635,25 +730,34 @@ p2 {
 }
 
 .header__nav-Recettes {
-    align-items: center;
-    justify-content: center;
-    max-width: 500px;
+    align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
+
+}
+.header__nav-en_cuisine {
+    align-items: self-start;
+    display: flex; /* Afficher le menu */
+    flex-direction: column; /* Disposer les éléments verticalement */
+
+}
+.header__nav_menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px 15px;
+    margin: 0 5px;
+    border-radius: 38px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+
+}
+.header__nav-Recettes .header__nav_menu-container {
+    background-color: #FBFBFB;
+}
+.header__nav-en_cuisine .header__nav_menu-container {
+    background-color: #FBFBFB;
 }
 
-.header__nav a {
-    text-decoration: none; /* Supprime le soulignement */
-    color: inherit;        /* Conserve la couleur du texte */
-    cursor: pointer;       /* Rend le curseur cliquable */
-}
-.header__nav h1 {
-    margin-top: 0;
-    margin-bottom: 30;
-}
-.header__nav h3 {
-    text-align: center;
-}
 
 /* --- Styles pour le menu burger lorsqu'il est actif --- */
 .header.modal-burger-open .header__overlay {
@@ -681,14 +785,15 @@ p2 {
 
 /* Afficher le menu burger lorsque la largeur de la fenêtre est inférieure à 768px */
 @media (max-width: 768px) {
-
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
-        height: calc(100vh - 20px); /* Ajustez 80px à la hauteur réelle de votre header */
-        padding: 15px 15px 0 15px ; 
+        height: calc(100vh - 80px); /* Ajustez 80px à la hauteur réelle de votre header */
+        padding: 15px 15px 40px 15px ; 
         justify-content: unset ;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        box-sizing: border-box;
     }
-
     .header__burger {
         display: flex; /* Afficher le burger */
     }  
@@ -698,6 +803,18 @@ p2 {
     #headerSearchBar__Large_Screen {
         display: none;
     } 
+    .header__nav_menus {
+        grid-template-columns: 1fr;
+    }
+    .header__nav_menu{
+        grid-template-columns: 1fr;
+        margin-bottom: 40px;
+    }
+    .menu_separator {
+        width: unset;
+        height: 1px;
+        margin: 25px 0;
+    }
 
 
 } 

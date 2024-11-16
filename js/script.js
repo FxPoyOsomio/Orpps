@@ -283,7 +283,7 @@ function createSearchContent() {
 
 // Fonction pour animer la barre de recherche
 function animateSearchBar(searchContent) {
-    searchContent.style.width = "250px";
+    searchContent.style.width = "calc(100% - 40px)";
     searchContent.style.opacity = "1";
     const input = searchContent.querySelector("input");
     if (input) input.style.opacity = "1";

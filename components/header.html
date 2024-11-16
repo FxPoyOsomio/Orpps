@@ -27,24 +27,125 @@
 
     <div class="overlay-content">
         <div class="header__nav">
-            <div class="header__nav-Recettes">
-                <a href="/recettes"><h1>Recettes</h1></a>
-                <div id="headerSearchBar" class="header__search-bar">
+            <div class="header__nav_menus">
+                <div class="header__nav_menu">
+                    <div class="header__nav-Recettes">
+                        <div class="header__nav_menu-title">
+                            <h4>Recettes</h4>                        
+                        </div>
+                        <div class="header__nav_menu-container">
+                            <div id="headerSearchBar" class="header__search-bar">
+                            </div>
+                            <div class="Menu_categorie">
+                                <button>
+                                    <a href="/recettes?categorie=Ap%C3%A9ritif">
+                                        <h5>Apéritif</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="/recettes?categorie=Entr%C3%A9e">
+                                        <h5>Entrée</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="/recettes?categorie=Tapas">
+                                        <h5>Tapas</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="/recettes?categorie=Plat">
+                                        <h5>Plat</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="/recettes?categorie=Dessert">
+                                        <h5>Dessert</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="/recettes?categorie=Boisson">
+                                        <h5>Boisson</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                            </div>
+                            <secondary-button text="Toutes les recettes" href="/recettes">
+                                <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px" viewBox="0 0 512 512" xml:space="preserve" fill="#CB6863"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css">  .st0{fill:#CB6863;}  </style> <g> <path class="st0" d="M371.884,0c-56.563,0-102.406,56.594-102.406,120.469c0,38.875,18.281,73.156,40.625,94.5 c19.609,18.75,31.656,33.188,34.063,64.516v206.563c0,14.328,11.625,25.953,25.953,25.953h3.516 c14.328,0,25.953-11.625,25.953-25.953V279.484c2.406-31.328,14.453-45.766,34.063-64.516c22.344-21.344,40.625-55.625,40.625-94.5 C474.274,56.594,428.415,0,371.884,0z"></path> <path class="st0" d="M188.587,24.547v109.375c0,6.984-5.656,12.656-12.641,12.656h-3.391c-6.969,0-12.641-5.672-12.641-12.656 V24.047c0-18.016-12.125-23.422-23.766-23.422c-11.625,0-23.75,5.406-23.75,23.422v109.875c0,6.984-5.672,12.656-12.656,12.656 h-3.375c-6.984,0-12.641-5.672-12.641-12.656V24.547c0-32.266-46-31.172-46,0.359c0,37.75,0,104.438,0,104.438 c-0.219,58,13.641,73.047,36.516,91.125c18.438,14.563,34.203,22.875,34.203,59.031v206.547c0,14.328,11.609,25.953,25.953,25.953 h3.516c14.328,0,25.953-11.625,25.953-25.953V279.5c0-36.156,15.75-44.469,34.188-59.031c22.891-18.078,36.75-33.125,36.531-91.125 c0,0,0-66.688,0-104.438C234.587-6.625,188.587-7.719,188.587,24.547z"></path> </g> </g></svg>
+                            </secondary-button>
+                        </div>
+                    </div>
+                    <!-- <div class="menu_separator"></div> -->
                 </div>
-                <div class="Menu_categorie">
-                    <secondary-button text="Apéritif" href="/recettes?categorie=Ap%C3%A9ritif"></secondary-button>
-                    <secondary-button text="Entrée" href="/recettes?categorie=Entr%C3%A9e"></secondary-button>
-                    <secondary-button text="Tapas" href="/recettes?categorie=Tapas"></secondary-button>
-                    <secondary-button text="Plat" href="/recettes?categorie=Plat"></secondary-button>
-                    <secondary-button text="Dessert" href="/recettes?categorie=Dessert"></secondary-button>
-                    <secondary-button text="Boisson" href="/recettes?categorie=Boisson"></secondary-button>
+                <div class="header__nav_menu">
+                    <div class="header__nav-Cuisiner">
+                        <div class="header__nav_menu-title">
+                            <h4>Cuisiner au fil des saisons</h4>                     
+                        </div>
+                        <div class="header__nav_menu-container">
+                            <div class="Menu_categorie">
+                                <button>
+                                    <a href="">
+                                        <h5>Fraicheur de la terre</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="">
+                                        <h5>Cueillette gourmande</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                                <button>
+                                    <a href="">
+                                        <h5>Délice de la mer</h5>
+                                        <div class="boutton_underline"></div>
+                                    </a>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header__nav_menu">
+                    <div class="header__nav-en_cuisine">
+                        <div class="header__nav_menu-title">
+                            <h4>En cuisine !</h4>                     
+                        </div>
+                        <div class="header__nav_menu-container">
+                            <div class="buttons_en_cuisine">
+                                <secondary-button text="Panificateur de menu" href="">
+                                    <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7.75 2.5C7.75 2.08579 7.41421 1.75 7 1.75C6.58579 1.75 6.25 2.08579 6.25 2.5V4.07926C4.81067 4.19451 3.86577 4.47737 3.17157 5.17157C2.47737 5.86577 2.19451 6.81067 2.07926 8.25H21.9207C21.8055 6.81067 21.5226 5.86577 20.8284 5.17157C20.1342 4.47737 19.1893 4.19451 17.75 4.07926V2.5C17.75 2.08579 17.4142 1.75 17 1.75C16.5858 1.75 16.25 2.08579 16.25 2.5V4.0129C15.5847 4 14.839 4 14 4H10C9.16097 4 8.41527 4 7.75 4.0129V2.5Z" fill="#CB6863"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 11.161 2 10.4153 2.0129 9.75H21.9871C22 10.4153 22 11.161 22 12V14C22 17.7712 22 19.6569 20.8284 20.8284C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 17.7712 2 14V12ZM17 14C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12C16.4477 12 16 12.4477 16 13C16 13.5523 16.4477 14 17 14ZM17 18C17.5523 18 18 17.5523 18 17C18 16.4477 17.5523 16 17 16C16.4477 16 16 16.4477 16 17C16 17.5523 16.4477 18 17 18ZM13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13ZM13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17ZM7 14C7.55228 14 8 13.5523 8 13C8 12.4477 7.55228 12 7 12C6.44772 12 6 12.4477 6 13C6 13.5523 6.44772 14 7 14ZM7 18C7.55228 18 8 17.5523 8 17C8 16.4477 7.55228 16 7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18Z" fill="#CB6863"></path> </g></svg>                            </secondary-button>
+                                <secondary-button text="liste de course" href="">
+                                    <svg width="64px" height="64px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="si-glyph si-glyph-basket" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>604</title> <defs> </defs> <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <path d="M15.244,5.084 L13.316,5.084 L12.281,1.447 C12.13,1.13 11.755,1.002 11.443,1.161 L11.372,1.197 C11.061,1.357 10.932,1.743 11.083,2.06 L11.824,5.083 L5.17,5.083 L5.938,2.064 C6.092,1.75 5.965,1.362 5.657,1.199 L5.587,1.163 C5.277,1.001 4.899,1.125 4.745,1.44 L3.672,5.083 L1.782,5.083 C1.382,5.083 1.057,5.385 1.057,5.755 C1.057,5.755 1.381,6.975 1.782,6.975 L2.418,6.975 L2.867,13.652 C2.867,13.652 2.919,14.961 4.98,14.961 L12.001,14.961 C14.146,14.961 14.116,13.625 14.116,13.625 L14.479,6.976 L15.245,6.976 C15.645,6.976 15.97,5.756 15.97,5.756 C15.969,5.386 15.644,5.084 15.244,5.084 L15.244,5.084 Z M4.031,7.031 L2.969,7.031 L2.969,5.969 L4.031,5.969 L4.031,7.031 L4.031,7.031 Z M6.062,12.742 C6.062,13.092 5.811,13.375 5.503,13.375 L5.48,13.375 C5.169,13.375 4.919,13.092 4.919,12.742 L4.919,8.413 C4.919,8.063 5.169,7.781 5.48,7.781 L5.503,7.781 C5.811,7.781 6.062,8.063 6.062,8.413 L6.062,12.742 L6.062,12.742 Z M9.06,12.547 C9.06,12.881 8.823,13.152 8.531,13.152 L8.51,13.152 C8.217,13.152 7.981,12.881 7.981,12.547 L7.981,8.448 C7.981,8.114 8.217,7.844 8.51,7.844 L8.531,7.844 C8.823,7.844 9.06,8.115 9.06,8.448 L9.06,12.547 L9.06,12.547 Z M12.028,12.639 C12.028,12.977 11.783,13.25 11.482,13.25 L11.46,13.25 C11.158,13.25 10.915,12.977 10.915,12.639 L10.915,8.483 C10.915,8.145 11.158,7.872 11.46,7.872 L11.482,7.872 C11.783,7.872 12.028,8.145 12.028,8.483 L12.028,12.639 L12.028,12.639 Z M14.031,7.062 L12.937,7.062 L12.937,5.968 L14.031,5.968 L14.031,7.062 L14.031,7.062 Z" fill="#CB6863" class="si-glyph-fill"> </path> </g> </g></svg>
+                                </secondary-button>
+                                <primary-button text="Se connecter" href="/recettes">
+                                    <svg id="Calque_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.43 22">
+                                        <defs>
+                                        <style>
+                                            .cls-1 {
+                                            fill: #fff;
+                                            }
+                                        </style>
+                                        </defs>
+                                        <g id="Calque_1-2" data-name="Calque_1">
+                                        <g>
+                                            <path class="cls-1" d="M4.87,13.78c0-.69-.02-1.37,0-2.06.01-.34-.1-.49-.44-.61-1.78-.66-3.19-1.77-3.98-3.53C-.81,4.77.65,1.75,3.67.87c2.03-.59,3.96-.3,5.8.7.22.12.36.22.58-.06C11.2.04,12.78-.22,14.48.15c1.49.33,2.75,1.11,3.28,2.62.24.69.6,1.05,1.2,1.41,1.9,1.12,1.96,3.38.17,4.69-.73.53-1.57.83-2.46.87-.46.02-.56.19-.56.61.02,1.48.03,2.96-.17,4.43-.15,1.13-.47,1.35-1.59,1.14-1.11-.22-2.22-.5-3.36-.55-1.94-.08-3.81.29-5.63.9-.46.16-.51.03-.49-.38.02-.7,0-1.41,0-2.11Z"/>
+                                            <path class="cls-1" d="M15.33,21.97c-.8.03-1.54-.23-2.23-.58-1.93-.96-3.83-.97-5.77-.01-.85.42-1.74.69-2.71.6-1.24-.12-2.06-1.06-1.93-2.28.06-.56.47-1.08.97-1.18.23-.05.51-.08.56.25.04.27-.11.4-.4.32-.22-.06-.18.12-.17.23.02.45.24.74.71.82.49.07.89-.12,1.23-.44.35-.33.69-.69,1.01-1.05.75-.83,1.63-1.22,2.76-.85.62.21,1.25.16,1.86-.03.94-.29,1.7,0,2.36.66.41.41.79.84,1.21,1.24.33.32.72.53,1.21.48.47-.05.71-.33.78-.76.03-.18.1-.44-.28-.28-.18.08-.32-.09-.33-.26-.02-.21.11-.32.33-.35.41-.04.93.33,1.11.8.46,1.22-.38,2.5-1.74,2.66-.18.02-.36,0-.54,0Z"/>
+                                        </g>
+                                        </g>
+                                    </svg>
+                                </primary-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
-            <div class="header__nav-en_cuisine">
-                <h1>En cuisine</h1>
-            </div>
         </div>
     </div>
 </div>    
