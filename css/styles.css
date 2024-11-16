@@ -629,8 +629,9 @@ p2 {
 .header__nav_menus {
     max-width: var(--page-max-width);
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     column-gap: 15px;
 
 
@@ -731,13 +732,14 @@ button h5 {
 
 .header__nav-Recettes {
     width: 380px;
+    width: 100%;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
 
 }
 .header__nav-Cuisiner {
-    width: 380px;
+width: 380px;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
@@ -811,7 +813,7 @@ button h5 {
         display: none;
     } 
     .header__nav_menus {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
     .header__nav_menu{
         grid-template-columns: 1fr;
@@ -822,7 +824,12 @@ button h5 {
         height: 1px;
         margin: 25px 0;
     }
-
+    .header__nav-Recettes {
+        width: 100%;
+    }
+    .header__nav-Cuisiner {
+        width: 100%;
+    }
 
 } 
 
