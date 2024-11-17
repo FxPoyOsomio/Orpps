@@ -567,7 +567,6 @@ p2 {
     left: 0;
     width: 100%;
     z-index: 999;
-
     transform: translateY(-100%); /* Commence au-dessus du container */
     transition: transform 0.5s ease-in-out; /* Animation douce de glissement */
 
@@ -614,35 +613,50 @@ p2 {
 
 /* --- Header navigation styles --- */
 .header__nav {
-    padding: 0 0 50px 0 ; /* Espacement interne */
-    background-color: rgba(255, 255, 255, 1); /* Fond blanc tranparent*/
+    padding: 50px 0;
+    background: linear-gradient(
+        to bottom, /* Direction du dégradé : de haut en bas */
+        rgba(255, 255, 255, 1) 0%, /* Couleur blanche opaque en haut */
+        rgba(255, 255, 255, 0.1) 100% /* Couleur blanche semi-transparente en bas */
+    );
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(25px); /* Applique un flou à l'arrière-plan */
     opacity: 0; /* Début transparent */
     transform: translateY(-20%);
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Transition douce de descente et d'opacité */
-    display: block;
-    margin: 0 auto;
-    justify-items: center;
-    
+    display: flex; 
+    justify-content: center; 
 }
-.header__nav_menus {
-    max-width: var(--page-max-width);
-    width: 100%;
+.header__nav_container {
     display: flex;
     flex-direction: row;
+    justify-content: start; /* Centre les sous-menus horizontalement */
+    gap: 20px; /* Espacement entre les différentes sections (Recettes, Blog, etc.) */
+    flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
+    width: auto;
+    transform: translateY(-150px); /* Déplacement initial vers le haut */
+    opacity: 0; /* Initialement invisible */
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-in-out; /* Animation fluide */
+}
+.header__nav_container.visible {
+    transform: translateY(0); /* Position finale */
+    opacity: 1; /* Complètement visible */
+}
+.header__nav_menus {
+    display: flex;
     flex-wrap: wrap;
-    column-gap: 15px;
-
-
+    justify-content: center; /* Centre horizontalement les enfants */
+    align-items: center;
+    gap: 20px; /* Espacement entre chaque section */
+    width: auto;
+    max-width: var(--page-max-width); /* Limite la largeur maximale */
+    margin: 0 auto;
 }
 
 .header__nav_menu{
     display: flex;
     flex-direction: column;
-
-    margin-bottom: 20px;
-    padding: 0 10px;
+    margin: 10px 10px;
 }
 .menu_separator {
     width: 1px;
@@ -657,7 +671,7 @@ p2 {
     width: 100%;
     padding: 15px 0 20px 0;
 }
-.header__nav h4 {
+.header__nav h2 {
     text-align: center;
     margin: 0;
 }
@@ -670,19 +684,36 @@ p2 {
 }
 .header__nav_menus button a {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.header__nav_menus button svg {
+    margin-right: 15px;
+}
+.button_title{
+    display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 4px;
+}
+.header__nav_menus button .svg_stroke path{
+    stroke: #1B1B1B;
+    transition: stroke 0.3s ease;
+}
+.header__nav_menus button .svg_fill path{
+    fill: #1B1B1B;
+    transition: fill 0.3s ease;
 }
 .header__nav_menus h2 {
     color: #696969;
     font-family: 'Montserrat Alternates';
-    font-size: 0.9em;
+    font-size: 0.9rem;
     font-weight: 400;
 }
 button h5 {
     color: #1B1B1B;
     font-family: 'Montserrat Alternates';
-    font-size: 1.1em;
+    font-size: 1rem;
     font-weight: 400;
     margin: 0;
     transition: color 0.3s ease; /* Transition pour la couleur du texte */
@@ -697,6 +728,12 @@ button h5 {
 .header__nav_menus button:hover h5{
     color: #CB6863;
 }
+.header__nav_menus button:hover .svg_stroke path{
+    stroke: #CB6863;
+}
+.header__nav_menus button:hover .svg_fill path{
+    fill: #CB6863;
+}
 .header__nav_menus button:hover .boutton_underline{
     background-color: #CB6863;
     width: 100%;
@@ -705,14 +742,19 @@ button h5 {
     text-decoration: unset;
     color: unset;
 }
-.buttons_en_cuisine {
+.buttons_users {
     display: flex;
     flex-direction: column;
-    row-gap: 25px;
+    justify-content: space-between;
     width: 100%;
 }
-.header__nav-Recettes secondary-button {
-    padding: 40px 0 0 0;
+.buttons_users_features {
+    display: flex;
+    flex-direction: column;
+
+}
+.header__nav-Recettes .all_recipe {
+    padding: 40px 0 0 15px;
 }
 .header__search-bar{
     width: 100%;
@@ -731,21 +773,31 @@ button h5 {
 }
 
 .header__nav-Recettes {
-    width: 380px;
     width: 100%;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
 
 }
-.header__nav-Cuisiner {
-width: 380px;
+.header__nav-blog {
+    width: 100%;
+    height: 100%;
     align-items: self-start;
     display: flex; /* Afficher le menu */
     flex-direction: column; /* Disposer les éléments verticalement */
 
 }
-.header__nav-Cuisiner .Menu_categorie {
+.header__nav-blog .Menu_categorie, .header__nav-users_features .Menu_categorie{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.header__nav-users_features {
+    width: 100%;
+    height: 100%;
+    align-items: self-start;
     display: flex;
     flex-direction: column;
 }
@@ -754,18 +806,18 @@ width: 380px;
     flex-direction: column;
     align-items: flex-start;
     width: calc(100% - 40px);
+    height: 100%;
     padding: 25px 15px;
     margin: 0 5px;
-    border-radius: 38px;
+    border-radius: 39px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    background-color: #FBFBFB;
+}
+.header__nav-users_features .header__nav_menu-container {
+    height: 100%;
+    justify-content: space-between;
+}
 
-}
-.header__nav-Recettes .header__nav_menu-container {
-    background-color: #FBFBFB;
-}
-.header__nav-en_cuisine .header__nav_menu-container {
-    background-color: #FBFBFB;
-}
 
 
 /* --- Styles pour le menu burger lorsqu'il est actif --- */
@@ -797,7 +849,8 @@ width: 380px;
     .header__nav {
         position: relative; /* Assurez-vous que la navigation est en dessous du header */
         height: calc(100vh - 80px); /* Ajustez 80px à la hauteur réelle de votre header */
-        padding: 15px 15px 40px 15px ; 
+        padding: 15px 15px 100px 15px ; 
+        display: block;
         justify-content: unset ;
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -817,7 +870,7 @@ width: 380px;
     }
     .header__nav_menu{
         grid-template-columns: 1fr;
-        margin-bottom: 40px;
+        margin: 10px 10px;
     }
     .menu_separator {
         width: unset;
@@ -825,10 +878,13 @@ width: 380px;
         margin: 25px 0;
     }
     .header__nav-Recettes {
-        width: 100%;
+        width: calc(100vw - 50px);
     }
-    .header__nav-Cuisiner {
-        width: 100%;
+    .header__nav-blog {
+        width: calc(100vw - 50px);
+    }
+    .header__nav-users_features {
+        width: calc(100vw - 50px);
     }
 
 } 

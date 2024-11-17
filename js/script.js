@@ -31,24 +31,43 @@ function initializeHeader() {
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
     const header = document.querySelector(".header");
+    const navContainers = document.querySelectorAll(".header__nav_container"); // Tous les containers
 
     if (burgerMenu && overlayMenu) {
         burgerMenu.addEventListener("click", () => {
+            const isMenuActive = overlayMenu.classList.toggle("active"); // Ouvrir/Fermer le menu
             header.classList.toggle("modal-burger-open");
-            overlayMenu.classList.toggle("active");
             burgerMenu.classList.toggle("active");
 
+            // Ajouter ou retirer la classe 'visible' avec un délai entre chaque container
+            navContainers.forEach((container, index) => {
+                if (isMenuActive) {
+                    container.style.transitionDelay = `${index * 0.1}s`; // Définir le délai pour l'apparition
+                    container.classList.add("visible");
+                } else {
+                    container.style.transitionDelay = `${(navContainers.length - index) * 0.1}s`; // Délai inverse pour la disparition
+                    container.classList.remove("visible");
+                }
+            });
+
             initializeSearchBar();
-            animateCategoryButtons(overlayMenu.classList.contains("active"));
+            animateCategoryButtons(isMenuActive); // Animation des boutons de catégorie
         });
 
         document.addEventListener("click", (event) => {
             if (shouldCloseMenu(event, overlayMenu, burgerMenu, header)) {
                 closeMenu(header, overlayMenu, burgerMenu);
+
+                // Retirer la classe 'visible' avec des délais inversés
+                navContainers.forEach((container, index) => {
+                    container.style.transitionDelay = `${(navContainers.length - index) * 0.1}s`; // Délai inverse
+                    container.classList.remove("visible");
+                });
             }
         });
     }
 }
+
 
 // Fonction pour initialiser la barre de recherche dans la div `headerSearchBar`
 function initializeSearchBar() {
@@ -441,7 +460,7 @@ class PrimaryButton extends HTMLElement {
             const textElement = document.createElement('span');
             textElement.textContent = buttonText;
             textElement.style.fontFamily = "'Montserrat Alternates"; // Police du texte
-            textElement.style.fontSize = '1.1em'; // Taille de la police
+            textElement.style.fontSize = '1.1rem'; // Taille de la police
             textElement.style.fontWeight = '400'; // Graisse de la police // Utiliser le texte fourni
             button.appendChild(textElement); // Ajouter le texte au bouton
         }
@@ -638,7 +657,7 @@ class SecondaryButton extends HTMLElement {
             this.textElement.textContent = buttonText;
             this.textElement.style.color = '#CB6863';
             this.textElement.style.fontFamily = "'Montserrat Alternates'";
-            this.textElement.style.fontSize = '1.1em';
+            this.textElement.style.fontSize = '1.1rem';
             this.textElement.style.fontWeight = '400';
             this.button.appendChild(this.textElement);
 
