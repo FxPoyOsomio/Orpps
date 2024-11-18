@@ -1,52 +1,63 @@
+console.log('Fonction add-favorite appelée');
+
 const Airtable = require('airtable');
 
 exports.handler = async (event) => {
+    console.log('Requête reçue pour ajouter/retirer un favori');
     try {
-        const { userEmail, recipeId } = JSON.parse(event.body);
+        const { userEmail, recipeId, action } = JSON.parse(event.body);
 
-        // Initialiser Airtable
+        console.log('Données reçues :', { userEmail, recipeId, action });
+
+        if (!userEmail || !recipeId || !action) {
+            console.error('Données manquantes');
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Email, ID recette ou action manquant.' }),
+            };
+        }
+
         const base = new Airtable({ apiKey: process.env.AIRTABLE_API_TOKEN }).base(process.env.AIRTABLE_BASE_ID);
-        const utilisateursTable = base(process.env.AIRTABLE__UTILISATEURS__TABLE_ID);
+        const userTable = base(process.env.AIRTABLE__UTILISATEURS__TABLE_ID);
 
-        // Récupérer l'utilisateur via son email
-        const records = await utilisateursTable.select({
-            filterByFormula: `{Mail} = "${userEmail}"`,
-        }).firstPage();
+        const userRecords = await userTable
+            .select({ filterByFormula: `{Email} = "${userEmail}"` })
+            .firstPage();
 
-        if (records.length === 0) {
+        if (userRecords.length === 0) {
+            console.error('Utilisateur non trouvé');
             return {
                 statusCode: 404,
-                body: JSON.stringify({ error: 'Utilisateur non trouvé' }),
+                body: JSON.stringify({ error: 'Utilisateur non trouvé.' }),
             };
         }
 
-        const userRecord = records[0];
-        const currentFavorites = userRecord.fields['Recettes favorites'] || []; // Liste actuelle des favoris
+        const userRecord = userRecords[0];
+        const currentFavorites = userRecord.fields['Recettes favorites'] || [];
 
-        // Ajouter l'ID de la recette si non déjà présent
-        if (!currentFavorites.includes(recipeId)) {
+        if (action === 'add' && !currentFavorites.includes(recipeId)) {
             currentFavorites.push(recipeId);
-
-            // Mettre à jour le champ `Recettes favorites`
-            await utilisateursTable.update(userRecord.id, {
-                'Recettes favorites': currentFavorites,
-            });
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: 'Recette ajoutée aux favoris', favorites: currentFavorites }),
-            };
+        } else if (action === 'remove' && currentFavorites.includes(recipeId)) {
+            const index = currentFavorites.indexOf(recipeId);
+            currentFavorites.splice(index, 1);
+        } else {
+            console.log('Aucune modification nécessaire');
         }
 
+        await userTable.update(userRecord.id, { 'Recettes favorites': currentFavorites });
+
+        console.log('Favoris mis à jour avec succès');
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Recette déjà présente dans les favoris', favorites: currentFavorites }),
+            body: JSON.stringify({
+                message: `Recette ${action === 'add' ? 'ajoutée' : 'retirée'} avec succès !`,
+            }),
         };
     } catch (error) {
-        console.error('Erreur lors de l’ajout aux favoris :', error);
+        console.error('Erreur serveur :', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Erreur serveur lors de l’ajout aux favoris' }),
+            body: JSON.stringify({ error: 'Erreur interne du serveur.' }),
         };
     }
 };

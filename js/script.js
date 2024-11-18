@@ -705,6 +705,7 @@ class AddFavoriteButton extends HTMLElement {
 
         // Récupérer l'ID de la recette depuis l'attribut HTML
         this.recipeId = this.getAttribute('data-recipe-id');
+        this.isActive = false; // Initialement, la recette n'est pas dans les favoris
 
         // Créer un bouton
         this.button = document.createElement('button');
@@ -736,41 +737,59 @@ class AddFavoriteButton extends HTMLElement {
             justify-content: center;
         `;
 
-        this.iconContainer.innerHTML = `
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
-                <path fill="none" stroke="#CB6863" stroke-width="1.5"
-                    d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
-                />
-            </svg>
-        `;
-
         this.button.appendChild(this.iconContainer);
         this.shadowRoot.appendChild(this.button);
 
-        // Listener pour ajouter la recette aux favoris
-        this.button.addEventListener('click', () => this.handleAddToFavorites());
+        // Vérifier l'état initial
+        this.checkInitialState();
+
+        // Listener pour ajouter ou retirer la recette des favoris
+        this.button.addEventListener('click', () => this.handleToggleFavorite());
     }
 
-    async handleAddToFavorites() {
+    async checkInitialState() {
+        const userEmail = localStorage.getItem('userEmail'); // Vérifier l'utilisateur connecté
+        if (!userEmail) return;
+    
+        try {
+            const response = await fetch(`/.netlify/functions/get-favorites?userEmail=${encodeURIComponent(userEmail)}`);
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la récupération des favoris : ${response.statusText}`);
+            }
+            const favorites = await response.json();
+    
+            // Vérifier si la recette est dans les favoris
+            this.isActive = favorites.includes(this.recipeId);
+            this.updateIcon(); // Mettre à jour l'icône
+        } catch (error) {
+            console.error('Erreur lors de la vérification des favoris :', error);
+        }
+    }
+
+    async handleToggleFavorite() {
         const userEmail = localStorage.getItem('userEmail'); // Vérifier localStorage
         if (!userEmail) {
-            alert('Veuillez vous connecter pour ajouter des favoris.');
+            alert('Veuillez vous connecter pour gérer vos favoris.');
             return;
         }
 
         try {
+            // Déterminer l'action (ajouter ou retirer des favoris)
+            const action = this.isActive ? 'remove' : 'add';
             const response = await fetch('/.netlify/functions/add-favorite', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail, recipeId: this.recipeId }),
+                body: JSON.stringify({ userEmail, recipeId: this.recipeId, action }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                alert(data.message || 'Recette ajoutée aux favoris !');
+                this.isActive = !this.isActive; // Inverser l'état actuel
+                this.updateIcon(); // Mettre à jour l'icône
+                alert(data.message || `Recette ${this.isActive ? 'ajoutée' : 'retirée'} des favoris !`);
             } else {
-                console.error('Erreur :', data.error);
-                alert('Impossible d’ajouter la recette.');
+                console.error('Erreur serveur :', data.error);
+                alert('Impossible de gérer vos favoris.');
             }
         } catch (error) {
             console.error('Erreur réseau :', error);
@@ -779,27 +798,24 @@ class AddFavoriteButton extends HTMLElement {
     }
 
     updateIcon() {
-        if (this.isActive) {
-            this.iconContainer.innerHTML = `
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="#CB6863" xmlns="http://www.w3.org/2000/svg">
+        this.iconContainer.innerHTML = this.isActive
+            ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="#CB6863" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
                     />
-                </svg>
-            `;
-        } else {
-            this.iconContainer.innerHTML = `
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                </svg>`
+            : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill="none" stroke="#CB6863" stroke-width="1.5"
                         d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.9023 3.75065 14.9662 3.85585 13.0725 5.51217L14.5302 6.9694C14.8232 7.26224 14.8233 7.73711 14.5304 8.03006C14.2376 8.323 13.7627 8.32309 13.4698 8.03025L11.4698 6.03097L11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241Z"
                     />
-                </svg>
-            `;
-        }
+                </svg>`;
     }
 }
 
 customElements.define('add-favorite-button', AddFavoriteButton);
+
+
+
 
 
 
