@@ -128,7 +128,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-subcategorie="${subCategories}" 
             data-ref-ingredients="${ingredients}" 
             data-ref-instructions="${instructions}">
-            <add-favorite-button href="/index.html" style="
+            <add-favorite-button data-recipe-id="${recipe.id}" style="
                     position: absolute;
                     top: 20px;
                     right: 12px;

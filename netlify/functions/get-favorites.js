@@ -22,7 +22,7 @@ exports.handler = async (event) => {
 
         // Rechercher l'utilisateur dans Airtable
         const userRecords = await userTable
-            .select({ filterByFormula: `{Email} = "${userEmail}"` })
+            .select({ filterByFormula: `{Mail} = "${userEmail}"` })
             .firstPage();
 
         if (userRecords.length === 0) {

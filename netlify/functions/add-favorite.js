@@ -21,7 +21,7 @@ exports.handler = async (event) => {
         const userTable = base(process.env.AIRTABLE__UTILISATEURS__TABLE_ID);
 
         const userRecords = await userTable
-            .select({ filterByFormula: `{Email} = "${userEmail}"` })
+            .select({ filterByFormula: `{Mail} = "${userEmail}"` })
             .firstPage();
 
         if (userRecords.length === 0) {

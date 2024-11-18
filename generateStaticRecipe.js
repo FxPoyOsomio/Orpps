@@ -621,6 +621,7 @@ async function generateStaticPages() {
     // Remplacement des placeholders dans le template
     finalHTML = finalHTML
         .replace(/{{recipe-title}}/g, recipe.fields['Titre recettes'])
+        .replace(/{{recipe-id}}/g, recipe.fields['RECORD-ID'])
         .replace(/{{recipe-description-with-link}}/g, updatedDescriptionWithLinks)
         .replace(/{{recipe-description-with-title}}/g, updatedDescriptionWithTitle)
         .replace(/{{recipe-image}}/g, relativeImagePath)
