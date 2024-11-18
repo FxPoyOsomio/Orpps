@@ -52,7 +52,9 @@ function initializeHeader() {
 
             initializeSearchBar();
             animateCategoryButtons(isMenuActive); // Animation des boutons de catégorie
+
         });
+
 
         document.addEventListener("click", (event) => {
             if (shouldCloseMenu(event, overlayMenu, burgerMenu, header)) {
@@ -373,11 +375,6 @@ function SearchRecipe() {
         console.log("Le champ de recherche n'a pas été trouvé.");
     }
 }
-
-
-
-
-
 
 
 
