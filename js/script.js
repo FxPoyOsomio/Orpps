@@ -1,7 +1,15 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM content loaded, starting header fetch...");
+    console.log("DOM content loaded, starting header and footer fetch...");
 
+    // Vérifier si l'utilisateur est connecté via localStorage
+    const userEmail = localStorage.getItem('userEmail'); // Utiliser localStorage ici
+    if (userEmail) {
+        console.log(`Utilisateur déjà connecté : ${userEmail}`);
+    } else {
+        console.log('Aucun utilisateur connecté.');
+    }
+
+    // Charger et insérer le header
     fetch("/components/header.html")
         .then(response => response.text())
         .then(data => {
@@ -22,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("footer").innerHTML = data;
         });
 });
+
 
 
 
@@ -689,40 +698,44 @@ customElements.define('secondary-button', SecondaryButton);
 
 
 
-// AddFavorite Button Component
 class AddFavoriteButton extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
 
+        // Récupérer l'ID de la recette depuis l'attribut HTML
+        this.recipeId = this.getAttribute('data-recipe-id');
+
         // Créer un bouton
         this.button = document.createElement('button');
-        this.button.style.color = '#CB6863';
-        this.button.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-        this.button.style.backdropFilter = 'blur(5px)';
-        this.button.style.borderRadius = '50px';
-        this.button.style.padding = '10px';
-        this.button.style.border = '1px solid #CB6863';
-        this.button.style.cursor = 'pointer';
-        this.button.style.display = 'flex';
-        this.button.style.alignItems = 'center';
-        this.button.style.justifyContent = 'center';
-        this.button.style.height = '40px';
-        this.button.style.width = '40px'; // Bouton circulaire
-        this.button.style.position = 'relative';
-        this.button.style.overflow = 'hidden';
-        this.button.style.transition = 'transform 0.2s';
-        this.button.style.margin = '0 10px';
+        this.button.style = `
+            color: #CB6863;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            padding: 10px;
+            border: 1px solid #CB6863;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+            margin: 0 10px;
+        `;
 
-        // Créer une div pour l'icône SVG
         this.iconContainer = document.createElement('div');
-        this.iconContainer.style.width = '22px';
-        this.iconContainer.style.height = '22px';
-        this.iconContainer.style.display = 'flex';
-        this.iconContainer.style.alignItems = 'center';
-        this.iconContainer.style.justifyContent = 'center';
+        this.iconContainer.style = `
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
 
-        // Ajouter le SVG par défaut pour l'icône "favoris" avec bordure uniquement (inactif)
         this.iconContainer.innerHTML = `
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart-icon">
                 <path fill="none" stroke="#CB6863" stroke-width="1.5"
@@ -730,56 +743,41 @@ class AddFavoriteButton extends HTMLElement {
                 />
             </svg>
         `;
-        this.button.appendChild(this.iconContainer);
 
-        // Ajouter le bouton au shadow DOM
+        this.button.appendChild(this.iconContainer);
         this.shadowRoot.appendChild(this.button);
 
-        // Styles pour le hover
-        this.button.addEventListener('mouseenter', () => {
-            this.button.style.transform = 'scale(1.1)';
-        });
-
-        this.button.addEventListener('mouseleave', () => {
-            this.button.style.transform = 'scale(1)';
-        });
-
-        // Effet d'animation d'onde au clic
-        this.button.addEventListener('mousedown', () => {
-            const ripple = document.createElement('span');
-            ripple.style.position = 'absolute';
-            ripple.style.borderRadius = '50%';
-            ripple.style.border = `${this.button.offsetWidth / 50}px solid #F5E1DE`;
-            ripple.style.backgroundColor = 'transparent';
-            ripple.style.pointerEvents = 'none';
-            ripple.style.width = '10px';
-            ripple.style.height = '10px';
-            ripple.style.transform = 'scale(1)';
-            ripple.style.transition = 'transform 1s cubic-bezier(0.5, 0, 0.5, 1)';
-            ripple.style.left = `${this.button.offsetWidth / 2}px`;
-            ripple.style.top = `${this.button.offsetHeight / 2}px`;
-            ripple.style.transformOrigin = 'center';
-            ripple.style.transform = `translate(-50%, -50%) scale(1)`;
-
-            this.button.appendChild(ripple);
-
-            setTimeout(() => {
-                ripple.style.transform = 'translate(-50%, -50%) scale(100)';
-            }, 10);
-
-            ripple.addEventListener('transitionend', () => {
-                ripple.remove();
-            });
-        });
-
-        // Toggle entre inactif (bordure) et actif (rempli)
-        this.isActive = false;
-        this.button.addEventListener('click', () => {
-            this.isActive = !this.isActive;
-            this.updateIcon();
-        });        
-
+        // Listener pour ajouter la recette aux favoris
+        this.button.addEventListener('click', () => this.handleAddToFavorites());
     }
+
+    async handleAddToFavorites() {
+        const userEmail = localStorage.getItem('userEmail'); // Vérifier localStorage
+        if (!userEmail) {
+            alert('Veuillez vous connecter pour ajouter des favoris.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/.netlify/functions/add-favorite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userEmail, recipeId: this.recipeId }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message || 'Recette ajoutée aux favoris !');
+            } else {
+                console.error('Erreur :', data.error);
+                alert('Impossible d’ajouter la recette.');
+            }
+        } catch (error) {
+            console.error('Erreur réseau :', error);
+            alert('Une erreur est survenue.');
+        }
+    }
+
     updateIcon() {
         if (this.isActive) {
             this.iconContainer.innerHTML = `
@@ -802,6 +800,7 @@ class AddFavoriteButton extends HTMLElement {
 }
 
 customElements.define('add-favorite-button', AddFavoriteButton);
+
 
 
 
@@ -959,18 +958,7 @@ class ShareButton extends HTMLElement {
             <h2>Partager</h2>
             <hr class="modal-divider">
             <div class="share-apps">
-                <a href="mailto:?subject=Partager cette page&body=Voici le lien: ${window.location.href}" class="share-btn">
-                    <img src="https://img.icons8.com/fluency/48/apple-mail.png" alt="apple-mail"/>
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
-                    <img src="https://img.icons8.com/fluency/48/facebook-new.png" alt="facebook"/>
-                </a>
-                <a href="https://www.facebook.com/dialog/send?link=${encodeURIComponent(window.location.href)}&app_id=2203716320028284&redirect_uri=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
-                    <img src="https://img.icons8.com/fluency/48/facebook-messenger--v2.png" alt="facebook-messenger"/>
-                </a>
-                <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}" target="_blank" class="share-btn">
-                    <img src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="whatsapp"/>
-                </a>
+
             </div>
             <hr class="modal-divider">
             <h3>Lien de la page</h3>

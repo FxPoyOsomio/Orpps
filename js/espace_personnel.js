@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.authorized) {
                 console.log('Utilisateur autorisé :', data.userEmail);
 
-                // Stocker le token dans sessionStorage
-                sessionStorage.setItem("userToken", idToken);
+                // Stocker le token et l'email utilisateur dans localStorage
+                localStorage.setItem("userToken", idToken);
+                localStorage.setItem("userEmail", data.userEmail);
 
                 // Mettre à jour l'affichage
                 document.getElementById('google-signin-container').style.display = 'none';
@@ -36,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Vérifier si un token existe dans sessionStorage
-    const storedToken = sessionStorage.getItem("userToken");
+    // Vérifier si un token existe dans localStorage
+    const storedToken = localStorage.getItem("userToken");
     if (storedToken) {
         console.log("Token existant trouvé. Tentative de validation...");
 
@@ -50,29 +51,35 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.authorized) {
-                console.log('Utilisateur autorisé via sessionStorage :', data.userEmail);
+                console.log('Utilisateur autorisé :', data.userEmail);
+                localStorage.setItem('userEmail', data.userEmail);
                 document.getElementById('google-signin-container').style.display = 'none';
                 document.getElementById('personal-space-content').style.display = 'block';
                 document.getElementById('user-email').innerText = `Connecté en tant que : ${data.userEmail}`;
             } else {
-                console.log("Le token dans sessionStorage n'est pas valide.");
-                sessionStorage.removeItem("userToken"); // Nettoyer le token invalide
+                alert('Accès refusé : votre e-mail n’est pas autorisé.');
             }
         })
-        .catch(error => console.error("Erreur lors de la validation du token depuis sessionStorage :", error));
+        .catch(error => console.error("Erreur lors de la validation du token depuis localStorage :", error));
     }
 
     // Ajouter l'événement de déconnexion uniquement si le bouton est présent
     const logoutButton = document.getElementById('logout-button');
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
-            // Supprimer le token du sessionStorage
-            sessionStorage.removeItem("userToken");
-
+            // Supprimer l'email de l'utilisateur et le token du localStorage
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userEmail");
+    
             // Réinitialiser l'affichage
-            document.getElementById('google-signin-container').style.display = 'block';
-            document.getElementById('personal-space-content').style.display = 'none';
-            document.getElementById('user-email').innerText = '';
+            const signinContainer = document.getElementById('google-signin-container');
+            const personalSpaceContent = document.getElementById('personal-space-content');
+            const userEmailElement = document.getElementById('user-email');
+    
+            if (signinContainer) signinContainer.style.display = 'block';
+            if (personalSpaceContent) personalSpaceContent.style.display = 'none';
+            if (userEmailElement) userEmailElement.innerText = '';
+    
             console.log("Utilisateur déconnecté.");
         });
     } else {
