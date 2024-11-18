@@ -312,37 +312,7 @@ p2 {
 
 }
 
-/* Styles pour les écrans de taille mobile */
-@media (max-width: 740px) {
-    :root {
-        --page-max-width: 100%; /* 100% de la largeur pour mobile */
 
-    }
-}
-
-/* Styles pour les tablettes */
-@media (min-width: 741px) and (max-width: 980px) {
-    :root {
-        --page-max-width: 741px; /* 450px pour les petits écrans */
-
-    }
-}
-
-/* Styles pour le web */
-@media (min-width: 981px) and (max-width: 1240px) {
-    :root {
-        --page-max-width: 980px; /* 980px pour les écrans intermédiaires */
-
-    }
-}
-
-/* Styles pour les très grands écrans */
-@media (min-width: 1241px) {
-    :root {
-        --page-max-width: 1240px; /* 1240px pour les grands écrans */
-
-    }
-}
 
 
 
@@ -547,7 +517,7 @@ p2 {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    row-gap: 20px;
+    row-gap: 10px;
     align-items: self-start;
 
 }
@@ -613,7 +583,7 @@ p2 {
 
 /* --- Header navigation styles --- */
 .header__nav {
-    padding: 50px 0;
+    padding: 0 0 20px 0;
     background: linear-gradient(
         to bottom, /* Direction du dégradé : de haut en bas */
         rgba(255, 255, 255, 1) 0%, /* Couleur blanche opaque en haut */
@@ -630,10 +600,11 @@ p2 {
 .header__nav_container {
     display: flex;
     flex-direction: row;
-    justify-content: start; /* Centre les sous-menus horizontalement */
-    gap: 20px; /* Espacement entre les différentes sections (Recettes, Blog, etc.) */
+    justify-content: start;
+    gap: 20px; 
     flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
-    width: auto;
+    width: 100%;
+    padding: 15px 15px;
     transform: translateY(-150px); /* Déplacement initial vers le haut */
     opacity: 0; /* Initialement invisible */
     transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease-in-out; /* Animation fluide */
@@ -644,20 +615,15 @@ p2 {
 }
 .header__nav_menus {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center; /* Centre horizontalement les enfants */
-    align-items: center;
-    gap: 20px; /* Espacement entre chaque section */
+    align-items: start;
+    gap: 0; /* Espacement entre chaque section */
     width: auto;
     max-width: var(--page-max-width); /* Limite la largeur maximale */
     margin: 0 auto;
 }
 
-.header__nav_menu{
-    display: flex;
-    flex-direction: column;
-    margin: 10px 10px;
-}
 .menu_separator {
     width: 1px;
     background-color: rgba(63, 55, 53, .23);
@@ -725,7 +691,7 @@ button h5 {
     margin-top: 4px;
     transition: width 0.3s ease, background-color 0.3s ease; /* Transition pour la largeur et la couleur */
 }
-.header__nav_menus button:hover h5{
+.header__nav_menus button:hover h5, .header__nav_menus button:hover h3{
     color: #CB6863;
 }
 .header__nav_menus button:hover .svg_stroke path{
@@ -753,9 +719,7 @@ button h5 {
     flex-direction: column;
 
 }
-.header__nav-Recettes .all_recipe {
-    padding: 40px 0 0 15px;
-}
+
 .header__search-bar{
     width: 100%;
     display: block;
@@ -772,52 +736,45 @@ button h5 {
     opacity: 1; /* Devient visible */
 }
 
-.header__nav-Recettes {
-    width: 100%;
-    align-items: self-start;
-    display: flex; /* Afficher le menu */
-    flex-direction: column; /* Disposer les éléments verticalement */
 
-}
-.header__nav-blog {
-    width: 100%;
-    height: 100%;
-    align-items: self-start;
-    display: flex; /* Afficher le menu */
-    flex-direction: column; /* Disposer les éléments verticalement */
 
-}
-.header__nav-blog .Menu_categorie, .header__nav-users_features .Menu_categorie{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
 
-.header__nav-users_features {
-    width: 100%;
-    height: 100%;
-    align-items: self-start;
-    display: flex;
-    flex-direction: column;
-}
 .header__nav_menu-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     width: calc(100% - 40px);
-    height: 100%;
-    padding: 25px 15px;
+    height: 200px;
+    padding: 25px 15px 25px 15px;
     margin: 0 5px;
     border-radius: 39px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
     background-color: #FBFBFB;
 }
-.header__nav-users_features .header__nav_menu-container {
-    height: 100%;
-    justify-content: space-between;
+#recettes_menu_container {
+width: 500px;
+}
+#blog_menu_container {
+    width: 370px;
+}
+#blog_menu_container .Menu_categorie {
+    flex-direction: column ;
+}
+#user_menu_container {
+    width: 370px;
+}
+#user_menu_container .Menu_categorie {
+    flex-direction: column ;
 }
 
+.container_title h3 {
+    margin: 0;
+    font-size: 1.3rem;
+
+}
+.container_title {
+    padding: 0 15px 20px 15px !important;   
+}
 
 
 /* --- Styles pour le menu burger lorsqu'il est actif --- */
@@ -837,12 +794,13 @@ button h5 {
 
 
 
+/* Styles pour les écrans de taille mobile */
+@media (max-width: 740px) {
+    :root {
+        --page-max-width: 100%; /* 100% de la largeur pour mobile */
 
-
-
-
-
-
+    }
+}
 
 /* Afficher le menu burger lorsque la largeur de la fenêtre est inférieure à 768px */
 @media (max-width: 768px) {
@@ -877,16 +835,15 @@ button h5 {
         height: 1px;
         margin: 25px 0;
     }
-    .header__nav-Recettes {
-        width: calc(100vw - 50px);
+    .header__nav_menus {
+        flex-wrap: wrap;
     }
-    .header__nav-blog {
-        width: calc(100vw - 50px);
+    #recettes_menu_container, #blog_menu_container, #user_menu_container {
+        width: calc(100% - 30px) !important;
     }
-    .header__nav-users_features {
-        width: calc(100vw - 50px);
+    #recettes_menu_container .header__nav_menu-container, #blog_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
+        height: 100%;
     }
-
 } 
 
 /* Afficherafficher la navigation normale sur les écrans plus larges */
@@ -901,4 +858,54 @@ button h5 {
         display: contents;
     }
 
+}
+
+/* Styles pour les tablettes */
+@media (min-width: 741px) and (max-width: 980px) {
+    :root {
+        --page-max-width: 741px; /* 450px pour les petits écrans */
+    }
+    .header__nav_menus {
+        flex-wrap: wrap;
+    }
+    #recettes_menu_container {
+        width: 741px;
+    }
+    #recettes_menu_container .header__nav_menu-container{
+        height: 100%;
+    }
+    #blog_menu_container {
+        width: 340px;
+    }
+    #user_menu_container {
+        width: 340px;
+    }
+    #blog_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
+        height: 190px;
+    }
+}
+
+/* Styles pour le web */
+@media (min-width: 981px) and (max-width: 1240px) {
+    :root {
+        --page-max-width: 980px; /* 980px pour les écrans intermédiaires */
+
+    }
+    #recettes_menu_container {
+        width: 380px;
+    }
+    #blog_menu_container {
+        width: 300px;
+    }
+    #user_menu_container {
+        width: 280px;
+    }
+}
+
+/* Styles pour les très grands écrans */
+@media (min-width: 1241px) {
+    :root {
+        --page-max-width: 1240px; /* 1240px pour les grands écrans */
+
+    }
 }
