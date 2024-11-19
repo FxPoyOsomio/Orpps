@@ -13,21 +13,21 @@
     <!-- Capturer le token d'invitation -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (window.location.hash.includes("invite_token=")) {
-                const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get("invite_token");
+            const hash = window.location.hash;
+            if (hash.includes("invite_token=")) {
+                const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
                 console.log("Invite token capturé :", inviteToken);
 
                 // Sauvegarder dans localStorage
                 localStorage.setItem("inviteToken", inviteToken);
 
-                // Nettoyer uniquement le fragment du hash
-                const newURL = window.location.href.split("#")[0];
-                window.history.replaceState(null, null, newURL);
+                // Nettoyer l'URL
+                window.history.replaceState(null, null, window.location.origin + window.location.pathname);
 
-                // Désactive temporairement la redirection pour tester le widget
-                alert("Votre invitation a été capturée. Rechargez manuellement la page de connexion.");
+                // Rediriger vers la page de connexion
+                alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
+                window.location.replace("/login");
             }
-
         });
     </script>
 </head>

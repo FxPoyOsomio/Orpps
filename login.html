@@ -14,32 +14,24 @@
                     APIUrl: "https://orpps.netlify.app/.netlify/identity",
                 });
 
-                // Récupérer le token d'invitation depuis localStorage
+                // Récupérer le token d'invitation
                 const inviteToken = localStorage.getItem("inviteToken");
                 if (inviteToken) {
                     console.log("Token d'invitation récupéré :", inviteToken);
 
                     // Accepter l'invitation
-                    netlifyIdentity
-                        .acceptInvite(inviteToken)
-                        .then(() => {
-                            console.log("Invitation acceptée avec succès !");
-                            localStorage.removeItem("inviteToken"); // Nettoyer après succès
-                            alert("Invitation acceptée. Configurez votre mot de passe.");
-                        })
-                        .catch((err) => {
-                            console.error("Erreur lors de l'acceptation de l'invitation :", err);
-                            alert("Impossible de gérer l'invitation. Vérifiez votre email.");
-                        });
+                    netlifyIdentity.acceptInvite(inviteToken).then(() => {
+                        console.log("Invitation acceptée avec succès !");
+                        localStorage.removeItem("inviteToken");
+                        alert("Invitation acceptée. Configurez votre mot de passe pour continuer.");
+                        netlifyIdentity.open(); // Ouvrir le formulaire de connexion/mot de passe
+                    }).catch((err) => {
+                        console.error("Erreur lors de l'acceptation de l'invitation :", err);
+                        alert("Impossible de gérer l'invitation. Vérifiez votre email.");
+                    });
                 } else {
                     console.error("Aucun token d'invitation trouvé dans localStorage.");
                 }
-
-                // Forcer l'ouverture du widget
-                setTimeout(() => {
-                    console.log("Ouverture forcée du widget Netlify Identity...");
-                    netlifyIdentity.open(); // Forcer l'ouverture
-                }, 500); // Laisse un délai avant de forcer l'ouverture
             } else {
                 console.error("Netlify Identity n'est pas disponible.");
             }
@@ -52,7 +44,6 @@
     <main class="container">
         <h1>Connexion à Orpps</h1>
         <p>Veuillez utiliser le formulaire ci-dessous pour vous connecter.</p>
-        <div id="netlify-auth-widget"></div>
     </main>
     <div id="footer"></div>
 
