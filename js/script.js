@@ -1,21 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Vérifier si Netlify Identity est disponible
     if (typeof netlifyIdentity !== "undefined") {
         console.log("Netlify Identity détecté.");
-
-        // Initialiser avec l'endpoint API
         netlifyIdentity.init({
             APIUrl: "https://orpps.netlify.app/.netlify/identity",
         });
 
-        // Capture de l'invite token
         const inviteToken = localStorage.getItem("inviteToken");
         if (inviteToken) {
             console.log("Tentative d'acceptation de l'invitation avec le token :", inviteToken);
 
-            // Vérifiez si acceptInvite est disponible
             if (typeof netlifyIdentity.acceptInvite === "function") {
                 netlifyIdentity
                     .acceptInvite(inviteToken)
@@ -29,16 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         alert("Erreur lors de l'acceptation de l'invitation.");
                     });
             } else {
-                console.error("La méthode acceptInvite n'est pas disponible dans cette version de Netlify Identity.");
-                alert(
-                    "L'invitation ne peut pas être acceptée automatiquement. Veuillez vérifier vos droits ou contactez un administrateur."
-                );
+                console.warn("La méthode acceptInvite n'est pas disponible. Redirection vers /login.");
+                window.location.replace("/login");
             }
         } else {
             console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
 
-        // Gérer la connexion/déconnexion
         netlifyIdentity.on("login", (user) => {
             console.log("Utilisateur connecté :", user.email);
             localStorage.setItem("userEmail", user.email);
@@ -49,10 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem("userEmail");
         });
     } else {
-        console.error("Netlify Identity n'est pas disponible.");
+        console.error("Netlify Identity Widget n'a pas pu être chargé.");
     }
 
-    // Charger header et footer
     loadHeaderAndFooter();
 });
 

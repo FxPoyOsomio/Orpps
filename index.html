@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-     <!-- head stuff -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Orpps - Accueil</title>
     <link rel="icon" href="/assets/images/logos_orpps/Orpps_favicon.png" type="image/png">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preload" href="/css/styles.css" as="style">
 
     <!-- Charger Netlify Identity Widget -->
-    <script src="https://unpkg.com/netlify-identity-widget@latest/netlify-identity-widget.min.js" defer></script>
+    <script src="https://unpkg.com/netlify-identity-widget@latest/netlify-identity-widget.min.js"></script>
 
     <!-- Capturer l'invite token -->
     <script>
@@ -22,32 +22,15 @@
             window.history.replaceState(null, null, window.location.pathname);
         }
     </script>
-    </head>
+</head>
 <body>
-
-    <!-- Inclure le header -->
     <div id="header"></div>
-    
-    <!-- Contenu de la page -->
     <main class="container">
         <h1>Bienvenue sur Orpps</h1>
         <p>Explorez nos super recettes et gérez votre planification et vos courses.</p>
-        <p> Coucou</p>
-        <a href="/recettes/Focaccia%20de%20G%C3%AAne/">Focaccia de Gêne</a>
-        <a href="/recettes/Saumon%20en%20gravlax%20au%20sirop%20d'érable/">Saumon en gravlax au sirop d'érable
-        </a>
-
     </main>
-
-    <!-- Inclure le footer -->
     <div id="footer"></div>
 
-    <!-- Scripts -->
-
     <script src="/js/script.js" type="module"></script>
-
-    <!-- <script src="/js/shared-header.js"></script> -->
 </body>
 </html>
-
-
