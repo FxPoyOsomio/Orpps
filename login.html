@@ -11,10 +11,31 @@
             if (typeof netlifyIdentity !== "undefined") {
                 console.log("Netlify Identity initialisé sur la page de connexion.");
                 netlifyIdentity.init({
-                    APIUrl: "https://orpps.netlify.app/.netlify/identity"
+                    APIUrl: "https://orpps.netlify.app/.netlify/identity",
                 });
 
-                // Afficher le widget de connexion
+                // Récupérer le token d'invitation depuis localStorage
+                const inviteToken = localStorage.getItem("inviteToken");
+                if (inviteToken) {
+                    console.log("Token d'invitation récupéré :", inviteToken);
+
+                    // Accepter l'invitation
+                    netlifyIdentity
+                        .acceptInvite(inviteToken)
+                        .then(() => {
+                            console.log("Invitation acceptée avec succès !");
+                            localStorage.removeItem("inviteToken"); // Nettoyer après succès
+                            alert("Invitation acceptée. Configurez votre mot de passe.");
+                        })
+                        .catch((err) => {
+                            console.error("Erreur lors de l'acceptation de l'invitation :", err);
+                            alert("Impossible de gérer l'invitation. Vérifiez votre email.");
+                        });
+                } else {
+                    console.error("Aucun token d'invitation trouvé dans localStorage.");
+                }
+
+                // Ouvrir automatiquement le formulaire de connexion
                 netlifyIdentity.open();
             } else {
                 console.error("Netlify Identity n'est pas disponible.");

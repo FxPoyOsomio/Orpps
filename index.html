@@ -12,16 +12,18 @@
 
     <!-- Capturer le token d'invitation -->
     <script>
-        if (window.location.hash.includes("invite_token=")) {
-            const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get("invite_token");
-            if (inviteToken) {
-                console.log("Invite token détecté :", inviteToken);
-                localStorage.setItem("inviteToken", inviteToken);
-                window.history.replaceState(null, null, window.location.pathname);
-            } else {
-                console.error("Aucun token détecté dans le hash !");
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.location.hash.includes('invite_token=')) {
+                const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get('invite_token');
+                console.log("Invite token capturé :", inviteToken);
+                localStorage.setItem('inviteToken', inviteToken); // Sauvegarde dans localStorage
+                window.history.replaceState(null, null, window.location.pathname); // Nettoyer l'URL
+
+                // Redirige vers la page de connexion
+                alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
+                window.location.replace("/login");
             }
-        }
+        });
     </script>
 </head>
 <body>

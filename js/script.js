@@ -10,21 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
             APIUrl: "https://orpps.netlify.app/.netlify/identity",
         });
 
-        // Vérifier s'il existe un token d'invitation dans localStorage
-        const inviteToken = localStorage.getItem("inviteToken");
-        if (inviteToken) {
-            console.log("Tentative de gestion de l'invitation avec le token :", inviteToken);
-
-            // Utilisation du token pour rediriger ou alerter l'utilisateur
-            alert(
-                "Votre invitation a été capturée. Veuillez vous connecter ou vérifier votre email pour finaliser votre inscription."
-            );
-            localStorage.removeItem("inviteToken");
-            window.location.replace("/login"); // Redirige vers une page de connexion si nécessaire
-        } else {
-            console.log("Aucun token d'invitation trouvé dans localStorage.");
-        }
-
         // Gestion des événements de connexion et de déconnexion
         netlifyIdentity.on("login", (user) => {
             console.log("Utilisateur connecté :", user.email);
@@ -35,10 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Utilisateur déconnecté.");
             localStorage.removeItem("userEmail");
         });
+
         netlifyIdentity.on("error", (err) => {
             console.error("Erreur Netlify Identity :", err);
         });
-        
+
         // Si un utilisateur est déjà connecté
         const currentUser = netlifyIdentity.currentUser();
         if (currentUser) {
@@ -51,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Charger header et footer
     loadHeaderAndFooter();
 });
+
+
 
 // Fonction pour charger le header et le footer
 function loadHeaderAndFooter() {
