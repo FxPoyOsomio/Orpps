@@ -6,9 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Netlify Identity détecté.");
         netlifyIdentity.init();
 
-        // Vérifier le fragment
+        // Vérifier le fragment dans l'URL
         const hash = window.location.hash;
-
         if (hash.includes('invite_token')) {
             const inviteToken = hash.split('invite_token=')[1];
             console.log("Invite token trouvé :", inviteToken);
@@ -16,13 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // Préserver le token dans localStorage
             localStorage.setItem('inviteToken', inviteToken);
 
-            // Essayer d'accepter l'invitation
+            // Tenter d'accepter l'invitation
             netlifyIdentity
                 .acceptInvite(inviteToken)
                 .then(() => {
-                    console.log("Invitation acceptée.");
+                    console.log("Invitation acceptée avec succès.");
                     localStorage.removeItem('inviteToken'); // Nettoyer après succès
-                    window.location.replace('/'); // Rediriger
+                    window.location.replace('/'); // Rediriger après succès
                 })
                 .catch((error) => {
                     console.error("Erreur lors de l'acceptation de l'invitation :", error);
@@ -82,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("footer").innerHTML = data;
         });
 });
+
 
 
 
