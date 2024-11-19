@@ -11,7 +11,8 @@ for = "/*"
 [headers.values]
 Content-Security-Policy = "
     default-src 'self'; 
-    img-src 'self' https://orpps.netlify.app/; 
-    style-src 'self' https://orpps.netlify.app 'unsafe-inline'; 
     script-src 'self' https://identity.netlify.com 'unsafe-inline'; 
-    connect-src 'self' https://identity.netlify.com"
+    connect-src 'self' https://identity.netlify.com; 
+    style-src 'self' 'unsafe-inline'; 
+    img-src 'self' data: https://identity.netlify.com; 
+    frame-src https://identity.netlify.com"
