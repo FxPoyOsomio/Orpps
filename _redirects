@@ -1,4 +1,2 @@
 /recettes /recettes.html 301
 
-# Redirection pour gérer les URL non trouvées en envoyant vers index.html
-/* /index.html 200
