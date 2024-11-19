@@ -48,20 +48,28 @@ document.addEventListener("DOMContentLoaded", () => {
     loadHeaderAndFooter();
 });
 
-// Charger le header et le footer
+// Fonction pour charger le header et le footer
 function loadHeaderAndFooter() {
     fetch("/components/header.html")
         .then((response) => response.text())
         .then((data) => {
-            document.getElementById("header").innerHTML = data;
-            console.log("Header loaded successfully");
+            const headerElement = document.getElementById("header");
+            if (headerElement) {
+                headerElement.innerHTML = data;
+                console.log("Header loaded successfully");
+                initializeHeader(); // Initialiser les événements du header
+            }
         })
         .catch((error) => console.error("Error loading header:", error));
 
     fetch("/components/footer.html")
         .then((response) => response.text())
         .then((data) => {
-            document.getElementById("footer").innerHTML = data;
+            const footerElement = document.getElementById("footer");
+            if (footerElement) {
+                footerElement.innerHTML = data;
+                console.log("Footer loaded successfully");
+            }
         })
         .catch((error) => console.error("Error loading footer:", error));
 }
