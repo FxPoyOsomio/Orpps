@@ -1,13 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
+    // Vérifier si Netlify Identity est disponible
     if (typeof netlifyIdentity !== 'undefined') {
         console.log("Netlify Identity détecté.");
+        
         // Initialiser Netlify Identity
         netlifyIdentity.init();
 
-        const user = netlifyIdentity.currentUser();
+        // Vérifier s'il y a un token d'invitation dans l'URL
+        const hash = window.location.hash;
+        if (hash.includes('invite_token')) {
+            console.log("Invitation détectée, traitement...");
+            netlifyIdentity
+                .acceptInvite()
+                .then(() => {
+                    console.log("Invitation acceptée avec succès.");
+                    window.location.reload(); // Recharge la page après succès
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                });
+        }
 
+        // Vérifier si un utilisateur est déjà connecté
+        const user = netlifyIdentity.currentUser();
         if (user) {
             console.log('Utilisateur connecté :', user.email);
             localStorage.setItem('userEmail', user.email);
@@ -18,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem('userToken');
         }
 
-        // Gestion des événements de connexion/déconnexion
+        // Gérer les événements de connexion et déconnexion
         netlifyIdentity.on('login', (user) => {
             console.log('Utilisateur connecté :', user.email);
             localStorage.setItem('userEmail', user.email);
