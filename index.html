@@ -13,13 +13,18 @@
     <!-- Capturer le token d'invitation -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (window.location.hash.includes('invite_token=')) {
-                const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get('invite_token');
+            if (window.location.hash.includes("invite_token=")) {
+                const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get("invite_token");
                 console.log("Invite token capturé :", inviteToken);
-                localStorage.setItem('inviteToken', inviteToken); // Sauvegarde dans localStorage
-                window.history.replaceState(null, null, window.location.pathname); // Nettoyer l'URL
 
-                // Redirige vers la page de connexion
+                // Sauvegarder dans localStorage
+                localStorage.setItem("inviteToken", inviteToken);
+
+                // Nettoyer uniquement le fragment du hash sans rediriger
+                const newURL = window.location.origin + window.location.pathname;
+                window.history.replaceState(null, null, newURL);
+
+                // Rediriger l'utilisateur vers la page de connexion
                 alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
                 window.location.replace("/login");
             }
