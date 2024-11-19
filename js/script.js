@@ -1,13 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Vérifier si l'utilisateur est connecté via localStorage
-    const userEmail = localStorage.getItem('userEmail'); // Utiliser localStorage ici
-    if (userEmail) {
-        console.log(`Utilisateur déjà connecté : ${userEmail}`);
-    } else {
-        console.log('Aucun utilisateur connecté.');
-    }
+
 
     // Charger et insérer le header
     fetch("/components/header.html")
@@ -1050,3 +1044,51 @@ class ShareButton extends HTMLElement {
 }
 
 customElements.define('share-button', ShareButton);
+
+
+
+
+
+
+
+
+
+
+// Initialiser Netlify Identity
+netlifyIdentity.init();
+
+// Gestion des événements de connexion et déconnexion
+netlifyIdentity.on('login', (user) => {
+    console.log('Utilisateur connecté :', user);
+    localStorage.setItem('userEmail', user.email); // Stocke l'e-mail
+    localStorage.setItem('userToken', user.token.access_token); // Stocke le token d'accès
+    location.reload(); // Recharge la page pour mettre à jour l'état
+});
+
+netlifyIdentity.on('logout', () => {
+    console.log('Utilisateur déconnecté');
+    localStorage.removeItem('userEmail'); // Supprime l'e-mail
+    localStorage.removeItem('userToken'); // Supprime le token
+    location.reload(); // Recharge la page pour mettre à jour l'état
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const userEmail = localStorage.getItem('userEmail');
+
+    if (userEmail) {
+        // Si un utilisateur est connecté
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+        console.log(`Connecté en tant que : ${userEmail}`);
+    } else {
+        // Si aucun utilisateur n'est connecté
+        loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+    }
+
+    // Ajouter les listeners aux boutons
+    loginButton.addEventListener('click', () => netlifyIdentity.open());
+    logoutButton.addEventListener('click', () => netlifyIdentity.logout());
+});
