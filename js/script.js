@@ -35,7 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Utilisateur déconnecté.");
             localStorage.removeItem("userEmail");
         });
-
+        netlifyIdentity.on("error", (err) => {
+            console.error("Erreur Netlify Identity :", err);
+        });
+        
         // Si un utilisateur est déjà connecté
         const currentUser = netlifyIdentity.currentUser();
         if (currentUser) {

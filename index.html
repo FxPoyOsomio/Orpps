@@ -12,13 +12,15 @@
 
     <!-- Capturer le token d'invitation -->
     <script>
-        if (window.location.hash.includes('invite_token=')) {
-            const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get('invite_token');
-            console.log("Invite token capturé :", inviteToken);
-            localStorage.setItem('inviteToken', inviteToken);
-
-            // Nettoyer l'URL pour éviter que le hash ne reste visible
-            window.history.replaceState(null, null, window.location.pathname);
+        if (window.location.hash.includes("invite_token=")) {
+            const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get("invite_token");
+            if (inviteToken) {
+                console.log("Invite token détecté :", inviteToken);
+                localStorage.setItem("inviteToken", inviteToken);
+                window.history.replaceState(null, null, window.location.pathname);
+            } else {
+                console.error("Aucun token détecté dans le hash !");
+            }
         }
     </script>
 </head>
