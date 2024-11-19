@@ -1,6 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
+    const userEmail = localStorage.getItem('userEmail');
 
+    // Vérifiez si Netlify Identity considère l'utilisateur comme connecté
+    const user = netlifyIdentity.currentUser();
+
+    if (user && user.email !== userEmail) {
+        console.log('Synchronisation des informations utilisateur avec Netlify Identity.');
+        localStorage.setItem('userEmail', user.email);
+        localStorage.setItem('userToken', user.token.access_token);
+    } else if (!user) {
+        console.log('Aucun utilisateur connecté via Netlify Identity.');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userToken');
+    }
 
 
     // Charger et insérer le header
@@ -742,61 +755,12 @@ class AddFavoriteButton extends HTMLElement {
         this.button.appendChild(this.iconContainer);
         this.shadowRoot.appendChild(this.button);
 
-        // Vérifier l'état initial
-        this.checkInitialState();
 
-        // Listener pour ajouter ou retirer la recette des favoris
-        this.button.addEventListener('click', () => this.handleToggleFavorite());
     }
 
-    async checkInitialState() {
-        const userEmail = localStorage.getItem('userEmail'); // Vérifier l'utilisateur connecté
-        if (!userEmail) return;
-    
-        try {
-            const response = await fetch(`/.netlify/functions/get-favorites?userEmail=${encodeURIComponent(userEmail)}`);
-            if (!response.ok) {
-                throw new Error(`Erreur lors de la récupération des favoris : ${response.statusText}`);
-            }
-            const favorites = await response.json();
-    
-            // Vérifier si la recette est dans les favoris
-            this.isActive = favorites.includes(this.recipeId);
-            this.updateIcon(); // Mettre à jour l'icône
-        } catch (error) {
-            console.error('Erreur lors de la vérification des favoris :', error);
-        }
-    }
 
-    async handleToggleFavorite() {
-        const userEmail = localStorage.getItem('userEmail'); // Vérifier localStorage
-        if (!userEmail) {
-            this.showNotification('Veuillez vous connecter pour gérer vos favoris.', false);
-            return;
-        }
+
     
-        try {
-            const action = this.isActive ? 'remove' : 'add';
-            const response = await fetch('/.netlify/functions/add-favorite', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail, recipeId: this.recipeId, action }),
-            });
-    
-            const data = await response.json();
-            if (response.ok) {
-                this.isActive = !this.isActive; // Inverser l'état actuel
-                this.updateIcon(); // Mettre à jour l'icône
-                this.showNotification(data.message || `Recette ${this.isActive ? 'ajoutée' : 'retirée'} des favoris !`);
-            } else {
-                console.error('Erreur serveur :', data.error);
-                this.showNotification('Impossible de gérer vos favoris.', false);
-            }
-        } catch (error) {
-            console.error('Erreur réseau :', error);
-            this.showNotification('Une erreur est survenue.', false);
-        }
-    }
 
     updateIcon() {
         this.iconContainer.innerHTML = this.isActive
@@ -811,31 +775,7 @@ class AddFavoriteButton extends HTMLElement {
                     />
                 </svg>`;
     }
-    showNotification(message, isSuccess = true) {
-        const notification = document.createElement('div');
-        notification.style = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: ${isSuccess ? '#4CAF50' : '#f44336'};
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            font-size: 14px;
-            animation: fadeout 3s forwards;
-        `;
-        notification.innerText = message;
-    
-        // Ajouter l'élément au body
-        document.body.appendChild(notification);
-    
-        // Supprimer après 3 secondes
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 3000);
-    }
+
 }
 
 customElements.define('add-favorite-button', AddFavoriteButton);
@@ -1059,36 +999,37 @@ netlifyIdentity.init();
 
 // Gestion des événements de connexion et déconnexion
 netlifyIdentity.on('login', (user) => {
-    console.log('Utilisateur connecté :', user);
-    localStorage.setItem('userEmail', user.email); // Stocke l'e-mail
-    localStorage.setItem('userToken', user.token.access_token); // Stocke le token d'accès
-    location.reload(); // Recharge la page pour mettre à jour l'état
+    console.log('Utilisateur connecté :', user.email);
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userToken', user.token.access_token);
+    location.reload(); // Recharger la page après connexion
 });
 
 netlifyIdentity.on('logout', () => {
     console.log('Utilisateur déconnecté');
-    localStorage.removeItem('userEmail'); // Supprime l'e-mail
-    localStorage.removeItem('userToken'); // Supprime le token
-    location.reload(); // Recharge la page pour mettre à jour l'état
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userToken');
+    location.reload(); // Recharger la page après déconnexion
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('loginButton');
     const logoutButton = document.getElementById('logoutButton');
     const userEmail = localStorage.getItem('userEmail');
-
+    
     if (userEmail) {
-        // Si un utilisateur est connecté
         loginButton.style.display = 'none';
         logoutButton.style.display = 'block';
-        console.log(`Connecté en tant que : ${userEmail}`);
     } else {
-        // Si aucun utilisateur n'est connecté
         loginButton.style.display = 'block';
         logoutButton.style.display = 'none';
     }
+    
 
     // Ajouter les listeners aux boutons
     loginButton.addEventListener('click', () => netlifyIdentity.open());
-    logoutButton.addEventListener('click', () => netlifyIdentity.logout());
+    logoutButton.addEventListener('click', () => {
+        netlifyIdentity.logout();
+    });
 });
