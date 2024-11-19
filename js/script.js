@@ -1,34 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Vérifier si Netlify Identity est disponible
+    // Vérifier Netlify Identity
     if (typeof netlifyIdentity !== 'undefined') {
         console.log("Netlify Identity détecté.");
-        
-        // Initialiser Netlify Identity
         netlifyIdentity.init();
 
-        // Vérifier s'il y a un token d'invitation dans l'URL
+        // Vérifier le fragment
         const hash = window.location.hash;
 
         if (hash.includes('invite_token')) {
             const inviteToken = hash.split('invite_token=')[1];
             console.log("Invite token trouvé :", inviteToken);
 
-            // Accepter l'invitation
-            if (typeof netlifyIdentity !== 'undefined') {
-                netlifyIdentity
-                    .acceptInvite(inviteToken)
-                    .then(() => {
-                        console.log("Invitation acceptée avec succès.");
-                        window.location.replace('/'); // Redirige après succès
-                    })
-                    .catch((error) => {
-                        console.error("Erreur lors de l'acceptation de l'invitation :", error);
-                    });
-            } else {
-                console.error("Netlify Identity non chargé !");
-            }
+            // Préserver le token dans localStorage
+            localStorage.setItem('inviteToken', inviteToken);
+
+            // Essayer d'accepter l'invitation
+            netlifyIdentity
+                .acceptInvite(inviteToken)
+                .then(() => {
+                    console.log("Invitation acceptée.");
+                    localStorage.removeItem('inviteToken'); // Nettoyer après succès
+                    window.location.replace('/'); // Rediriger
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                });
         } else {
             console.log("Aucun token d'invitation détecté.");
         }
