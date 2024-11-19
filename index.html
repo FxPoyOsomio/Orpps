@@ -7,19 +7,21 @@
     <title>Orpps - Accueil</title>
     <link rel="icon" href="/assets/images/logos_orpps/Orpps_favicon.png" type="image/png">
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://unpkg.com/netlify-identity-widget@latest/netlify-identity-widget.min.js" defer></script>
+
+    <!-- Charger Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+
+    <!-- Capturer l'invite token -->
     <script>
-        // Capturer immédiatement le hash avant que quoi que ce soit ne l'écrase
-        if (window.location.hash.includes('invite_token')) {
-            const inviteToken = window.location.hash.split('invite_token=')[1];
+        if (window.location.hash.includes('invite_token=')) {
+            const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get('invite_token');
             console.log("Invite token capturé :", inviteToken);
             localStorage.setItem('inviteToken', inviteToken);
-    
+
             // Nettoyer l'URL pour éviter que le hash ne soit visible
             window.history.replaceState(null, null, window.location.pathname);
         }
     </script>
-
     </head>
 <body>
 
