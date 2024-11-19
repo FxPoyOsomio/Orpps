@@ -13,17 +13,33 @@
     <!-- Capturer le token d'invitation -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            console.log("DOM chargé, vérification de l'invite token...");
+            
+            // Vérifier l'URL pour un token d'invitation
             const hash = window.location.hash;
+            console.log("Hash actuel de l'URL :", hash);
+
             if (hash.includes("invite_token=")) {
+                console.log("Invite token détecté dans le hash.");
+                
+                // Extraire le token
                 const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
-                console.log("Invite token capturé :", inviteToken);
+                
+                if (inviteToken) {
+                    console.log("Invite token extrait :", inviteToken);
+                    
+                    // Sauvegarder dans localStorage
+                    localStorage.setItem("inviteToken", inviteToken);
+                    console.log("Invite token enregistré dans localStorage.");
 
-                // Sauvegarder dans localStorage
-                localStorage.setItem("inviteToken", inviteToken);
-
-                // Rediriger vers la page de connexion
-                alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
-                window.location.replace("/login");
+                    // Rediriger vers la page de connexion
+                    alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
+                    window.location.replace("/login");
+                } else {
+                    console.error("Impossible d'extraire le token d'invitation.");
+                }
+            } else {
+                console.log("Aucun token d'invitation détecté dans l'URL.");
             }
         });
     </script>
