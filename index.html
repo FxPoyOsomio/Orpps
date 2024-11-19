@@ -21,11 +21,8 @@
                 // Sauvegarder dans localStorage
                 localStorage.setItem("inviteToken", inviteToken);
 
-                // Nettoyer l'URL (supprimer #invite_token=...)
-                window.history.replaceState(null, null, window.location.origin + window.location.pathname);
-
-                // Forcer la redirection vers la page login
-                console.log("Redirection vers /login");
+                // Rediriger vers la page de connexion
+                alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
                 window.location.replace("/login");
             }
         });
