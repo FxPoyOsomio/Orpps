@@ -1,20 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
-    const userEmail = localStorage.getItem('userEmail');
 
-    // Vérifiez si Netlify Identity considère l'utilisateur comme connecté
-    const user = netlifyIdentity.currentUser();
+    if (typeof netlifyIdentity !== 'undefined') {
+        console.log("Netlify Identity détecté.");
+        // Initialiser Netlify Identity
+        netlifyIdentity.init();
 
-    if (user && user.email !== userEmail) {
-        console.log('Synchronisation des informations utilisateur avec Netlify Identity.');
-        localStorage.setItem('userEmail', user.email);
-        localStorage.setItem('userToken', user.token.access_token);
-    } else if (!user) {
-        console.log('Aucun utilisateur connecté via Netlify Identity.');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userToken');
+        const user = netlifyIdentity.currentUser();
+
+        if (user) {
+            console.log('Utilisateur connecté :', user.email);
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userToken', user.token.access_token);
+        } else {
+            console.log('Aucun utilisateur connecté via Netlify Identity.');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userToken');
+        }
+
+        // Gestion des événements de connexion/déconnexion
+        netlifyIdentity.on('login', (user) => {
+            console.log('Utilisateur connecté :', user.email);
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userToken', user.token.access_token);
+            location.reload(); // Recharger la page après connexion
+        });
+
+        netlifyIdentity.on('logout', () => {
+            console.log('Utilisateur déconnecté');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userToken');
+            location.reload(); // Recharger la page après déconnexion
+        });
+    } else {
+        console.error("Netlify Identity n'est pas disponible.");
     }
-
 
     // Charger et insérer le header
     fetch("/components/header.html")
@@ -38,45 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
-// Initialiser Netlify Identity
-netlifyIdentity.init();
-
-// Gestion des événements de connexion et déconnexion
-netlifyIdentity.on('login', (user) => {
-    console.log('Utilisateur connecté :', user.email);
-    localStorage.setItem('userEmail', user.email);
-    localStorage.setItem('userToken', user.token.access_token);
-    location.reload(); // Recharger la page après connexion
-});
-
-netlifyIdentity.on('logout', () => {
-    console.log('Utilisateur déconnecté');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userToken');
-    location.reload(); // Recharger la page après déconnexion
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const loginButton = document.getElementById('loginButton');
-    const logoutButton = document.getElementById('logoutButton');
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (userEmail) {
-        loginButton.style.display = 'none';
-        logoutButton.style.display = 'block';
-    } else {
-        loginButton.style.display = 'block';
-        logoutButton.style.display = 'none';
-    }
-    
-
-    // Ajouter les listeners aux boutons
-    loginButton.addEventListener('click', () => netlifyIdentity.open());
-    logoutButton.addEventListener('click', () => {
-        netlifyIdentity.logout();
-    });
-});
 
 
 
