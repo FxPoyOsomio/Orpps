@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (typeof netlifyIdentity !== "undefined") {
         console.log("Netlify Identity détecté.");
+
         netlifyIdentity.init({
             APIUrl: "https://orpps.netlify.app/.netlify/identity",
+            disableAutoLogin: true,
         });
 
         const inviteToken = localStorage.getItem("inviteToken");
@@ -21,27 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .catch((error) => {
                         console.error("Erreur lors de l'acceptation de l'invitation :", error);
-                        alert("Erreur lors de l'acceptation de l'invitation.");
                     });
             } else {
-                console.warn("La méthode acceptInvite n'est pas disponible. Redirection vers /login.");
-                window.location.replace("/login");
+                console.error("La méthode acceptInvite n'est pas disponible.");
             }
-        } else {
-            console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
-
-        netlifyIdentity.on("login", (user) => {
-            console.log("Utilisateur connecté :", user.email);
-            localStorage.setItem("userEmail", user.email);
-        });
-
-        netlifyIdentity.on("logout", () => {
-            console.log("Utilisateur déconnecté.");
-            localStorage.removeItem("userEmail");
-        });
     } else {
-        console.error("Netlify Identity Widget n'a pas pu être chargé.");
+        console.error("Netlify Identity n'est pas disponible.");
     }
 
     loadHeaderAndFooter();
