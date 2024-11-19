@@ -2,66 +2,77 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
     // Vérifier si Netlify Identity est disponible
-    if (typeof netlifyIdentity !== 'undefined') {
+    if (typeof netlifyIdentity !== "undefined") {
         console.log("Netlify Identity détecté.");
-        netlifyIdentity.init();
 
-        const inviteToken = localStorage.getItem('inviteToken');
+        // Initialiser avec l'endpoint API
+        netlifyIdentity.init({
+            APIUrl: "https://orpps.netlify.app/.netlify/identity",
+        });
+
+        // Capture de l'invite token
+        const inviteToken = localStorage.getItem("inviteToken");
         if (inviteToken) {
             console.log("Tentative d'acceptation de l'invitation avec le token :", inviteToken);
 
-            if (typeof netlifyIdentity.acceptInvite === 'function') {
+            // Vérifiez si acceptInvite est disponible
+            if (typeof netlifyIdentity.acceptInvite === "function") {
                 netlifyIdentity
                     .acceptInvite(inviteToken)
                     .then(() => {
                         console.log("Invitation acceptée avec succès.");
-                        localStorage.removeItem('inviteToken');
-                        window.location.replace('/'); // Rediriger après succès
+                        localStorage.removeItem("inviteToken");
+                        window.location.replace("/"); // Rediriger après succès
                     })
                     .catch((error) => {
                         console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                        alert("Erreur lors de l'acceptation de l'invitation.");
                     });
             } else {
-                console.error("La méthode acceptInvite n'est pas disponible.");
+                console.error("La méthode acceptInvite n'est pas disponible dans cette version de Netlify Identity.");
+                alert(
+                    "L'invitation ne peut pas être acceptée automatiquement. Veuillez vérifier vos droits ou contactez un administrateur."
+                );
             }
         } else {
             console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
 
-        netlifyIdentity.on('login', (user) => {
+        // Gérer la connexion/déconnexion
+        netlifyIdentity.on("login", (user) => {
             console.log("Utilisateur connecté :", user.email);
-            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem("userEmail", user.email);
         });
 
-        netlifyIdentity.on('logout', () => {
+        netlifyIdentity.on("logout", () => {
             console.log("Utilisateur déconnecté.");
-            localStorage.removeItem('userEmail');
+            localStorage.removeItem("userEmail");
         });
     } else {
         console.error("Netlify Identity n'est pas disponible.");
     }
 
-    // Charger et insérer le header
+    // Charger header et footer
+    loadHeaderAndFooter();
+});
+
+function loadHeaderAndFooter() {
     fetch("/components/header.html")
-        .then(response => response.text())
-        .then(data => {
+        .then((response) => response.text())
+        .then((data) => {
             document.getElementById("header").innerHTML = data;
             console.log("Header loaded successfully");
-
-            initializeHeader(); // Initialiser les éléments du header une fois le HTML chargé
-            applySearchEventsOnHeaderOpen();
-            applySearchEvents(document.getElementById("headerSearchBar")); // Activer les événements de la barre de recherche
-            applySearchEventsOnCategories();
         })
-        .catch(error => console.error("Error loading header:", error));
+        .catch((error) => console.error("Error loading header:", error));
 
-    // Charger le footer
     fetch("/components/footer.html")
-        .then(response => response.text())
-        .then(data => {
+        .then((response) => response.text())
+        .then((data) => {
             document.getElementById("footer").innerHTML = data;
-        });
-});
+        })
+        .catch((error) => console.error("Error loading footer:", error));
+}
+
 
 
 
