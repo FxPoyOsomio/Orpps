@@ -1,23 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
+    // Sauvegarder immédiatement le hash avant qu'il ne soit écrasé
+    const hash = window.location.hash;
+    if (hash.includes('invite_token')) {
+        const inviteToken = hash.split('invite_token=')[1];
+        console.log("Invite token détecté :", inviteToken);
+        localStorage.setItem('inviteToken', inviteToken); // Sauvegarder dans localStorage
+        // Nettoyer l'URL sans recharger la page
+        window.history.replaceState(null, null, window.location.pathname);
+    }
+
     // Vérifier Netlify Identity
     if (typeof netlifyIdentity !== 'undefined') {
         console.log("Netlify Identity détecté.");
         netlifyIdentity.init();
 
-        // Vérifier le fragment dans l'URL
-        const hash = window.location.hash;
-        if (hash.includes('invite_token')) {
-            const inviteToken = hash.split('invite_token=')[1];
-            console.log("Invite token trouvé :", inviteToken);
-
-            // Préserver le token dans localStorage
-            localStorage.setItem('inviteToken', inviteToken);
-
-            // Tenter d'accepter l'invitation
+        // Récupérer le token depuis localStorage
+        const savedToken = localStorage.getItem('inviteToken');
+        if (savedToken) {
+            console.log("Tentative d'acceptation de l'invitation avec le token :", savedToken);
             netlifyIdentity
-                .acceptInvite(inviteToken)
+                .acceptInvite(savedToken)
                 .then(() => {
                     console.log("Invitation acceptée avec succès.");
                     localStorage.removeItem('inviteToken'); // Nettoyer après succès
@@ -27,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error("Erreur lors de l'acceptation de l'invitation :", error);
                 });
         } else {
-            console.log("Aucun token d'invitation détecté.");
+            console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
 
-        // Vérifier si un utilisateur est déjà connecté
+        // Vérifier si un utilisateur est connecté
         const user = netlifyIdentity.currentUser();
         if (user) {
             console.log('Utilisateur connecté :', user.email);
@@ -81,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("footer").innerHTML = data;
         });
 });
+
 
 
 
