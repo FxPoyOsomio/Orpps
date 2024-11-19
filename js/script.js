@@ -1,30 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    if (typeof netlifyIdentity !== "undefined") {
-        console.log("Netlify Identity détecté.");
-        netlifyIdentity.init({
-            APIUrl: "https://orpps.netlify.app/.netlify/identity",
-        });
-
-        // Gestion des événements
-        netlifyIdentity.on("login", (user) => {
-            console.log("Utilisateur connecté :", user.email);
-            localStorage.setItem("userEmail", user.email);
-        });
-
-        netlifyIdentity.on("logout", () => {
-            console.log("Utilisateur déconnecté.");
-            localStorage.removeItem("userEmail");
-        });
-
-        const currentUser = netlifyIdentity.currentUser();
-        if (currentUser) {
-            console.log("Utilisateur actuel :", currentUser);
-        }
-    } else {
-        console.error("Netlify Identity n'est pas disponible.");
-    }
+    
 
     loadHeaderAndFooter();
 });

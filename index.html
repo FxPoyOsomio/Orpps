@@ -10,6 +10,35 @@
     <!-- Charger Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("DOM chargé.");
+
+            if (typeof netlifyIdentity !== "undefined") {
+                console.log("Netlify Identity détecté.");
+                
+                // Initialiser Netlify Identity
+                netlifyIdentity.init({
+                    APIUrl: "https://orpps.netlify.app/.netlify/identity"
+                });
+
+                // Observer les événements
+                netlifyIdentity.on("init", (user) => {
+                    console.log("Utilisateur initialisé :", user);
+                });
+
+                netlifyIdentity.on("login", (user) => {
+                    console.log("Utilisateur connecté :", user);
+                });
+
+                netlifyIdentity.on("logout", () => {
+                    console.log("Utilisateur déconnecté.");
+                });
+            } else {
+                console.error("Netlify Identity n'est pas disponible.");
+            }
+        });
+    </script>
 
     
     
