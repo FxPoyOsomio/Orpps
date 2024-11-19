@@ -6,7 +6,21 @@
   directory = "netlify/functions"
   external_node_modules = ["node-fetch", "airtable"]
 
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = true
+preserveQuery = true
+
 [[headers]]
 for = "/*"
 [headers.values]
-Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com 'unsafe-inline'; connect-src 'self' https://identity.netlify.com https://orpps.netlify.app/.netlify/identity/settings; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://identity.netlify.com; frame-src https://identity.netlify.com;"
+Content-Security-Policy = """
+    default-src 'self'; 
+    script-src 'self' https://identity.netlify.com 'unsafe-inline'; 
+    connect-src 'self' https://identity.netlify.com https://orpps.netlify.app/.netlify/identity/settings; 
+    style-src 'self' 'unsafe-inline'; 
+    img-src 'self' data: https://identity.netlify.com; 
+    frame-src https://identity.netlify.com;
+"""
