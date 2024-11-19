@@ -35,12 +35,16 @@
                     console.error("Aucun token d'invitation trouvé dans localStorage.");
                 }
 
-                // Ouvrir automatiquement le formulaire de connexion
-                netlifyIdentity.open();
+                // Forcer l'ouverture du widget
+                setTimeout(() => {
+                    console.log("Ouverture forcée du widget Netlify Identity...");
+                    netlifyIdentity.open(); // Forcer l'ouverture
+                }, 500); // Laisse un délai avant de forcer l'ouverture
             } else {
                 console.error("Netlify Identity n'est pas disponible.");
             }
         });
+
     </script>
 </head>
 <body>
