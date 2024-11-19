@@ -6,42 +6,7 @@
     <title>Connexion - Orpps</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("Page login chargée.");
-    
-            if (typeof netlifyIdentity !== "undefined") {
-                console.log("Netlify Identity détecté.");
-                netlifyIdentity.init({
-                    APIUrl: "https://orpps.netlify.app/.netlify/identity",
-                });
-    
-                // Vérifier si un token est présent dans localStorage
-                const inviteToken = localStorage.getItem("inviteToken");
-                if (inviteToken) {
-                    console.log("Token trouvé :", inviteToken);
-    
-                    // Accepter l'invitation
-                    netlifyIdentity.acceptInvite(inviteToken)
-                        .then(() => {
-                            console.log("Invitation acceptée !");
-                            localStorage.removeItem("inviteToken");
-                            alert("Invitation acceptée. Veuillez configurer votre mot de passe.");
-                            netlifyIdentity.open("login"); // Ouvrir le formulaire de connexion
-                        })
-                        .catch((err) => {
-                            console.error("Erreur lors de l'acceptation de l'invitation :", err);
-                            alert("Erreur lors de l'invitation. Vérifiez votre email.");
-                        });
-                } else {
-                    console.error("Aucun token d'invitation trouvé.");
-                    alert("Aucun token trouvé. Vérifiez votre email.");
-                }
-            } else {
-                console.error("Netlify Identity non disponible.");
-            }
-        });
-    </script>
+
     
 </head>
 <body>
