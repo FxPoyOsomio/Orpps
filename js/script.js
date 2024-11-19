@@ -38,7 +38,45 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 
+// Initialiser Netlify Identity
+netlifyIdentity.init();
 
+// Gestion des événements de connexion et déconnexion
+netlifyIdentity.on('login', (user) => {
+    console.log('Utilisateur connecté :', user.email);
+    localStorage.setItem('userEmail', user.email);
+    localStorage.setItem('userToken', user.token.access_token);
+    location.reload(); // Recharger la page après connexion
+});
+
+netlifyIdentity.on('logout', () => {
+    console.log('Utilisateur déconnecté');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userToken');
+    location.reload(); // Recharger la page après déconnexion
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const userEmail = localStorage.getItem('userEmail');
+    
+    if (userEmail) {
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+    } else {
+        loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+    }
+    
+
+    // Ajouter les listeners aux boutons
+    loginButton.addEventListener('click', () => netlifyIdentity.open());
+    logoutButton.addEventListener('click', () => {
+        netlifyIdentity.logout();
+    });
+});
 
 
 
@@ -994,42 +1032,4 @@ customElements.define('share-button', ShareButton);
 
 
 
-// Initialiser Netlify Identity
-netlifyIdentity.init();
 
-// Gestion des événements de connexion et déconnexion
-netlifyIdentity.on('login', (user) => {
-    console.log('Utilisateur connecté :', user.email);
-    localStorage.setItem('userEmail', user.email);
-    localStorage.setItem('userToken', user.token.access_token);
-    location.reload(); // Recharger la page après connexion
-});
-
-netlifyIdentity.on('logout', () => {
-    console.log('Utilisateur déconnecté');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userToken');
-    location.reload(); // Recharger la page après déconnexion
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const loginButton = document.getElementById('loginButton');
-    const logoutButton = document.getElementById('logoutButton');
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (userEmail) {
-        loginButton.style.display = 'none';
-        logoutButton.style.display = 'block';
-    } else {
-        loginButton.style.display = 'block';
-        logoutButton.style.display = 'none';
-    }
-    
-
-    // Ajouter les listeners aux boutons
-    loginButton.addEventListener('click', () => netlifyIdentity.open());
-    logoutButton.addEventListener('click', () => {
-        netlifyIdentity.logout();
-    });
-});
