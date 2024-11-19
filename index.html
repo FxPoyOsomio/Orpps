@@ -10,46 +10,7 @@
     <!-- Charger Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("Vérification du token d'invitation...");
-    
-            // Vérifie si l'URL contient un token d'invitation
-            const hash = window.location.hash;
-            console.log("Hash actuel de l'URL :", hash);
-    
-            if (hash.includes("invite_token=")) {
-                const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
-                console.log("Token d'invitation détecté :", inviteToken);
-    
-                if (inviteToken) {
-                    // Initialise Netlify Identity
-                    if (typeof netlifyIdentity !== "undefined") {
-                        netlifyIdentity.init({
-                            APIUrl: "https://orpps.netlify.app/.netlify/identity",
-                        });
-    
-                        // Accepte directement l'invitation
-                        netlifyIdentity.acceptInvite(inviteToken)
-                            .then(() => {
-                                console.log("Invitation acceptée avec succès !");
-                                netlifyIdentity.open(); // Ouvre la fenêtre pour définir le mot de passe
-                            })
-                            .catch((err) => {
-                                console.error("Erreur lors de l'acceptation de l'invitation :", err);
-                                alert("Erreur lors de l'acceptation de l'invitation. Vérifiez votre email.");
-                            });
-                    } else {
-                        console.error("Netlify Identity n'est pas disponible.");
-                    }
-                } else {
-                    console.error("Token non valide ou introuvable.");
-                }
-            } else {
-                console.log("Aucun token d'invitation détecté dans l'URL.");
-            }
-        });
-    </script>
+
     
     
     
