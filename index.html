@@ -14,23 +14,26 @@
         document.addEventListener("DOMContentLoaded", () => {
             console.log("DOM chargé, vérification de l'invite token...");
             
-            // Vérifier l'URL pour un token d'invitation
+            // Vérifier si l'URL contient un hash
             const hash = window.location.hash;
             console.log("Hash actuel de l'URL :", hash);
-
-            if (hash.includes("invite_token=")) {
+    
+            if (hash && hash.includes("invite_token=")) {
                 console.log("Invite token détecté dans le hash.");
-                
-                // Extraire le token
+    
+                // Extraire le token d'invitation
                 const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
-                
+    
                 if (inviteToken) {
                     console.log("Invite token extrait :", inviteToken);
-                    
-                    // Sauvegarder dans localStorage
+    
+                    // Sauvegarder le token dans localStorage
                     localStorage.setItem("inviteToken", inviteToken);
                     console.log("Invite token enregistré dans localStorage.");
-
+    
+                    // Nettoyer le hash de l'URL SANS RECHARGER la page
+                    window.history.replaceState(null, null, window.location.pathname);
+    
                     // Rediriger vers la page de connexion
                     alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
                     window.location.replace("/login");
@@ -42,6 +45,7 @@
             }
         });
     </script>
+    
 </head>
 <body>
     <div id="header"></div>

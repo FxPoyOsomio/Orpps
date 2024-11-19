@@ -8,35 +8,36 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("Chargement de la page de connexion...");
-
             if (typeof netlifyIdentity !== "undefined") {
+                console.log("Netlify Identity initialisé sur la page de connexion.");
                 netlifyIdentity.init({
                     APIUrl: "https://orpps.netlify.app/.netlify/identity",
                 });
 
-                // Récupérer le token d'invitation
                 const inviteToken = localStorage.getItem("inviteToken");
                 if (inviteToken) {
                     console.log("Token d'invitation récupéré :", inviteToken);
 
-                    // Accepter l'invitation
-                    netlifyIdentity.acceptInvite(inviteToken).then(() => {
-                        console.log("Invitation acceptée avec succès !");
-                        localStorage.removeItem("inviteToken");
-                        alert("Invitation acceptée. Configurez votre mot de passe pour continuer.");
-                        netlifyIdentity.open("signup");
-                    }).catch((err) => {
-                        console.error("Erreur lors de l'acceptation de l'invitation :", err);
-                        alert("Impossible de gérer l'invitation. Vérifiez votre email.");
-                    });
+                    netlifyIdentity
+                        .acceptInvite(inviteToken)
+                        .then(() => {
+                            console.log("Invitation acceptée !");
+                            localStorage.removeItem("inviteToken");
+                            alert("Invitation acceptée. Configurez votre mot de passe.");
+                            netlifyIdentity.open("signup");
+                        })
+                        .catch((err) => {
+                            console.error("Erreur lors de l'acceptation de l'invitation :", err);
+                        });
                 } else {
-                    console.error("Aucun token d'invitation trouvé dans localStorage.");
+                    console.log("Aucun token d'invitation trouvé.");
                 }
             } else {
                 console.error("Netlify Identity n'est pas disponible.");
             }
         });
+
+
     </script>
 </head>
 <body>
