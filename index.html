@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <!-- Charger Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -21,6 +21,14 @@
                 netlifyIdentity.init({
                     APIUrl: "https://orpps.netlify.app/.netlify/identity"
                 });
+
+                // Vérifier si un token d'invitation est présent
+                if (window.location.hash.includes("invite_token=")) {
+                    console.log("Invite token détecté :", window.location.hash);
+
+                    // Ouvrir la fenêtre du widget
+                    netlifyIdentity.open("signup");
+                }
 
                 // Observer les événements
                 netlifyIdentity.on("init", (user) => {
@@ -38,6 +46,7 @@
                 console.error("Netlify Identity n'est pas disponible.");
             }
         });
+
     </script>
 
     

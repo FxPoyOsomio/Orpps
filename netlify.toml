@@ -4,19 +4,4 @@
 
 [functions]
   directory = "netlify/functions"
-  external_node_modules = ["node-fetch", "google-auth-library", "airtable"]
-
-[[headers]]
-for = "/*"
-[headers.values]
-Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://identity.netlify.com; frame-src https://identity.netlify.com;"
-
-[[headers]]
-for = "/*.js"
-[headers.values]
-Content-Type = "application/javascript"
-
-[[headers]]
-for = "/*.css"
-[headers.values]
-Content-Type = "text/css"
+  external_node_modules = ["node-fetch", "airtable"]
