@@ -1,40 +1,59 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
+    // Vérifier si Netlify Identity est disponible
     if (typeof netlifyIdentity !== "undefined") {
         console.log("Netlify Identity détecté.");
 
+        // Initialiser Netlify Identity
         netlifyIdentity.init({
-            APIUrl: "https://orpps.netlify.app/.netlify/identity",
-            disableAutoLogin: true,
+            APIUrl: "https://orpps.netlify.app/.netlify/identity", // Assure-toi que c'est l'endpoint correct
         });
 
+        // Vérifier s'il existe un token d'invitation dans localStorage
         const inviteToken = localStorage.getItem("inviteToken");
         if (inviteToken) {
             console.log("Tentative d'acceptation de l'invitation avec le token :", inviteToken);
 
+            // Tenter d'accepter l'invitation si possible
             if (typeof netlifyIdentity.acceptInvite === "function") {
                 netlifyIdentity
                     .acceptInvite(inviteToken)
                     .then(() => {
                         console.log("Invitation acceptée avec succès.");
-                        localStorage.removeItem("inviteToken");
+                        localStorage.removeItem("inviteToken"); // Nettoyer le token après acceptation
                         window.location.replace("/"); // Rediriger après succès
                     })
                     .catch((error) => {
                         console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                        alert("Erreur lors de l'acceptation de l'invitation. Contactez un administrateur.");
                     });
             } else {
-                console.error("La méthode acceptInvite n'est pas disponible.");
+                console.error("La méthode acceptInvite n'est pas disponible sur Netlify Identity.");
             }
+        } else {
+            console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
+
+        // Gestion des événements de connexion/déconnexion
+        netlifyIdentity.on("login", (user) => {
+            console.log("Utilisateur connecté :", user.email);
+            localStorage.setItem("userEmail", user.email);
+        });
+
+        netlifyIdentity.on("logout", () => {
+            console.log("Utilisateur déconnecté.");
+            localStorage.removeItem("userEmail");
+        });
     } else {
         console.error("Netlify Identity n'est pas disponible.");
     }
 
+    // Charger header et footer
     loadHeaderAndFooter();
 });
 
+// Charger et insérer le header et le footer
 function loadHeaderAndFooter() {
     fetch("/components/header.html")
         .then((response) => response.text())
@@ -51,6 +70,7 @@ function loadHeaderAndFooter() {
         })
         .catch((error) => console.error("Error loading footer:", error));
 }
+
 
 
 
