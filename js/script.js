@@ -1,16 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Vérifier si Netlify Identity est disponible
     if (typeof netlifyIdentity !== "undefined") {
         console.log("Netlify Identity détecté.");
-
-        // Initialiser Netlify Identity
         netlifyIdentity.init({
             APIUrl: "https://orpps.netlify.app/.netlify/identity",
         });
 
-        // Gestion des événements de connexion et de déconnexion
+        // Gestion des événements
         netlifyIdentity.on("login", (user) => {
             console.log("Utilisateur connecté :", user.email);
             localStorage.setItem("userEmail", user.email);
@@ -25,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Erreur Netlify Identity :", err);
         });
 
-        // Si un utilisateur est déjà connecté
         const currentUser = netlifyIdentity.currentUser();
         if (currentUser) {
             console.log("Utilisateur actuel :", currentUser);

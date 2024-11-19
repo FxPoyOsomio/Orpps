@@ -24,19 +24,19 @@
                         console.log("Invitation acceptée avec succès !");
                         localStorage.removeItem("inviteToken");
                         alert("Invitation acceptée. Configurez votre mot de passe pour continuer.");
-                        netlifyIdentity.open(); // Ouvrir le formulaire de connexion/mot de passe
+                        netlifyIdentity.open("login"); // Ouvrir le formulaire de connexion/mot de passe
                     }).catch((err) => {
                         console.error("Erreur lors de l'acceptation de l'invitation :", err);
                         alert("Impossible de gérer l'invitation. Vérifiez votre email.");
                     });
                 } else {
                     console.error("Aucun token d'invitation trouvé dans localStorage.");
+                    alert("Aucun token d'invitation détecté. Veuillez vérifier votre email.");
                 }
             } else {
                 console.error("Netlify Identity n'est pas disponible.");
             }
         });
-
     </script>
 </head>
 <body>
@@ -44,6 +44,7 @@
     <main class="container">
         <h1>Connexion à Orpps</h1>
         <p>Veuillez utiliser le formulaire ci-dessous pour vous connecter.</p>
+        <div id="netlify-auth-widget"></div>
     </main>
     <div id="footer"></div>
 
