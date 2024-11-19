@@ -24,7 +24,7 @@
                         console.log("Invitation acceptée avec succès !");
                         localStorage.removeItem("inviteToken");
                         alert("Invitation acceptée. Configurez votre mot de passe pour continuer.");
-                        netlifyIdentity.open("login"); // Ouvrir le formulaire de connexion/mot de passe
+                        netlifyIdentity.open("login"); // Ouvrir le formulaire pour définir le mot de passe
                     }).catch((err) => {
                         console.error("Erreur lors de l'acceptation de l'invitation :", err);
                         alert("Impossible de gérer l'invitation. Vérifiez votre email.");
@@ -44,7 +44,6 @@
     <main class="container">
         <h1>Connexion à Orpps</h1>
         <p>Veuillez utiliser le formulaire ci-dessous pour vous connecter.</p>
-        <div id="netlify-auth-widget"></div>
     </main>
     <div id="footer"></div>
 
