@@ -1,16 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Sauvegarder immédiatement le hash avant qu'il ne soit écrasé
-    const hash = window.location.hash;
-    if (hash.includes('invite_token')) {
-        const inviteToken = hash.split('invite_token=')[1];
-        console.log("Invite token détecté :", inviteToken);
-        localStorage.setItem('inviteToken', inviteToken); // Sauvegarder dans localStorage
-        // Nettoyer l'URL sans recharger la page
-        window.history.replaceState(null, null, window.location.pathname);
-    }
-
     // Vérifier Netlify Identity
     if (typeof netlifyIdentity !== 'undefined') {
         console.log("Netlify Identity détecté.");
@@ -85,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("footer").innerHTML = data;
         });
 });
+
 
 
 
