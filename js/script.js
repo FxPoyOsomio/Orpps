@@ -1,80 +1,101 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
 
-    // Vérifier Netlify Identity
-    if (typeof netlifyIdentity !== 'undefined') {
-        console.log("Netlify Identity détecté.");
-        netlifyIdentity.init();
-
-        // Récupérer le token depuis localStorage
-        const savedToken = localStorage.getItem('inviteToken');
-        if (savedToken) {
-            console.log("Tentative d'acceptation de l'invitation avec le token :", savedToken);
-            netlifyIdentity
-                .acceptInvite(savedToken)
-                .then(() => {
-                    console.log("Invitation acceptée avec succès.");
-                    localStorage.removeItem('inviteToken'); // Nettoyer après succès
-                    window.location.replace('/'); // Rediriger après succès
-                })
-                .catch((error) => {
-                    console.error("Erreur lors de l'acceptation de l'invitation :", error);
-                });
-        } else {
-            console.log("Aucun token d'invitation trouvé dans localStorage.");
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOM content loaded, starting header and footer fetch...");
+    
+        // Sauvegarder immédiatement le hash avant qu'il ne soit écrasé
+        const hash = window.location.hash;
+        if (hash.includes('invite_token')) {
+            const inviteToken = hash.split('invite_token=')[1];
+            console.log("Invite token détecté :", inviteToken);
+            localStorage.setItem('inviteToken', inviteToken); // Sauvegarder dans localStorage
+            // Nettoyer l'URL sans recharger la page
+            window.history.replaceState(null, null, window.location.pathname);
         }
-
-        // Vérifier si un utilisateur est connecté
-        const user = netlifyIdentity.currentUser();
-        if (user) {
-            console.log('Utilisateur connecté :', user.email);
-            localStorage.setItem('userEmail', user.email);
-            localStorage.setItem('userToken', user.token.access_token);
+    
+        // Vérifier si Netlify Identity est disponible
+        if (typeof netlifyIdentity !== 'undefined') {
+            console.log("Netlify Identity détecté.");
+            netlifyIdentity.init();
+    
+            // Lorsque Netlify Identity est prêt
+            netlifyIdentity.on('init', () => {
+                const savedToken = localStorage.getItem('inviteToken');
+                if (savedToken) {
+                    console.log("Tentative d'acceptation de l'invitation avec le token :", savedToken);
+    
+                    if (typeof netlifyIdentity.acceptInvite === 'function') {
+                        netlifyIdentity
+                            .acceptInvite(savedToken)
+                            .then(() => {
+                                console.log("Invitation acceptée avec succès.");
+                                localStorage.removeItem('inviteToken'); // Nettoyer après succès
+                                window.location.replace('/'); // Rediriger après succès
+                            })
+                            .catch((error) => {
+                                console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                            });
+                    } else {
+                        console.error("La méthode acceptInvite n'est pas disponible.");
+                    }
+                } else {
+                    console.log("Aucun token d'invitation trouvé dans localStorage.");
+                }
+            });
+    
+            // Vérifier si un utilisateur est connecté
+            const user = netlifyIdentity.currentUser();
+            if (user) {
+                console.log('Utilisateur connecté :', user.email);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userToken', user.token.access_token);
+            } else {
+                console.log('Aucun utilisateur connecté via Netlify Identity.');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userToken');
+            }
+    
+            // Gérer les événements de connexion et déconnexion
+            netlifyIdentity.on('login', (user) => {
+                console.log('Utilisateur connecté :', user.email);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userToken', user.token.access_token);
+                location.reload(); // Recharger la page après connexion
+            });
+    
+            netlifyIdentity.on('logout', () => {
+                console.log('Utilisateur déconnecté');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userToken');
+                location.reload(); // Recharger la page après déconnexion
+            });
         } else {
-            console.log('Aucun utilisateur connecté via Netlify Identity.');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userToken');
+            console.error("Netlify Identity n'est pas disponible.");
         }
-
-        // Gérer les événements de connexion et déconnexion
-        netlifyIdentity.on('login', (user) => {
-            console.log('Utilisateur connecté :', user.email);
-            localStorage.setItem('userEmail', user.email);
-            localStorage.setItem('userToken', user.token.access_token);
-            location.reload(); // Recharger la page après connexion
-        });
-
-        netlifyIdentity.on('logout', () => {
-            console.log('Utilisateur déconnecté');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userToken');
-            location.reload(); // Recharger la page après déconnexion
-        });
-    } else {
-        console.error("Netlify Identity n'est pas disponible.");
-    }
-
-    // Charger et insérer le header
-    fetch("/components/header.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-            console.log("Header loaded successfully");
-
-            initializeHeader(); // Initialiser les éléments du header une fois le HTML chargé
-            applySearchEventsOnHeaderOpen();
-            applySearchEvents(document.getElementById("headerSearchBar")); // Activer les événements de la barre de recherche
-            applySearchEventsOnCategories();
-        })
-        .catch(error => console.error("Error loading header:", error));
-
-    // Charger le footer
-    fetch("/components/footer.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("footer").innerHTML = data;
-        });
-});
+    
+        // Charger et insérer le header
+        fetch("/components/header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+                console.log("Header loaded successfully");
+    
+                initializeHeader(); // Initialiser les éléments du header une fois le HTML chargé
+                applySearchEventsOnHeaderOpen();
+                applySearchEvents(document.getElementById("headerSearchBar")); // Activer les événements de la barre de recherche
+                applySearchEventsOnCategories();
+            })
+            .catch(error => console.error("Error loading header:", error));
+    
+        // Charger le footer
+        fetch("/components/footer.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("footer").innerHTML = data;
+            });
+    });
+    
 
 
 
