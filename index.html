@@ -20,13 +20,15 @@
                 // Sauvegarder dans localStorage
                 localStorage.setItem("inviteToken", inviteToken);
 
-                // Nettoyer uniquement le fragment du hash sans rediriger
-                const newURL = window.location.origin + window.location.pathname;
+                // Nettoyer le hash sans provoquer de redirection incorrecte
+                const newURL = window.location.href.split("#")[0];
                 window.history.replaceState(null, null, newURL);
 
-                // Rediriger l'utilisateur vers la page de connexion
-                alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
-                window.location.replace("/login");
+                // Vérifie si l'URL actuelle est différente de "/login"
+                if (!window.location.pathname.includes("/login")) {
+                    alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
+                    window.location.replace("/login"); // Rediriger vers la page de connexion
+                }
             }
         });
     </script>
