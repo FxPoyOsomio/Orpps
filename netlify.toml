@@ -9,10 +9,4 @@
 [[headers]]
 for = "/*"
 [headers.values]
-Content-Security-Policy = "
-    default-src 'self'; 
-    script-src 'self' https://identity.netlify.com 'unsafe-inline'; 
-    connect-src 'self' https://identity.netlify.com; 
-    style-src 'self' 'unsafe-inline'; 
-    img-src 'self' data: https://identity.netlify.com; 
-    frame-src https://identity.netlify.com"
+Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com 'unsafe-inline'; connect-src 'self' https://identity.netlify.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://identity.netlify.com; frame-src https://identity.netlify.com;"
