@@ -12,32 +12,53 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("Vérification de l'URL pour un token d'invitation...");
+            console.log("Vérification du token d'invitation...");
     
-            const hash = window.location.hash; // Récupère le hash de l'URL
-            console.log("Hash actuel :", hash);
+            // Vérifie si l'URL contient un token d'invitation
+            const hash = window.location.hash;
+            console.log("Hash actuel de l'URL :", hash);
     
             if (hash.includes("invite_token=")) {
                 const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
-                console.log("Token capturé :", inviteToken);
+                console.log("Token d'invitation détecté :", inviteToken);
     
                 if (inviteToken) {
-                    // Sauvegarder dans localStorage
+                    // Sauvegarde le token dans localStorage
                     localStorage.setItem("inviteToken", inviteToken);
                     console.log("Token sauvegardé dans localStorage.");
     
-                    // Nettoyer le hash pour éviter des redirections inutiles
+                    // Nettoie l'URL pour éviter que le token reste visible
                     window.history.replaceState(null, null, window.location.pathname);
     
-                    // Rediriger vers la page de login
-                    console.log("Redirection vers /login...");
-                    window.location.replace("/login");
+                    // Initialise Netlify Identity et ouvre directement la fenêtre
+                    if (typeof netlifyIdentity !== "undefined") {
+                        netlifyIdentity.init({
+                            APIUrl: "https://orpps.netlify.app/.netlify/identity",
+                        });
+    
+                        // Accepte automatiquement l'invitation
+                        netlifyIdentity.acceptInvite(inviteToken)
+                            .then(() => {
+                                console.log("Invitation acceptée avec succès !");
+                                localStorage.removeItem("inviteToken");
+                                netlifyIdentity.open(); // Ouvre la fenêtre pour configurer le mot de passe
+                            })
+                            .catch((err) => {
+                                console.error("Erreur lors de l'acceptation de l'invitation :", err);
+                                alert("Erreur lors de l'acceptation de l'invitation. Vérifiez votre email.");
+                            });
+                    } else {
+                        console.error("Netlify Identity n'est pas disponible.");
+                    }
+                } else {
+                    console.error("Aucun token valide détecté dans l'URL.");
                 }
             } else {
-                console.log("Aucun token détecté dans l'URL.");
+                console.log("Aucun token d'invitation détecté dans l'URL.");
             }
         });
     </script>
+    
     
     
 </head>
