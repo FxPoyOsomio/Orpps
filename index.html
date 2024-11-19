@@ -12,39 +12,33 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM chargé, vérification de l'invite token...");
-            
-            // Vérifier si l'URL contient un hash
-            const hash = window.location.hash;
-            console.log("Hash actuel de l'URL :", hash);
+            console.log("Vérification de l'URL pour un token d'invitation...");
     
-            if (hash && hash.includes("invite_token=")) {
-                console.log("Invite token détecté dans le hash.");
+            const hash = window.location.hash; // Récupère le hash de l'URL
+            console.log("Hash actuel :", hash);
     
-                // Extraire le token d'invitation
+            if (hash.includes("invite_token=")) {
                 const inviteToken = new URLSearchParams(hash.slice(1)).get("invite_token");
+                console.log("Token capturé :", inviteToken);
     
                 if (inviteToken) {
-                    console.log("Invite token extrait :", inviteToken);
-    
-                    // Sauvegarder le token dans localStorage
+                    // Sauvegarder dans localStorage
                     localStorage.setItem("inviteToken", inviteToken);
-                    console.log("Invite token enregistré dans localStorage.");
+                    console.log("Token sauvegardé dans localStorage.");
     
-                    // Nettoyer le hash de l'URL SANS RECHARGER la page
+                    // Nettoyer le hash pour éviter des redirections inutiles
                     window.history.replaceState(null, null, window.location.pathname);
     
-                    // Rediriger vers la page de connexion
-                    alert("Votre invitation a été capturée. Vous allez être redirigé(e) vers la page de connexion.");
+                    // Rediriger vers la page de login
+                    console.log("Redirection vers /login...");
                     window.location.replace("/login");
-                } else {
-                    console.error("Impossible d'extraire le token d'invitation.");
                 }
             } else {
-                console.log("Aucun token d'invitation détecté dans l'URL.");
+                console.log("Aucun token détecté dans l'URL.");
             }
         });
     </script>
+    
     
 </head>
 <body>
