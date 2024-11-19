@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Votre invitation a été capturée. Veuillez vous connecter ou vérifier votre email pour finaliser votre inscription."
             );
             localStorage.removeItem("inviteToken");
+            window.location.replace("/login"); // Redirige vers une page de connexion si nécessaire
         } else {
             console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
