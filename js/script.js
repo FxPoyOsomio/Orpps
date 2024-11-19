@@ -10,17 +10,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Vérifier s'il y a un token d'invitation dans l'URL
         const hash = window.location.hash;
+
         if (hash.includes('invite_token')) {
-            console.log("Invitation détectée, traitement...");
-            netlifyIdentity
-                .acceptInvite()
-                .then(() => {
-                    console.log("Invitation acceptée avec succès.");
-                    window.location.reload(); // Recharge la page après succès
-                })
-                .catch((error) => {
-                    console.error("Erreur lors de l'acceptation de l'invitation :", error);
-                });
+            const inviteToken = hash.split('invite_token=')[1];
+            console.log("Invite token trouvé :", inviteToken);
+
+            // Accepter l'invitation
+            if (typeof netlifyIdentity !== 'undefined') {
+                netlifyIdentity
+                    .acceptInvite(inviteToken)
+                    .then(() => {
+                        console.log("Invitation acceptée avec succès.");
+                        window.location.replace('/'); // Redirige après succès
+                    })
+                    .catch((error) => {
+                        console.error("Erreur lors de l'acceptation de l'invitation :", error);
+                    });
+            } else {
+                console.error("Netlify Identity non chargé !");
+            }
+        } else {
+            console.log("Aucun token d'invitation détecté.");
         }
 
         // Vérifier si un utilisateur est déjà connecté
