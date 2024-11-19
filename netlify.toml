@@ -6,4 +6,8 @@
   directory = "netlify/functions"
   external_node_modules = ["node-fetch", "google-auth-library", "airtable"]
 
+[[headers]]
+for = "/*"
+[headers.values]
+Content-Security-Policy = "script-src 'self' https://identity.netlify.com"
 
