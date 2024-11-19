@@ -10,7 +10,6 @@
     <!-- Charger Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
-    <!-- Capturer le token d'invitation -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             console.log("DOM chargé, vérification de l'invite token...");
@@ -47,7 +46,6 @@
 <body>
     <div id="header"></div>
 
-    <!-- Contenu principal -->
     <main class="container">
         <h1>Bienvenue sur Orpps</h1>
         <p>Explorez nos super recettes et gérez votre planification et vos courses.</p>
@@ -56,6 +54,6 @@
 
     <div id="footer"></div>
 
-    <script src="/js/script.js"></script>
+    <script src="/js/script.js" type="module"></script>
 </body>
 </html>

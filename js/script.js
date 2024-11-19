@@ -18,10 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem("userEmail");
         });
 
-        netlifyIdentity.on("error", (err) => {
-            console.error("Erreur Netlify Identity :", err);
-        });
-
         const currentUser = netlifyIdentity.currentUser();
         if (currentUser) {
             console.log("Utilisateur actuel :", currentUser);
@@ -30,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Netlify Identity n'est pas disponible.");
     }
 
-    // Charger header et footer
     loadHeaderAndFooter();
 });
 

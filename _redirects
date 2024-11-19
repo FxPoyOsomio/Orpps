@@ -1,13 +1,5 @@
-/login /login.html 200
-/index /index.html 200
-/invite /invite.html 200
-/recettes /recettes.html 301
-
-# Exclusion des fichiers statiques
-/*.js /js/:splat 200
-/*.css /css/:splat 200
-/*.png /assets/images/:splat 200
-/*.jpg /assets/images/:splat 200
-
-# Redirection générique
-/* /index.html 200
+/login      /login.html      200
+/index      /index.html      200
+/invite     /invite.html     200
+/recettes   /recettes.html   301
+/*          /index.html      200
