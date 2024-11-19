@@ -23,25 +23,17 @@
                 console.log("Token d'invitation détecté :", inviteToken);
     
                 if (inviteToken) {
-                    // Sauvegarde le token dans localStorage
-                    localStorage.setItem("inviteToken", inviteToken);
-                    console.log("Token sauvegardé dans localStorage.");
-    
-                    // Nettoie l'URL pour éviter que le token reste visible
-                    window.history.replaceState(null, null, window.location.pathname);
-    
-                    // Initialise Netlify Identity et ouvre directement la fenêtre
+                    // Initialise Netlify Identity
                     if (typeof netlifyIdentity !== "undefined") {
                         netlifyIdentity.init({
                             APIUrl: "https://orpps.netlify.app/.netlify/identity",
                         });
     
-                        // Accepte automatiquement l'invitation
+                        // Accepte directement l'invitation
                         netlifyIdentity.acceptInvite(inviteToken)
                             .then(() => {
                                 console.log("Invitation acceptée avec succès !");
-                                localStorage.removeItem("inviteToken");
-                                netlifyIdentity.open(); // Ouvre la fenêtre pour configurer le mot de passe
+                                netlifyIdentity.open(); // Ouvre la fenêtre pour définir le mot de passe
                             })
                             .catch((err) => {
                                 console.error("Erreur lors de l'acceptation de l'invitation :", err);
@@ -51,13 +43,14 @@
                         console.error("Netlify Identity n'est pas disponible.");
                     }
                 } else {
-                    console.error("Aucun token valide détecté dans l'URL.");
+                    console.error("Token non valide ou introuvable.");
                 }
             } else {
                 console.log("Aucun token d'invitation détecté dans l'URL.");
             }
         });
     </script>
+    
     
     
     
