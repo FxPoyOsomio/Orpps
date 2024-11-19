@@ -6,31 +6,37 @@
     <title>Orpps - Accueil</title>
     <link rel="icon" href="/assets/images/logos_orpps/Orpps_favicon.png" type="image/png">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="preload" href="/css/styles.css" as="style">
 
     <!-- Charger Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 
-    <!-- Capturer l'invite token -->
+    <!-- Capturer le token d'invitation -->
     <script>
         if (window.location.hash.includes('invite_token=')) {
             const inviteToken = new URLSearchParams(window.location.hash.slice(1)).get('invite_token');
             console.log("Invite token capturé :", inviteToken);
             localStorage.setItem('inviteToken', inviteToken);
 
-            // Nettoyer l'URL pour éviter que le hash ne soit visible
+            // Nettoyer l'URL pour éviter que le hash ne reste visible
             window.history.replaceState(null, null, window.location.pathname);
         }
     </script>
 </head>
 <body>
+    <!-- Inclure le header -->
     <div id="header"></div>
+
+    <!-- Contenu principal -->
     <main class="container">
         <h1>Bienvenue sur Orpps</h1>
         <p>Explorez nos super recettes et gérez votre planification et vos courses.</p>
+        <p>Vous avez été invité à rejoindre notre site ? Connectez-vous pour continuer.</p>
     </main>
+
+    <!-- Inclure le footer -->
     <div id="footer"></div>
 
+    <!-- Scripts -->
     <script src="/js/script.js" type="module"></script>
 </body>
 </html>

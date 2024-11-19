@@ -7,35 +7,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Initialiser Netlify Identity
         netlifyIdentity.init({
-            APIUrl: "https://orpps.netlify.app/.netlify/identity", // Assure-toi que c'est l'endpoint correct
+            APIUrl: "https://orpps.netlify.app/.netlify/identity",
         });
 
         // Vérifier s'il existe un token d'invitation dans localStorage
         const inviteToken = localStorage.getItem("inviteToken");
         if (inviteToken) {
-            console.log("Tentative d'acceptation de l'invitation avec le token :", inviteToken);
+            console.log("Tentative de gestion de l'invitation avec le token :", inviteToken);
 
-            // Tenter d'accepter l'invitation si possible
-            if (typeof netlifyIdentity.acceptInvite === "function") {
-                netlifyIdentity
-                    .acceptInvite(inviteToken)
-                    .then(() => {
-                        console.log("Invitation acceptée avec succès.");
-                        localStorage.removeItem("inviteToken"); // Nettoyer le token après acceptation
-                        window.location.replace("/"); // Rediriger après succès
-                    })
-                    .catch((error) => {
-                        console.error("Erreur lors de l'acceptation de l'invitation :", error);
-                        alert("Erreur lors de l'acceptation de l'invitation. Contactez un administrateur.");
-                    });
-            } else {
-                console.error("La méthode acceptInvite n'est pas disponible sur Netlify Identity.");
-            }
+            // Utilisation du token pour rediriger ou alerter l'utilisateur
+            alert(
+                "Votre invitation a été capturée. Veuillez vous connecter ou vérifier votre email pour finaliser votre inscription."
+            );
+            localStorage.removeItem("inviteToken");
         } else {
             console.log("Aucun token d'invitation trouvé dans localStorage.");
         }
 
-        // Gestion des événements de connexion/déconnexion
+        // Gestion des événements de connexion et de déconnexion
         netlifyIdentity.on("login", (user) => {
             console.log("Utilisateur connecté :", user.email);
             localStorage.setItem("userEmail", user.email);
@@ -45,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Utilisateur déconnecté.");
             localStorage.removeItem("userEmail");
         });
+
+        // Si un utilisateur est déjà connecté
+        const currentUser = netlifyIdentity.currentUser();
+        if (currentUser) {
+            console.log("Utilisateur actuel :", currentUser);
+        }
     } else {
         console.error("Netlify Identity n'est pas disponible.");
     }
@@ -53,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadHeaderAndFooter();
 });
 
-// Charger et insérer le header et le footer
+// Charger le header et le footer
 function loadHeaderAndFooter() {
     fetch("/components/header.html")
         .then((response) => response.text())
@@ -70,6 +65,7 @@ function loadHeaderAndFooter() {
         })
         .catch((error) => console.error("Error loading footer:", error));
 }
+
 
 
 
