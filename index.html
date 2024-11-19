@@ -9,11 +9,12 @@
 
     <!-- Charger Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             console.log("DOM chargé.");
-
+    
             if (typeof netlifyIdentity !== "undefined") {
                 console.log("Netlify Identity détecté.");
                 
@@ -21,24 +22,23 @@
                 netlifyIdentity.init({
                     APIUrl: "https://orpps.netlify.app/.netlify/identity"
                 });
-
-                // Vérifier si un token d'invitation est présent
-                if (window.location.hash.includes("invite_token=")) {
-                    console.log("Invite token détecté :", window.location.hash);
-
-                    // Ouvrir la fenêtre du widget
+    
+                // Vérification et affichage de l'interface d'inscription si un token est présent
+                const hash = window.location.hash;
+                if (hash.includes("invite_token=")) {
+                    console.log("Invite token détecté :", hash);
                     netlifyIdentity.open("signup");
                 }
-
+    
                 // Observer les événements
                 netlifyIdentity.on("init", (user) => {
                     console.log("Utilisateur initialisé :", user);
                 });
-
+    
                 netlifyIdentity.on("login", (user) => {
                     console.log("Utilisateur connecté :", user);
                 });
-
+    
                 netlifyIdentity.on("logout", () => {
                     console.log("Utilisateur déconnecté.");
                 });
@@ -46,8 +46,8 @@
                 console.error("Netlify Identity n'est pas disponible.");
             }
         });
-
     </script>
+    
 
     
     
@@ -64,7 +64,11 @@
     </main>
 
     <div id="footer"></div>
-
+    <script>
+        window.addEventListener("hashchange", () => {
+            console.log("Changement de hash détecté :", window.location.hash);
+        });
+    </script>
     <script src="/js/script.js" type="module"></script>
 </body>
 </html>

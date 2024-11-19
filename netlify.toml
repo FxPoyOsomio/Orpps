@@ -5,3 +5,8 @@
 [functions]
   directory = "netlify/functions"
   external_node_modules = ["node-fetch", "airtable"]
+
+[[headers]]
+for = "/*"
+[headers.values]
+Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com 'unsafe-inline'; connect-src 'self' https://identity.netlify.com https://orpps.netlify.app/.netlify/identity/settings; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://identity.netlify.com; frame-src https://identity.netlify.com;"
