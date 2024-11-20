@@ -451,16 +451,17 @@ p2 {
     align-items: center;
     height: 40px; /* Ajustez la hauteur selon vos besoins */
     cursor: pointer;
+    transition: transform cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
 }
 
 /* Au survol du burger, changer la couleur des barres */
-.header__burger:hover > span {
-    background-color: #CB6863; /* Couleur des barres au survol */
+.header__burger:hover {
+    transform: scale(1.2); /* Couleur des barres au survol */
 }
 
 /* Transition de couleur lors de l'activation */
 .header__burger.active > span {
-    background-color: #000; /* Couleur des barres lorsque le menu est actif */
+    background-color: #000 ; /* Couleur des barres lorsque le menu est actif */
 }
 
 .header__burger > span {
@@ -492,13 +493,25 @@ p2 {
     top: 10px;
     transform: rotate(-45deg);
 }
+.header.modal-user-open .header__burger > span:first-child {
+    top: 10px;
+    transform: rotate(-45deg);
+}
 
 .header.modal-burger-open .header__burger > span:nth-child(2) {
     width: 0;
     opacity: 0;
 }
+.header.modal-user-open .header__burger > span:nth-child(2) {
+    width: 0;
+    opacity: 0;
+}
 
 .header.modal-burger-open .header__burger > span:last-child {
+    top: -10px;
+    transform: rotate(45deg);
+}
+.header.modal-user-open .header__burger > span:last-child {
     top: -10px;
     transform: rotate(45deg);
 }
@@ -558,13 +571,30 @@ p2 {
     visibility: hidden; /* Masque le menu quand il n'est pas actif */
     transition: transform 0.5s ease-in-out, visibility 0.5s; /* Transition douce */
 }
+#overlayUser {
+    position: fixed;
+    top: 80px; /* Correspond à la hauteur du header */
+    left: 0;
+    width: 100%;
+    z-index: 999; /* S'assurer qu'il est au-dessus du menu principal */
+    transform: translateY(-100%);
+    visibility: hidden;
+    transition: transform 0.5s ease-in-out, visibility 0.5s;
+}
 
 /* --- Styles pour le menu lorsqu'il est actif (affiché) --- */
 #overlayMenu.active {
     transform: translateY(0); /* Descend à sa position normale */
     visibility: visible; /* Permet d'afficher l'élément */
 }
+#overlayUser.active {
+    transform: translateY(0);
+    visibility: visible;
+}
 .header.modal-burger-open {
+    box-shadow: 0px 40px 80px rgba(255, 255, 255, 0.1);
+}
+.header.modal-user-open {
     box-shadow: 0px 40px 80px rgba(255, 255, 255, 0.1);
 }
 
@@ -735,6 +765,10 @@ button h5 {
     transform: translateY(0);
     opacity: 1; /* Devient visible */
 }
+#overlayUser.active .header__nav {
+    transform: translateY(0);
+    opacity: 1;
+}
 
 
 
@@ -766,6 +800,12 @@ width: 500px;
 #user_menu_container .Menu_categorie {
     flex-direction: column ;
 }
+#about_menu_container {
+    width: 370px;
+}
+#about_menu_container .Menu_categorie {
+    flex-direction: column ;
+}
 
 .container_title h3 {
     margin: 0;
@@ -784,7 +824,30 @@ width: 500px;
     pointer-events: auto;
     z-index: 999;
 }
+.header.modal-user-open .header__overlay {
+    display: block;
+    height: auto; /* Assurez que l'overlay a la hauteur nécessaire pour son contenu */
+    pointer-events: auto;
+    z-index: 999;
+}
 
+
+
+
+
+
+#netlify-identity-widget {
+    z-index: 1005 !important;
+    top: 80px !important;
+    height: calc(100% - 80px) !important;
+    background: unset !important;
+    backdrop-filter: blur(2px) !important; /* Applique un flou à l'arrière-plan */
+    background-color: rgb(0 0 0 / 0%) !important;
+
+}
+.form .btn {
+    background-color: #CB6863 !important;
+}
 
 
 
@@ -835,10 +898,10 @@ width: 500px;
     .header__nav_menus {
         flex-wrap: wrap;
     }
-    #recettes_menu_container, #blog_menu_container, #user_menu_container {
+    #recettes_menu_container, #blog_menu_container, #about_menu_container, #user_menu_container {
         width: calc(100% - 30px) !important;
     }
-    #recettes_menu_container .header__nav_menu-container, #blog_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
+    #recettes_menu_container .header__nav_menu-container, #blog_menu_container .header__nav_menu-container, #about_menu_container .header__nav_menu-container,  #user_menu_container  .header__nav_menu-container{
         height: 100%;
     }
 } 
@@ -874,10 +937,13 @@ width: 500px;
     #blog_menu_container {
         width: 340px;
     }
+    #about_menu_container {
+        width: 340px;
+    }
     #user_menu_container {
         width: 340px;
     }
-    #blog_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
+    #blog_menu_container .header__nav_menu-container, #about_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
         height: 190px;
     }
 }
@@ -894,6 +960,9 @@ width: 500px;
     #blog_menu_container {
         width: 300px;
     }
+    #about_menu_container {
+        width: 280px;
+    }   
     #user_menu_container {
         width: 280px;
     }

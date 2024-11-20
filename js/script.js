@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Gestion du bouton de connexion
     var loginButton = document.getElementById('login-button');
+    const header = document.querySelector(".header");
+    const overlayMenu = document.getElementById("overlayMenu");
+    const burgerMenu = document.getElementById("burgerMenu");
 
     if (loginButton) {
         loginButton.addEventListener('click', (event) => {
@@ -68,66 +71,132 @@ function loadHeaderAndFooter() {
 
 
 
-// Fonction pour initialiser les éléments du header (menu, animation, barre de recherche)
 function initializeHeader() {
     const burgerMenu = document.getElementById("burgerMenu");
     const overlayMenu = document.getElementById("overlayMenu");
+    const userLogo = document.querySelector(".user-logo");
+    const overlayUser = document.getElementById("overlayUser");
     const header = document.querySelector(".header");
-    const navContainers = document.querySelectorAll(".header__nav_container"); // Tous les containers
 
-    if (burgerMenu && overlayMenu) {
+    // Gestion du burger menu
+    if (burgerMenu) {
         burgerMenu.addEventListener("click", () => {
-            const isMenuActive = overlayMenu.classList.toggle("active"); // Ouvrir/Fermer le menu
-            header.classList.toggle("modal-burger-open");
-            burgerMenu.classList.toggle("active");
+            if (header.classList.contains("modal-user-open")) {
+                // Fermer overlayUser si actif
+                closeOverlay(header, overlayUser, burgerMenu, "modal-user-open");
+            } else {
+                // Ouvrir/fermer overlayMenu
+                const isMenuActive = overlayMenu.classList.toggle("active");
+                header.classList.toggle("modal-burger-open", isMenuActive);
+                updateBurgerMenuStyle(isMenuActive);
 
-            // Ajouter ou retirer la classe 'visible' avec un délai entre chaque container
-            navContainers.forEach((container, index) => {
-                if (isMenuActive) {
-                    container.style.transitionDelay = `${index * 0.1}s`; // Définir le délai pour l'apparition
-                    container.classList.add("visible");
-                } else {
-                    container.style.transitionDelay = `${(navContainers.length - index) * 0.1}s`; // Délai inverse pour la disparition
-                    container.classList.remove("visible");
-                }
-            });
 
-            initializeSearchBar();
-            animateCategoryButtons(isMenuActive); // Animation des boutons de catégorie
+                // Gérer les animations et la barre de recherche pour overlayMenu
+                const menuNavContainers = overlayMenu.querySelectorAll(".header__nav_container");
+                toggleNavContainers(menuNavContainers, isMenuActive);
 
-            if (isMenuActive) {
-                // Le menu vient d'être ouvert
-                attachLoginButtonEvent();
+                initializeSearchBar(); // Initialiser la barre de recherche
+                
             }
-
         });
-
 
         document.addEventListener("click", (event) => {
             if (shouldCloseMenu(event, overlayMenu, burgerMenu, header)) {
-                closeMenu(header, overlayMenu, burgerMenu);
+                closeOverlay(header, overlayMenu, burgerMenu, "modal-burger-open");
+            }
+        });
+    }
 
-                // Retirer la classe 'visible' avec des délais inversés
-                navContainers.forEach((container, index) => {
-                    container.style.transitionDelay = `${(navContainers.length - index) * 0.1}s`; // Délai inverse
-                    container.classList.remove("visible");
-                });
+    // Gestion du user logo
+    if (userLogo) {
+        userLogo.addEventListener("click", () => {
+            if (header.classList.contains("modal-burger-open")) {
+                // Fermer overlayMenu si actif
+                closeOverlay(header, overlayMenu, burgerMenu, "modal-burger-open");
+            }
+
+            const isUserOverlayActive = overlayUser.classList.toggle("active");
+            header.classList.toggle("modal-user-open", isUserOverlayActive);
+            updateBurgerMenuStyle(isUserOverlayActive);
+
+            const userNavContainers = overlayUser.querySelectorAll(".header__nav_container");
+            toggleNavContainers(userNavContainers, isUserOverlayActive);
+
+            attachLoginButtonEvent(); // Ajouter les événements au login-button pour overlayUser
+            
+        });
+
+        document.addEventListener("click", (event) => {
+            if (
+                overlayUser &&
+                !overlayUser.contains(event.target) &&
+                userLogo &&
+                !userLogo.contains(event.target)
+            ) {
+                closeOverlay(header, overlayUser, burgerMenu, "modal-user-open");
             }
         });
     }
 }
 
-function attachLoginButtonEvent() {
-    var loginButton = document.getElementById('login-button');
+// Fonction générique pour ouvrir/fermer un overlay
+function toggleOverlay(header, overlay, toggleElement, className) {
+    const isActive = overlay.classList.toggle("active");
+    header.classList.toggle(className, isActive);
+    toggleElement.classList.toggle("active", isActive);
 
-    if (loginButton && !loginButton.hasAttribute('data-event-attached')) {
-        loginButton.addEventListener('click', (event) => {
+    const navContainers = overlay.querySelectorAll(".header__nav_container");
+    toggleNavContainers(navContainers, isActive);
+
+    return isActive;
+}
+
+function updateBurgerMenuStyle(isActive) {
+    const burgerMenuSpans = document.querySelectorAll("#burgerMenu > span");
+    const color = isActive ? "#000" : "#CB6863"; // Couleur active ou par défaut
+    burgerMenuSpans.forEach((span) => {
+        span.style.backgroundColor = color;
+    });
+}
+
+// Fonction générique pour fermer un overlay
+function closeOverlay(header, overlay, toggleElement, className) {
+    overlay.classList.remove("active");
+    header.classList.remove(className);
+    if (toggleElement.id === "burgerMenu") {
+        toggleElement.classList.remove("active");
+    }
+
+    const navContainers = overlay.querySelectorAll(".header__nav_container");
+    toggleNavContainers(navContainers, false);
+}
+
+// Fonction pour gérer les animations des navContainers
+function toggleNavContainers(navContainers, isActive) {
+    navContainers.forEach((container, index) => {
+        const delay = `${index * 0.1}s`;
+        container.style.transitionDelay = isActive ? delay : `${(navContainers.length - index) * 0.1}s`;
+        container.classList.toggle("visible", isActive);
+    });
+}
+
+// Fonction pour attacher les événements au bouton de connexion
+function attachLoginButtonEvent() {
+    const loginButton = document.getElementById("login-button");
+
+    if (loginButton && !loginButton.hasAttribute("data-event-attached")) {
+        loginButton.addEventListener("click", (event) => {
             event.preventDefault(); // Empêche l'action par défaut
-            netlifyIdentity.open('login');
+            netlifyIdentity.open("login");
         });
-        loginButton.setAttribute('data-event-attached', 'true'); // Évite d'attacher plusieurs fois l'écouteur
+        loginButton.setAttribute("data-event-attached", "true"); // Évite d'attacher plusieurs fois l'écouteur
     }
 }
+
+
+
+
+
 
 
 // Fonction pour initialiser la barre de recherche dans la div `headerSearchBar`
@@ -279,8 +348,11 @@ function applySearchEvents(searchBarContainer) {
 
 
 // Fonction pour vérifier si on doit fermer le menu
-function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer) {
+function shouldCloseMenu(event, overlayMenu, burgerMenu, header, headerContainer, ignoreElements = []) {
+    const isIgnored = ignoreElements.some((element) => element && element.contains(event.target));
+
     return (
+        !isIgnored && // Si l'élément cliqué n'est pas dans la liste des ignorés
         overlayMenu && !overlayMenu.contains(event.target) &&
         burgerMenu && !burgerMenu.contains(event.target) &&
         header && !header.contains(event.target) &&
@@ -373,33 +445,7 @@ function animateSearchBar(searchContent) {
 
 
 
-// Fonction pour animer les boutons de catégorie lors de l'ouverture/fermeture du menu
-function animateCategoryButtons(isActive) {
-    const categoryButtonsContainer = document.querySelector('.Menu_categorie');
-    if (categoryButtonsContainer) {
-        const categoryButtons = categoryButtonsContainer.querySelectorAll('secondary-button');
 
-        if (isActive) {
-            // Afficher les boutons puis appliquer une transition d'opacité
-            categoryButtons.forEach((button, index) => {
-                button.style.display = "inline-block";
-                setTimeout(() => {
-                    button.style.opacity = "1";
-                    button.style.transition = `opacity 0.8s ease ${index * 0.1}s`;
-                }, 0);
-            });
-        } else {
-            // Masquer les boutons en supprimant leur opacité
-            categoryButtons.forEach(button => {
-                button.style.opacity = "0";
-                // Utiliser un timeout pour masquer après la transition
-                setTimeout(() => {
-                    button.style.display = "none";
-                }, 600); // Correspond à la durée de l'animation de 0.6s
-            });
-        }
-    }
-}
 
 
 function SearchRecipe() {
