@@ -7,3 +7,7 @@
   external_node_modules = ["node-fetch", "airtable"]
 
 
+[[headers]]
+for = "/*"
+[headers.values]
+Set-Cookie = "SameSite=None; Secure"
