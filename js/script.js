@@ -43,7 +43,10 @@ function initializeAuthButtons() {
     // Sélectionner les boutons
     const loginButton = document.getElementById('login-button');
     const logoutButton = document.getElementById('logout-button');
+    const menuCategorie = document.querySelector('#overlayUser .Menu_categorie');
 
+
+    
     if (!loginButton || !logoutButton ) {
         console.warn("Les boutons d'authentification ne sont pas trouvés.");
         return;
@@ -55,9 +58,16 @@ function initializeAuthButtons() {
     if (user) {
         loginButton.style.display = 'none';
         logoutButton.style.display = 'block';
+        // Afficher Menu_categorie si elle existe
+        if (menuCategorie) {
+            menuCategorie.style.display = 'block';
+        }
     } else {
         loginButton.style.display = 'block';
         logoutButton.style.display = 'none';
+        if (menuCategorie) {
+            menuCategorie.style.display = 'none';
+        }
     }
 
     // Écouteur pour le bouton de connexion
@@ -113,6 +123,8 @@ function initializeHeader() {
     const userLogo = document.querySelector(".user-logo");
     const overlayUser = document.getElementById("overlayUser");
     const header = document.querySelector(".header");
+    const navContainers = document.querySelectorAll(".header__nav_container"); // Tous les containers
+
 
     // Gestion du burger menu
     if (burgerMenu) {
@@ -217,18 +229,7 @@ function toggleNavContainers(navContainers, isActive) {
     });
 }
 
-// Fonction pour attacher les événements au bouton de connexion
-// function attachLoginButtonEvent() {
-//     const loginButton = document.getElementById("login-button");
 
-//     if (loginButton && !loginButton.hasAttribute("data-event-attached")) {
-//         loginButton.addEventListener("click", (event) => {
-//             event.preventDefault(); // Empêche l'action par défaut
-//             netlifyIdentity.open("login");
-//         });
-//         loginButton.setAttribute("data-event-attached", "true"); // Évite d'attacher plusieurs fois l'écouteur
-//     }
-// }
 
 function attachAuthButtonsEvents() {
     // Vérifier que Netlify Identity est initialisé
@@ -239,6 +240,8 @@ function attachAuthButtonsEvents() {
     // Sélectionner les boutons
     const loginButton = document.getElementById("login-button");
     const logoutButton = document.getElementById("logout-button");
+    const menuCategorie = document.querySelector('.Menu_categorie');
+
 
 
     // Vérifier que les boutons existent
@@ -253,9 +256,17 @@ function attachAuthButtonsEvents() {
     if (user) {
         loginButton.style.display = "none";
         logoutButton.style.display = "block";
+        // Afficher Menu_categorie si elle existe
+        if (menuCategorie) {
+            menuCategorie.style.display = 'block';
+        }
     } else {
         loginButton.style.display = "block";
         logoutButton.style.display = "none";
+        // Cacher Menu_categorie si elle existe
+        if (menuCategorie) {
+            menuCategorie.style.display = 'none';
+        }
     }
 }
 
