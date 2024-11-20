@@ -95,6 +95,11 @@ function initializeHeader() {
             initializeSearchBar();
             animateCategoryButtons(isMenuActive); // Animation des boutons de catégorie
 
+            if (isMenuActive) {
+                // Le menu vient d'être ouvert
+                attachLoginButtonEvent();
+            }
+
         });
 
 
@@ -109,6 +114,18 @@ function initializeHeader() {
                 });
             }
         });
+    }
+}
+
+function attachLoginButtonEvent() {
+    var loginButton = document.getElementById('login-button');
+
+    if (loginButton && !loginButton.hasAttribute('data-event-attached')) {
+        loginButton.addEventListener('click', (event) => {
+            event.preventDefault(); // Empêche l'action par défaut
+            netlifyIdentity.open('login');
+        });
+        loginButton.setAttribute('data-event-attached', 'true'); // Évite d'attacher plusieurs fois l'écouteur
     }
 }
 
