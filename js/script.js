@@ -1,9 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
+    // Initialisation de Netlify Identity
+    console.log("Initializing Netlify Identity...");
+    netlifyIdentity.init();
 
-    
-
+    // Fonction pour charger l'en-tête et le pied de page
     loadHeaderAndFooter();
+
+
+    // Gestion du bouton de connexion
+    var loginButton = document.getElementById('login-button');
+
+    if (loginButton) {
+        loginButton.addEventListener('click', () => {
+            // Ouvrir la modal de connexion
+            netlifyIdentity.open('login');
+        });
+    } else {
+        console.warn("Login button not found!");
+    }
+
+    // Redirection après une connexion réussie
+    netlifyIdentity.on('login', (user) => {
+        console.log('User logged in:', user);
+        window.location.href = '/espace_personnel.html';
+    });
 });
 
 
