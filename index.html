@@ -6,53 +6,7 @@
     <title>Orpps - Accueil</title>
     <link rel="stylesheet" href="/css/styles.css">
 
-    <!-- Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM chargé.");
-            console.log("Hash actuel au chargement :", window.location.hash); // Log initial
 
-            if (typeof netlifyIdentity !== "undefined") {
-                console.log("Netlify Identity détecté.");
-
-                // Initialiser Netlify Identity
-                netlifyIdentity.init({
-                    APIUrl: "https://orpps.netlify.app/.netlify/identity"
-                });
-
-                // Vérifier si un token est présent dans le hash
-                const hash = window.location.hash;
-                if (hash.includes("invite_token=")) {
-                    console.log("Invite token détecté :", hash);
-                    netlifyIdentity.open("signup");
-                } else if (hash.includes("confirmation_token=")) {
-                    console.log("Confirmation token détecté :", hash);
-                    netlifyIdentity.open("confirm");
-                } else if (hash.includes("recovery_token=")) {
-                    console.log("Recovery token détecté :", hash);
-                    netlifyIdentity.open("recovery");
-                }
-
-                // Écouter les événements Netlify Identity
-                netlifyIdentity.on("login", (user) => {
-                    console.log("Utilisateur connecté :", user);
-                });
-
-                netlifyIdentity.on("logout", () => {
-                    console.log("Utilisateur déconnecté.");
-                });
-
-            } else {
-                console.error("Netlify Identity n'est pas disponible.");
-            }
-        });
-
-        // Gérer les changements de hash
-        window.addEventListener("hashchange", () => {
-            console.log("Changement de hash détecté :", window.location.hash);
-        });
-    </script>
 </head>
 <body>
     <div id="header"></div>
