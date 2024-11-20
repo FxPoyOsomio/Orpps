@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
-    // Initialisation de Netlify Identity
-    console.log("Initializing Netlify Identity...");
-    netlifyIdentity.init();
+
 
     // Fonction pour charger l'en-tête et le pied de page
     loadHeaderAndFooter();
@@ -12,14 +10,20 @@ document.addEventListener("DOMContentLoaded", () => {
     var loginButton = document.getElementById('login-button');
 
     if (loginButton) {
-        loginButton.addEventListener('click', () => {
-            // Ouvrir la modal de connexion
+        loginButton.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default action
             netlifyIdentity.open('login');
         });
     } else {
         console.warn("Login button not found!");
     }
-
+    netlifyIdentity.on('init', user => {
+        console.log('Netlify Identity initialisé', user);
+    });
+    
+    netlifyIdentity.on('error', err => {
+        console.error('Erreur Netlify Identity', err);
+    });
     // Redirection après une connexion réussie
     netlifyIdentity.on('login', (user) => {
         console.log('User logged in:', user);

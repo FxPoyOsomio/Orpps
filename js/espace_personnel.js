@@ -1,13 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Netlify Identity
-    netlifyIdentity.init();
+    netlifyIdentity.init({
+        APIUrl: 'https://orpps.netlify.app/.netlify/identity' 
+    });
   
     // Check if the user is logged in
     netlifyIdentity.on('init', function(user) {
-      if (!user) {
-        // Redirect to the login page if not logged in
-        window.location.href = '/index.html';
-      }
+        const user = netlifyIdentity.currentUser();
+        if (!user) {
+            window.location.href = '/index.html';
+        }
     });
   
     var logoutButton = document.getElementById('logout-button');
