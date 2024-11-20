@@ -1,37 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded, starting header and footer fetch...");
-
-
-    // Fonction pour charger l'en-tête et le pied de page
-    loadHeaderAndFooter();
-
-
-    // Gestion du bouton de connexion
-    var loginButton = document.getElementById('login-button');
-    const header = document.querySelector(".header");
-    const overlayMenu = document.getElementById("overlayMenu");
-    const burgerMenu = document.getElementById("burgerMenu");
-
-    if (loginButton) {
-        loginButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent default action
-            netlifyIdentity.open('login');
-        });
-    } else {
-        console.warn("Login button not found!");
-    }
-    netlifyIdentity.on('init', user => {
-        console.log('Netlify Identity initialisé', user);
-    });
-    
-    netlifyIdentity.on('error', err => {
-        console.error('Erreur Netlify Identity', err);
-    });
-    // Redirection après une connexion réussie
-    netlifyIdentity.on('login', (user) => {
-        console.log('User logged in:', user);
-        window.location.href = '/espace_personnel.html';
-    });
+    netlifyIdentity.init();
+    loadHeaderAndFooter(); // Charger le header et le footer
 });
 
 
@@ -46,10 +16,12 @@ function loadHeaderAndFooter() {
                 headerElement.innerHTML = data;
                 console.log("Header loaded successfully");
                 initializeHeader(); // Initialiser les événements du header
+                initializeAuthButtons(); // Initialiser les boutons d'authentification
             }
         })
         .catch((error) => console.error("Error loading header:", error));
 
+    // Chargement du footer (reste inchangé)
     fetch("/components/footer.html")
         .then((response) => response.text())
         .then((data) => {
@@ -63,6 +35,70 @@ function loadHeaderAndFooter() {
 }
 
 
+
+
+function initializeAuthButtons() {
+
+
+    // Sélectionner les boutons
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
+
+    if (!loginButton || !logoutButton ) {
+        console.warn("Les boutons d'authentification ne sont pas trouvés.");
+        return;
+    }
+
+    // Vérifier l'état de connexion
+    const user = netlifyIdentity.currentUser();
+
+    if (user) {
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+    } else {
+        loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+    }
+
+    // Écouteur pour le bouton de connexion
+    if (!loginButton.hasAttribute("data-event-attached")) {
+        loginButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            netlifyIdentity.open('login');
+        });
+        loginButton.setAttribute("data-event-attached", "true");
+    }
+
+    // Écouteur pour le bouton de déconnexion
+    if (!logoutButton.hasAttribute("data-event-attached")) {
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            netlifyIdentity.logout();
+        });
+        logoutButton.setAttribute("data-event-attached", "true");
+    }
+
+
+
+    // Gérer les événements de connexion et déconnexion
+    netlifyIdentity.on('login', (user) => {
+        console.log('Utilisateur connecté :', user);
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+
+        // Redirection si nécessaire
+        window.location.href = '/espace_personnel.html';
+    });
+
+    netlifyIdentity.on('logout', () => {
+        console.log('Utilisateur déconnecté');
+        loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
+    
+        // Redirection si nécessaire
+        window.location.href = '/';
+    });
+}
 
 
 
@@ -122,8 +158,9 @@ function initializeHeader() {
             const userNavContainers = overlayUser.querySelectorAll(".header__nav_container");
             toggleNavContainers(userNavContainers, isUserOverlayActive);
 
-            attachLoginButtonEvent(); // Ajouter les événements au login-button pour overlayUser
-            
+            if (isUserOverlayActive) {
+                attachAuthButtonsEvents(); // Ajouter les événements aux boutons
+            }
         });
 
         document.addEventListener("click", (event) => {
@@ -181,15 +218,44 @@ function toggleNavContainers(navContainers, isActive) {
 }
 
 // Fonction pour attacher les événements au bouton de connexion
-function attachLoginButtonEvent() {
-    const loginButton = document.getElementById("login-button");
+// function attachLoginButtonEvent() {
+//     const loginButton = document.getElementById("login-button");
 
-    if (loginButton && !loginButton.hasAttribute("data-event-attached")) {
-        loginButton.addEventListener("click", (event) => {
-            event.preventDefault(); // Empêche l'action par défaut
-            netlifyIdentity.open("login");
-        });
-        loginButton.setAttribute("data-event-attached", "true"); // Évite d'attacher plusieurs fois l'écouteur
+//     if (loginButton && !loginButton.hasAttribute("data-event-attached")) {
+//         loginButton.addEventListener("click", (event) => {
+//             event.preventDefault(); // Empêche l'action par défaut
+//             netlifyIdentity.open("login");
+//         });
+//         loginButton.setAttribute("data-event-attached", "true"); // Évite d'attacher plusieurs fois l'écouteur
+//     }
+// }
+
+function attachAuthButtonsEvents() {
+    // Vérifier que Netlify Identity est initialisé
+    if (!netlifyIdentity.currentUser()) {
+        netlifyIdentity.init();
+    }
+
+    // Sélectionner les boutons
+    const loginButton = document.getElementById("login-button");
+    const logoutButton = document.getElementById("logout-button");
+
+
+    // Vérifier que les boutons existent
+    if (!loginButton || !logoutButton ) {
+        console.warn("Les boutons de connexion/déconnexion ne sont pas trouvés.");
+        return;
+    }
+
+    // Vérifier l'état de connexion
+    const user = netlifyIdentity.currentUser();
+
+    if (user) {
+        loginButton.style.display = "none";
+        logoutButton.style.display = "block";
+    } else {
+        loginButton.style.display = "block";
+        logoutButton.style.display = "none";
     }
 }
 

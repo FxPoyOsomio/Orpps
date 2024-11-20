@@ -770,6 +770,13 @@ button h5 {
     opacity: 1;
 }
 
+#overlayUser .header__nav {
+    display: block;
+    justify-content: unset;
+    }
+#overlayUser .header__nav_menus {
+    justify-content: flex-start;
+}
 
 
 
@@ -784,6 +791,9 @@ button h5 {
     border-radius: 39px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
     background-color: #FBFBFB;
+}
+#user_menu_container  .header__nav_menu-container {
+    height: 100%;
 }
 #recettes_menu_container {
 width: 500px;
@@ -833,6 +843,12 @@ width: 500px;
 
 
 
+
+
+#login-button,
+#logout-button {
+    display: none; /* Masquer par défaut */
+}
 
 
 
@@ -943,8 +959,11 @@ width: 500px;
     #user_menu_container {
         width: 340px;
     }
-    #blog_menu_container .header__nav_menu-container, #about_menu_container .header__nav_menu-container, #user_menu_container  .header__nav_menu-container{
+    #blog_menu_container .header__nav_menu-container, #about_menu_container .header__nav_menu-container{
         height: 190px;
+    }
+    #user_menu_container  .header__nav_menu-container {
+        height: 100%;
     }
 }
 
