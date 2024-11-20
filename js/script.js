@@ -240,7 +240,7 @@ function attachAuthButtonsEvents() {
     // Sélectionner les boutons
     const loginButton = document.getElementById("login-button");
     const logoutButton = document.getElementById("logout-button");
-    const menuCategorie = document.querySelector('.Menu_categorie');
+    const menuCategorie = document.querySelector('#overlayUser .Menu_categorie');
 
 
 
