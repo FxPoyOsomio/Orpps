@@ -265,3 +265,5 @@ function updateActiveSubCategoriesDisplay() {
 function getActiveSubCategories() {
     return Array.from(document.querySelectorAll('#subCategories .subCategory.active')).map(subCat => subCat.textContent.trim());
 }
+
+
