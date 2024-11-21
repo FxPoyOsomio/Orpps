@@ -865,7 +865,9 @@ width: 500px;
     background-color: #CB6863 !important;
 }
 
-
+add-favorite-button {
+    display: none;
+}
 
 
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <title id="page-title">Magret de canard (sauce au miel et thym)</title> <!-- Contenu dynimique pour champs 'Titre recettes'  -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos_orpps/Orpps_favicon.png">
     <meta name="description" id="page-description" content="Découvrez l'alliance parfaite de saveurs avec ce magret de canard tendre, nappé d'une sauce au miel délicieusement sucrée et légèrement caramélisée. Une recette simple et élégante qui sublime le canard, idéale pour impressionner vos invités ou pour un repas gourmand en toute occasion. Accompagnez ce plat de légumes de saison ou d'une purée maison pour un repas raffiné et plein de caractère.">
     <!-- Contenu dynimique pour champs 'Description recette'  -->
 
@@ -34,6 +35,9 @@
 
     <!-- Schema.org pour le balisage des recettes (exemple simplifié) -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        netlifyIdentity.init({ locale: 'fr' });
+    </script>
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -242,7 +246,7 @@
                 </div>
                 <div class="secondary-buttons">
 
-                    <add-favorite-button data-recipe-id="recQ4Ncis1DBxaT95"></add-favorite-button>
+                    <add-favorite-button data-recipe-id="recQ4Ncis1DBxaT95" onclick="event.preventDefault(); addToFavorites(event)"></add-favorite-button>
                     <share-button></share-button>
 
                 </div>

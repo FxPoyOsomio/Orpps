@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Orpps - Recettes</title>
+    <title>Orpps - Favoris</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos_orpps/Orpps_favicon.png">
-    <link rel="stylesheet" href="/css/styles.css"> 
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/recettes.css"> 
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
-        netlifyIdentity.init({ locale: 'fr' });
+        netlifyIdentity.init();
     </script>
 </head>
 <body>
     <div id="header"></div>
-
     <main class="container">
         <div class="categories">
             <div class="allCategories" id="categories">
@@ -48,30 +47,17 @@
             </div>
         </div>
 
-        <div id="recettesSearchBar" class="recettes__search-bar" data-terms="">
-            <div class="recettes__search-content">
-                <div class="recettesSearch-bar__button" id="recettesSearchBarButton" style="margin-right: 10px; cursor: pointer;">
-                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#696969">
-                        <path d="M16.6725 16.6412L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#696969" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </div>
-                <input type="text" id="recettesSearchInput"  placeholder="Recherche" style="border: none; outline: none; flex: 1 1 0%; opacity: 1; transition: opacity 0.4s 0.3s; background-color: transparent;">
-            </div>
-        </div>
-
-        <h1 class="display_categorie__titre">Toutes les recettes</h1>
+        <h1>Mes recettes favorites</h1>
 
         <div class="subCategories" id="subCategories"></div>
 
-
-
-
-        <!-- Liste des recettes -->
         <div id="recettes-list" class="recettes-list"></div>
+
+
     </main>
     <div id="footer"></div>
     <script src="/js/script.js" type="module"></script>
-    <script src="/js/recettes.js" type="module"></script>
+    <script src="/js/recettes-favorites.js" type="module"></script>
 
 </body>
 </html>

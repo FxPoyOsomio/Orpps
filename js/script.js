@@ -52,23 +52,8 @@ function initializeAuthButtons() {
         return;
     }
 
-    // Vérifier l'état de connexion
-    const user = netlifyIdentity.currentUser();
+    updateAuthUI();
 
-    if (user) {
-        loginButton.style.display = 'none';
-        logoutButton.style.display = 'block';
-        // Afficher Menu_categorie si elle existe
-        if (menuCategorie) {
-            menuCategorie.style.display = 'block';
-        }
-    } else {
-        loginButton.style.display = 'block';
-        logoutButton.style.display = 'none';
-        if (menuCategorie) {
-            menuCategorie.style.display = 'none';
-        }
-    }
 
     // Écouteur pour le bouton de connexion
     if (!loginButton.hasAttribute("data-event-attached")) {
@@ -93,20 +78,14 @@ function initializeAuthButtons() {
     // Gérer les événements de connexion et déconnexion
     netlifyIdentity.on('login', (user) => {
         console.log('Utilisateur connecté :', user);
-        loginButton.style.display = 'none';
-        logoutButton.style.display = 'block';
-
-        // Redirection si nécessaire
-        window.location.href = '/espace_personnel.html';
+        updateAuthUI()
+        //window.location.reload();
     });
 
     netlifyIdentity.on('logout', () => {
         console.log('Utilisateur déconnecté');
-        loginButton.style.display = 'block';
-        logoutButton.style.display = 'none';
-    
-        // Redirection si nécessaire
-        window.location.href = '/';
+        updateAuthUI()
+        // window.location.reload();
     });
 }
 
@@ -171,7 +150,7 @@ function initializeHeader() {
             toggleNavContainers(userNavContainers, isUserOverlayActive);
 
             if (isUserOverlayActive) {
-                attachAuthButtonsEvents(); // Ajouter les événements aux boutons
+                updateAuthUI(); // Ajouter les événements aux boutons
             }
         });
 
@@ -231,45 +210,42 @@ function toggleNavContainers(navContainers, isActive) {
 
 
 
-function attachAuthButtonsEvents() {
-    // Vérifier que Netlify Identity est initialisé
-    if (!netlifyIdentity.currentUser()) {
-        netlifyIdentity.init();
-    }
 
-    // Sélectionner les boutons
-    const loginButton = document.getElementById("login-button");
-    const logoutButton = document.getElementById("logout-button");
+
+function updateAuthUI() {
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
     const menuCategorie = document.querySelector('#overlayUser .Menu_categorie');
+    const addFavoriteButtons = document.querySelectorAll('.add-favorite-button');
+    const user = netlifyIdentity.currentUser();
 
-
-
-    // Vérifier que les boutons existent
-    if (!loginButton || !logoutButton ) {
-        console.warn("Les boutons de connexion/déconnexion ne sont pas trouvés.");
+    if (!loginButton || !logoutButton) {
+        console.warn("Les boutons d'authentification ne sont pas trouvés.");
         return;
     }
 
-    // Vérifier l'état de connexion
-    const user = netlifyIdentity.currentUser();
-
     if (user) {
-        loginButton.style.display = "none";
-        logoutButton.style.display = "block";
-        // Afficher Menu_categorie si elle existe
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
         if (menuCategorie) {
-            menuCategorie.style.display = 'block';
+            menuCategorie.style.display = 'flex';
         }
+        // Afficher les boutons "add-favorite-button"
+        addFavoriteButtons.forEach(button => {
+            button.style.display = 'block';
+        });
     } else {
-        loginButton.style.display = "block";
-        logoutButton.style.display = "none";
-        // Cacher Menu_categorie si elle existe
+        loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
         if (menuCategorie) {
             menuCategorie.style.display = 'none';
         }
+        // Cacher les boutons "add-favorite-button"
+        addFavoriteButtons.forEach(button => {
+            button.style.display = 'none';
+        });
     }
 }
-
 
 
 
@@ -921,11 +897,91 @@ class AddFavoriteButton extends HTMLElement {
         this.button.appendChild(this.iconContainer);
         this.shadowRoot.appendChild(this.button);
 
+        // Ajouter un écouteur pour le clic sur le bouton
+        this.button.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.toggleFavorite();
+        });
 
+        // Vérifier si la recette est déjà dans les favoris
+        this.checkIfFavorite();
+
+        // Appeler updateIcon pour initialiser l'icône
+        this.updateIcon();
     }
 
+    // Méthode pour vérifier si la recette est déjà dans les favoris
+    checkIfFavorite() {
+        const user = netlifyIdentity.currentUser();
+        if (user && user.user_metadata && user.user_metadata.recipeFavorites) {
+            this.isActive = user.user_metadata.recipeFavorites.includes(this.recipeId);
+        } else {
+            this.isActive = false;
+        }
+    }
 
+    // Méthode pour basculer l'état du favori
+    toggleFavorite() {
+        const user = netlifyIdentity.currentUser();
+        if (!user) {
+            // Si l'utilisateur n'est pas connecté, ouvrir le widget de connexion
+            netlifyIdentity.open('login');
+            return;
+        }
 
+        // Ajouter ou supprimer la recette des favoris
+        if (this.isActive) {
+            this.removeFromFavorites(user);
+        } else {
+            this.addToFavorites(user);
+        }
+    }
+
+    // Méthode pour ajouter la recette aux favoris
+    addToFavorites(user) {
+        const favorites = user.user_metadata.recipeFavorites || [];
+        if (!favorites.includes(this.recipeId)) {
+            favorites.push(this.recipeId);
+            this.updateUserMetadata(user, favorites);
+            this.isActive = true;
+            this.updateIcon();
+        }
+    }
+
+    // Méthode pour supprimer la recette des favoris
+    removeFromFavorites(user) {
+        const favorites = user.user_metadata.recipeFavorites || [];
+        const index = favorites.indexOf(this.recipeId);
+        if (index !== -1) {
+            favorites.splice(index, 1);
+            this.updateUserMetadata(user, favorites);
+            this.isActive = false;
+            this.updateIcon();
+        }
+    }
+
+    // Méthode pour mettre à jour les métadonnées de l'utilisateur
+    updateUserMetadata(user, favorites) {
+        netlifyIdentity.gotrue
+            .currentUser()
+            .update({
+                data: {
+                    ...user.user_metadata,
+                    recipeFavorites: favorites,
+                },
+            })
+            .then((user) => {
+                console.log('Mise à jour des favoris réussie', user);
+                // Mettre à jour l'utilisateur dans netlifyIdentity
+                netlifyIdentity.currentUser().user_metadata = user.user_metadata;
+                // Dispatch custom event to notify that favorites have changed
+                const event = new CustomEvent('favoritesChanged');
+                document.dispatchEvent(event);
+            })
+            .catch((error) => {
+                console.error('Erreur lors de la mise à jour des favoris', error);
+            });
+    }
     
 
     updateIcon() {

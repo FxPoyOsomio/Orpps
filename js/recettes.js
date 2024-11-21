@@ -3,6 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePageFromURL();
     initializeEventListeners();
     updateCategoryTitle();  // Mettre à jour le titre lors du chargement initial
+    
+    // Ajouter les écouteurs d'événements Netlify Identity
+    netlifyIdentity.on('login', () => {
+        console.log('Utilisateur connecté');
+        // Recharger les recettes pour mettre à jour l'affichage des boutons
+        initializePageFromURL();
+    });
+
+    netlifyIdentity.on('logout', () => {
+        console.log('Utilisateur déconnecté');
+        // Recharger les recettes pour mettre à jour l'affichage des boutons
+        initializePageFromURL();
+    });
 });
 
 // Fonction principale pour initialiser la page à partir des paramètres URL
@@ -74,16 +87,21 @@ function initializeEventListeners() {
 function updateCategoryTitle() {
     const activeCategories = getActiveCategories();
     const titleElement = document.querySelector('.display_categorie__titre');
+    const headTitle = document.querySelector('title'); 
 
     if (activeCategories.length === 0) {
         titleElement.textContent = "Toutes les recettes";
+        headTitle.textContent = "Orpps - Recettes";
     } else if (activeCategories.length === 1) {
         titleElement.textContent = activeCategories[0];
+        headTitle.textContent = "Orpps - " + activeCategories[0];
     } else if (activeCategories.length === 2) {
         titleElement.textContent = `${activeCategories[0]} & ${activeCategories[1]}`;
+        headTitle.textContent = "Orpps - " + activeCategories[0] + " & " + activeCategories[1];
     } else {
         const lastCategory = activeCategories.pop();
         titleElement.textContent = `${activeCategories.join(', ')} & ${lastCategory}`;
+        headTitle.textContent = "Orpps - " + activeCategories.join(', ') + " & " + lastCategory;
     }
 }
 
@@ -231,6 +249,10 @@ function initializeSubCategories(selectedCategories = [], searchTerms = [], sele
 
 // Fonction pour afficher les recettes en fonction des filtres actifs
 function displayFilteredRecipes(categories, searchTerms, subCategories) {
+    // Vérifier si l'utilisateur est connecté
+    const user = netlifyIdentity.currentUser();
+    const isLoggedIn = !!user;
+
     fetch('/dist/recettes.html')
         .then(response => {
             if (!response.ok) throw new Error("Erreur lors du chargement des recettes.");
@@ -257,16 +279,6 @@ function displayFilteredRecipes(categories, searchTerms, subCategories) {
                 const instructions = decodeHTML(recipeCard.getAttribute('data-ref-instructions') || '').toLowerCase();
                 const title = decodeHTML(recipeCard.getAttribute('data-ref-titre') || '').toLowerCase();
                 const description = decodeHTML(recipeCard.getAttribute('data-ref-description') || '').toLowerCase();
-                    
-                console.log("Checking recipe card:", {
-                    title,
-                    categories: cardCategories,
-                    subCategories: cardSubCategories,
-                    searchTerms,
-                    ingredients,
-                    instructions,
-                    description
-                });
 
                 const matchesCategories = categories.length === 0 || categories.some(cat => cardCategories.includes(cat));
                 const matchesSubCategories = subCategories.length === 0 || subCategories.some(subCat => cardSubCategories.includes(subCat));
@@ -277,7 +289,19 @@ function displayFilteredRecipes(categories, searchTerms, subCategories) {
                 });
 
                 if (matchesCategories && matchesSubCategories && matchesSearchTerms) {
-                    recettesList.appendChild(recipeCard.cloneNode(true));
+                    const recipeCardClone = recipeCard.cloneNode(true);
+
+                    // Gérer l'affichage du bouton add-favorite-button
+                    const addFavoriteButton = recipeCardClone.querySelector('add-favorite-button');
+                    if (addFavoriteButton) {
+                        if (isLoggedIn) {
+                            addFavoriteButton.style.display = 'block'; // Ou 'inline-block' selon vos styles
+                        } else {
+                            addFavoriteButton.style.display = 'none';
+                        }
+                    }
+
+                    recettesList.appendChild(recipeCardClone);
                     displayedRecipes++;
                 }
             });

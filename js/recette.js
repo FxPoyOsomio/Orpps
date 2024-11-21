@@ -37,7 +37,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+    // Sélectionner le bouton add-favorite-button
+    const addFavoriteButton = document.querySelector('add-favorite-button');
+    
 
+    // Vérifier si le bouton est présent
+    if (!addFavoriteButton) {
+        console.warn("Le bouton 'add-favorite-button' n'a pas été trouvé sur la page.");
+        return;
+    }
+    const user = netlifyIdentity.currentUser();
+    const isLoggedIn = !!user;
+    if (isLoggedIn) {
+        addFavoriteButton.style.display = 'block'; // Ou 'inline-block' selon vos styles
+    } else {
+        addFavoriteButton.style.display = 'none';
+    }
+    
     // Appeler la fonction au chargement de la page et lors du redimensionnement
     setEqualHeight();
     window.addEventListener('resize', function() {

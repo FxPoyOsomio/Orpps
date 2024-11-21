@@ -29,6 +29,7 @@
 }
 #allRecipes h6 {
     color: #a3a3a3;
+    transition: all 0.3s ease-in-out;
 }
 #allRecipes:hover h6 {
     color: #CB6863;
@@ -46,6 +47,7 @@
 }
 .category h6 {
     color: #a3a3a3;
+    transition: all 0.3s ease-in-out;
 }
 .category:hover h6{
     color: #CB6863;
