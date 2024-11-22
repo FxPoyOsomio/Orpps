@@ -236,6 +236,7 @@ h1 {
     letter-spacing : 0em;
     font-family: 'Gold Leaf', sans-serif;
     color: #1B1B1B;
+    line-height: 1.4cap;
  }
 h2 { 
     font-weight: 500;

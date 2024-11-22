@@ -1,3 +1,6 @@
+.container h1{
+    margin: 50px 0;
+}
 .modal-container {
     position: fixed;
     top: 0;
@@ -11,15 +14,35 @@
     z-index: 9999;
 }
 
+.modal-overlay {
+    position: fixed; /* Assure que l'overlay reste en place, peu importe le scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    display: flex; /* Permet d'aligner le modal */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    z-index: 9999; /* Place le modal au-dessus de tous les autres éléments */
+}
+
 .modal {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
+    width: 90%; /* Largeur par défaut sur mobile */
+    max-width: 300px; /* Largeur maximale pour les écrans plus larges */
+    z-index: 10000; /* Assure que le contenu du modal est au-dessus de l'overlay */
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
 }
-
+.modal_Title {
+    text-align: left;
+}
 .input-field {
     width: 100%;
     padding: 10px;
@@ -54,16 +77,176 @@
 }
 
 
-
+.event_list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-bottom: 30px;
+}
 .event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin: 50px 0;
+    padding: 0 15px;
+}
+
+.event_cardContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    background-color: #FBFBFB;
     width: 100%;
-    margin-bottom: 10px;
-    border: 1px solid #E0E0E0;
+}
+
+.event_ovelayContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
+    width: calc(100% + 30px);
+}
+
+.event_meals {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+.mealItem_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    background-color: #fBFBFB;
     border-radius: 20px;
+    width: calc(100% - 30px);
+    padding: 15px;
+}
+.mealItem{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.addMeal {
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px solid rgba(63, 55, 53, 0.23);
+    padding: 10px 20px;
+    color: #696969;
+    font-family: "Montserrat Alternates";
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-left: 15px;
+}
+.addToMenu {
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px dashed rgba(63, 55, 53, 0.23);
+    padding: 10px 20px;
+    color: #696969;
+    font-family: "Montserrat Alternates";
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+
+.titre-section-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Assure un bon alignement */
+    width: 100%; /* S'étend sur toute la largeur disponible */
+    gap: 10px; /* Ajoute de l'espacement entre les enfants */
+}
+
+.titre-section-image {
+    width: 50px ;
+    height: 50px ;
+    margin-right: 10px;
+    flex-shrink: 0; /* Empêche le SVG de se réduire */
+
+}
+.titre-section-titre_border {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 18px;
+}
+.titre-section-title {
+    flex-grow: 0; /* Permet au h2 de s'étendre */
+    margin: 0 0;
+}
+.titre-section-border {
+    flex-grow: 1; /* Permet à la bordure de prendre tout l'espace restant */
+    border-bottom: 2px solid rgba(63, 55, 53, .23);
+
+
+}
+
+.modal_SubTitle {
+    margin: 10px 0;
+}
+.input_meal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.input_mealDate {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.input_mealType {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.input_menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    
+}
+.input_menuCategories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.modal_buttons {
+    padding: 15px 0 30px 0;
+}
+
+
+.mealTitle{
+    margin: 10px 0;
+}
+.menuCategorie_title {
+    margin: 10px 0;
+}
+
+
+.deleteMealButton {
+    background-color: transparent;
+    color: #696969;
+    border: 1px dashed #696969;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.deleteMealButton:hover {
+    transform: scale(1.1);
+    color: #cb6863;
+    border: 1px dashed #cb6863;
 }
