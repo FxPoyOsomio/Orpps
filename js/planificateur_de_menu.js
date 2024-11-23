@@ -128,7 +128,6 @@ function displayUserEvents() {
 function displayEventMeals(event, eventIndex) {
     const mealContainer = document.getElementById(`eventMeals_${eventIndex}`);
     if (mealContainer && event.meal && Array.isArray(event.meal)) {
-        // Vider le conteneur avant d'ajouter les repas
         mealContainer.innerHTML = "";
 
         // Grouper les repas par date
@@ -140,9 +139,17 @@ function displayEventMeals(event, eventIndex) {
             return groupedMeals;
         }, {});
 
-        // Parcourir les dates et afficher les repas
-        Object.keys(mealsByDate).forEach((mealDate) => {
+        // Trier les dates dans l'ordre croissant
+        const sortedDates = sortDates(Object.keys(mealsByDate));
+
+        let globalMealIndex = 0;
+
+        // Parcourir les dates triées
+        sortedDates.forEach((mealDate) => {
             const meals = mealsByDate[mealDate];
+
+            // Trier les repas de cette date selon leur ordre défini
+            const sortedMeals = sortMealsByOrder(meals);
 
             // Créer un conteneur pour les repas de cette date
             let dateHTML = `
@@ -151,33 +158,31 @@ function displayEventMeals(event, eventIndex) {
                     <div class="mealItems-container">
             `;
 
-            // Parcourir les repas de cette date
-            meals.forEach((meal, mealIndex) => {
+            // Parcourir les repas triés de cette date
+            sortedMeals.forEach((meal) => {
                 const mealHTML = `
-                    <div class="mealItem_container" event-id="${eventIndex}" meal-id="${mealIndex}">
+                    <div class="mealItem_container" event-id="${eventIndex}" meal-id="${globalMealIndex}">
                         <div class="mealItem">
                             <h3 class="mealTitle">${meal.mealType}</h3>
-                            <button class="deleteMealButton" event-id="${eventIndex}" meal-id="${mealIndex}">supprimer repas</button>
+                            <button class="deleteMealButton" event-id="${eventIndex}" meal-id="${globalMealIndex}">supprimer repas</button>
                         </div>
-                        <div class="meal_menu" id="eventMealMenu_${eventIndex}_${mealIndex}"></div>
+                        <div class="meal_menu" id="eventMealMenu_${eventIndex}_${globalMealIndex}"></div>
                     </div>
                 `;
 
-                // Ajouter le repas au conteneur de la date
                 dateHTML += mealHTML;
+                globalMealIndex++;
             });
 
-            // Clôturer le conteneur de la date et des repas
             dateHTML += `
                     </div> <!-- Fin de mealItems-container -->
                 </div> <!-- Fin de mealItems_byDate -->
             `;
 
-            // Ajouter le contenu de la date au conteneur principal
             mealContainer.innerHTML += dateHTML;
         });
 
-        // Générer le contenu du menu pour chaque repas après l'affichage
+        // Générer les menus après avoir ajouté tous les repas au DOM
         event.meal.forEach((meal, mealIndex) => {
             const mealMenuContainer = document.getElementById(`eventMealMenu_${eventIndex}_${mealIndex}`);
             if (mealMenuContainer) {
@@ -187,30 +192,47 @@ function displayEventMeals(event, eventIndex) {
     }
 }
 
+
+
+
+
+
 // Fonction pour générer le contenu du menu d'un repas
 function generateMealMenu(meal, mealMenuContainer) {
-    if (!meal || !meal.menu || !Array.isArray(meal.menu)) return;
+    if (!meal || !meal.menu || !Array.isArray(meal.menu)) {
+        console.warn("Données du menu non valides :", meal);
+        return;
+    }
+
+    console.log("Génération du menu pour le repas :", meal);
 
     // Vider le conteneur avant d'ajouter les catégories
     mealMenuContainer.innerHTML = "";
 
-    // Parcourir les catégories activées
-    meal.menu.forEach((category) => {
+    // Parcourir les catégories du menu
+    meal.menu.forEach((category, categoryIndex) => {
         if (category.activCategory) {
+            console.log(`Catégorie active trouvée : ${category.categoryMenu} (index ${categoryIndex})`);
+
             let categoryHTML = `
                 <div class="menuCategorie">
-                    <h4 class="menuCategorie_title">${category.categoryMenu}</h4>
+                    <h4 class="menuCategorie_title">${category.categoryMenu.toUpperCase()}</h4>
                     <div class="menuCategorie_recipes">
             `;
 
             // Ajouter les recettes de cette catégorie
-            category.recipes.forEach((recipe) => {
-                categoryHTML += `
-                    <div class="recipeItem" id="${recipe.recipeId}">
-                        <p class="recipeTitle">${recipe.recipeName}</p>
-                    </div>
-                `;
-            });
+            if (category.recipes && Array.isArray(category.recipes)) {
+                category.recipes.forEach((recipe) => {
+                    console.log(`Ajout de la recette : ${recipe.recipeName} (ID: ${recipe.recipeId})`);
+                    categoryHTML += `
+                        <div class="recipeItem" id="${recipe.recipeId}">
+                            <p class="recipeTitle">${recipe.recipeName}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                console.warn(`Aucune recette trouvée pour la catégorie "${category.categoryMenu}"`);
+            }
 
             categoryHTML += `
                     </div> <!-- Fin de menuCategorie_recipes -->
@@ -218,9 +240,18 @@ function generateMealMenu(meal, mealMenuContainer) {
             `;
 
             mealMenuContainer.innerHTML += categoryHTML;
+        } else {
+            console.log(`Catégorie inactive : ${category.categoryMenu}`);
         }
     });
+
+    // Vérification finale
+    if (!mealMenuContainer.innerHTML.trim()) {
+        mealMenuContainer.innerHTML = "<p>Aucune catégorie active trouvée pour ce repas.</p>";
+    }
 }
+
+
 
 
 
@@ -285,6 +316,25 @@ const mealTypes = [
     "Diner",
     "Soirée",
 ];
+const mealOrder = {
+    "Petit-Déjeuner": 1,
+    "Brunch": 2,
+    "Déjeuner": 3,
+    "Goûter": 4,
+    "Diner": 5,
+    "Soirée": 6,
+};
+function sortMealsByOrder(meals) {
+    return meals.sort((a, b) => {
+        const orderA = mealOrder[a.mealType] || Infinity;
+        const orderB = mealOrder[b.mealType] || Infinity;
+        return orderA - orderB;
+    });
+}
+function sortDates(dates) {
+    return dates.sort((a, b) => new Date(a) - new Date(b));
+}
+
 
 const categoryMenus = {
     "Petit-Déjeuner": ["Dessert", "Céréales", "Boisson", "Boulangerie"],
@@ -419,84 +469,87 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
 
     // Charger le fichier /dist/recettes.html et filtrer les recettes
     fetch("/dist/recettes.html")
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error("Erreur lors du chargement des recettes.");
-        }
-        return response.text();
-    })
-    .then((html) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const recettes = doc.querySelectorAll("a[data-ref-categorie]");
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erreur lors du chargement des recettes.");
+            }
+            return response.text();
+        })
+        .then((html) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const recettes = doc.querySelectorAll("a[data-ref-categorie]");
 
-        // Filtrer les recettes par catégorie
-        const filteredRecettes = Array.from(recettes).filter((recette) => {
-            const categories = recette
-                .getAttribute("data-ref-categorie")
-                .split(",")
-                .map((cat) => decodeURIComponent(cat.trim())); // Décoder les catégories
-            return categories.includes(category); // Vérifier si la catégorie correspond
-        });
-
-        // Ajouter les recettes filtrées au modal
-        const recettesList = document.getElementById("recettes-list");
-        if (filteredRecettes.length === 0) {
-            recettesList.innerHTML = `<p>Aucune recette trouvée pour la catégorie "${category}".</p>`;
-        } else {
-            filteredRecettes.forEach((recette) => {
-                const recipeClone = recette.cloneNode(true);
-
-                // Bloquer le clic par défaut
-                recipeClone.addEventListener("click", (event) => {
-                    event.preventDefault();
-
-                    const recipeId = recette.getAttribute("id");
-                    const recipeTitle = recette.getAttribute(
-                        "data-ref-titre"
-                    );
-
-                    // Vérifier si la recette est déjà ajoutée
-                    if (
-                        menuCategorieRecipeInput.querySelector(
-                            `#${CSS.escape(recipeId)}`
-                        )
-                    ) {
-                        alert(
-                            `La recette "${recipeTitle}" est déjà ajoutée.`
-                        );
-                        return;
-                    }
-
-                    // Ajouter une nouvelle div pour la recette
-                    const recipeDiv = document.createElement("div");
-                    recipeDiv.className = "recipeInput";
-                    recipeDiv.id = recipeId;
-                    recipeDiv.innerHTML = `
-                        <p>${recipeTitle}</p>
-                        <button class="remove_recipeInput">×</button>
-                    `;
-
-                    // Ajouter la recette à la section correspondante
-                    menuCategorieRecipeInput.appendChild(recipeDiv);
-
-                    // Gérer la suppression de la recette
-                    recipeDiv
-                        .querySelector(".remove_recipeInput")
-                        .addEventListener("click", () => {
-                            recipeDiv.remove();
-                        });
-                });
-
-                recettesList.appendChild(recipeClone);
+            // Filtrer les recettes par catégorie
+            const filteredRecettes = Array.from(recettes).filter((recette) => {
+                const categories = recette
+                    .getAttribute("data-ref-categorie")
+                    .split(",")
+                    .map((cat) => decodeURIComponent(cat.trim())); // Décoder les catégories
+                return categories.includes(category); // Vérifier si la catégorie correspond
             });
-        }
-    })
-    .catch((error) => {
-        console.error(error);
-        const recettesList = document.getElementById("recettes-list");
-        recettesList.innerHTML = `<p>Erreur lors du chargement des recettes. Veuillez réessayer plus tard.</p>`;
-    });
+
+            // Ajouter les recettes filtrées au modal
+            const recettesList = document.getElementById("recettes-list");
+            if (filteredRecettes.length === 0) {
+                recettesList.innerHTML = `<p>Aucune recette trouvée pour la catégorie "${category}".</p>`;
+            } else {
+                filteredRecettes.forEach((recette) => {
+                    const recipeClone = recette.cloneNode(true);
+
+                    // Bloquer le clic par défaut
+                    recipeClone.addEventListener("click", (event) => {
+                        event.preventDefault();
+
+                        const recipeId = recette.getAttribute("id");
+                        const recipeTitle = recette.getAttribute(
+                            "data-ref-titre"
+                        );
+
+                        // Vérifier si la recette est déjà ajoutée
+                        if (
+                            menuCategorieRecipeInput.querySelector(
+                                `#${CSS.escape(recipeId)}`
+                            )
+                        ) {
+                            alert(
+                                `La recette "${recipeTitle}" est déjà ajoutée.`
+                            );
+                            return;
+                        }
+
+                        // Ajouter une nouvelle div pour la recette
+                        const recipeDiv = document.createElement("div");
+                        recipeDiv.className = "recipeInput";
+                        recipeDiv.id = recipeId;
+                        recipeDiv.innerHTML = `
+                            <p class="recipeTitle">${recipeTitle}</p>
+                            <button class="remove_recipeInput">×</button>
+                        `;
+
+                        // Ajouter la recette à la section correspondante
+                        menuCategorieRecipeInput.appendChild(recipeDiv);
+
+                        // Gérer la suppression de la recette
+                        recipeDiv
+                            .querySelector(".remove_recipeInput")
+                            .addEventListener("click", () => {
+                                recipeDiv.remove();
+                            });
+
+                        // Fermer le modal
+                        modal.remove();
+                    });
+
+                    recettesList.appendChild(recipeClone);
+                });
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            const recettesList = document.getElementById("recettes-list");
+            recettesList.innerHTML = `<p>Erreur lors du chargement des recettes. Veuillez réessayer plus tard.</p>`;
+        });
 
     // Fermer le modal lorsqu'on clique sur le bouton de fermeture
     modal.querySelector(".modal-close-button").addEventListener("click", () => {
@@ -504,23 +557,33 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
     });
 }
 
+
 // Gestionnaire pour ouvrir le modal des recettes
 document.addEventListener("click", (event) => {
+    // Vérifier si le clic vient d'un bouton avec la classe 'menuCategorie_recipeInput_button'
     const recipeButton = event.target.closest(".menuCategorie_recipeInput_button");
     if (recipeButton) {
+        // Trouver l'élément parent représentant la catégorie
         const categoryElement = recipeButton.closest(".input_menuCategorie");
+
+        // Récupérer la valeur de la catégorie
         const category = categoryElement ? categoryElement.getAttribute("value") : null;
+
+        // Trouver la div pour ajouter les recettes sélectionnées
         const menuCategorieRecipeInput = categoryElement.querySelector(
             ".menuCategorie_recipesInputs .menuCategorie_recipeInput"
         );
 
-        if (category) {
+        if (category && menuCategorieRecipeInput) {
+            // Appeler le modal avec la catégorie et l'élément cible pour ajouter les recettes
             openRecipeModal(category, menuCategorieRecipeInput);
         } else {
-            console.error("Impossible de déterminer la catégorie.");
+            // Gérer les erreurs si la catégorie ou la cible ne peut pas être déterminée
+            console.error("Impossible d'ouvrir le modal : catégorie ou conteneur introuvable.");
         }
     }
 });
+
 
 
 

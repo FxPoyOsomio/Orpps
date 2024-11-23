@@ -116,7 +116,7 @@
     align-items: flex-start; /* Aligne les éléments au début de chaque colonne */
     width: 100%;
 }
-.mealItem_byDate {
+.mealItems_byDate {
     display: flex;
     flex-direction: column;
     width: 100%;
