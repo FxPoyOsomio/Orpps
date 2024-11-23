@@ -124,6 +124,70 @@ function displayUserEvents() {
     }
 }
 
+// Fonction pour afficher les repas pour un événement donné, groupés par date
+function displayEventMeals(event, eventIndex) {
+    const mealContainer = document.getElementById(`eventMeals_${eventIndex}`);
+    if (mealContainer && event.meal && Array.isArray(event.meal)) {
+        // Vider le conteneur avant d'ajouter les repas
+        mealContainer.innerHTML = "";
+
+        // Grouper les repas par date
+        const mealsByDate = event.meal.reduce((groupedMeals, meal) => {
+            if (!groupedMeals[meal.mealDate]) {
+                groupedMeals[meal.mealDate] = [];
+            }
+            groupedMeals[meal.mealDate].push(meal);
+            return groupedMeals;
+        }, {});
+
+        // Parcourir les dates et afficher les repas
+        Object.keys(mealsByDate).forEach((mealDate) => {
+            const meals = mealsByDate[mealDate];
+
+            // Créer un conteneur pour les repas de cette date
+            let dateHTML = `
+                <div class="mealItems_byDate">
+                    <h3 class="mealDate">${mealDate}</h3>
+                    <div class="mealItems-container">
+            `;
+
+            // Parcourir les repas de cette date
+            meals.forEach((meal, mealIndex) => {
+                const mealHTML = `
+                    <div class="mealItem_container" event-id="${eventIndex}" meal-id="${mealIndex}">
+                        <div class="mealItem">
+                            <h3 class="mealTitle">${meal.mealType}</h3>
+                            <button class="deleteMealButton" event-id="${eventIndex}" meal-id="${mealIndex}">supprimer repas</button>
+                        </div>
+                        <div class="meal_menu" id="eventMealMenu_${eventIndex}_${mealIndex}"></div>
+                    </div>
+                `;
+
+                // Ajouter le repas au conteneur de la date
+                dateHTML += mealHTML;
+            });
+
+            // Clôturer le conteneur de la date et des repas
+            dateHTML += `
+                    </div> <!-- Fin de mealItems-container -->
+                </div> <!-- Fin de mealItems_byDate -->
+            `;
+
+            // Ajouter le contenu de la date au conteneur principal
+            mealContainer.innerHTML += dateHTML;
+        });
+
+        // Générer le contenu du menu pour chaque repas après l'affichage
+        event.meal.forEach((meal, mealIndex) => {
+            const mealMenuContainer = document.getElementById(`eventMealMenu_${eventIndex}_${mealIndex}`);
+            if (mealMenuContainer) {
+                generateMealMenu(meal, mealMenuContainer);
+            }
+        });
+    }
+}
+
+// Fonction pour générer le contenu du menu d'un repas
 function generateMealMenu(meal, mealMenuContainer) {
     if (!meal || !meal.menu || !Array.isArray(meal.menu)) return;
 
@@ -133,42 +197,33 @@ function generateMealMenu(meal, mealMenuContainer) {
     // Parcourir les catégories activées
     meal.menu.forEach((category) => {
         if (category.activCategory) {
-            const categoryHTML = `
+            let categoryHTML = `
                 <div class="menuCategorie">
                     <h4 class="menuCategorie_title">${category.categoryMenu}</h4>
-                </div>
+                    <div class="menuCategorie_recipes">
             `;
+
+            // Ajouter les recettes de cette catégorie
+            category.recipes.forEach((recipe) => {
+                categoryHTML += `
+                    <div class="recipeItem" id="${recipe.recipeId}">
+                        <p class="recipeTitle">${recipe.recipeName}</p>
+                    </div>
+                `;
+            });
+
+            categoryHTML += `
+                    </div> <!-- Fin de menuCategorie_recipes -->
+                </div> <!-- Fin de menuCategorie -->
+            `;
+
             mealMenuContainer.innerHTML += categoryHTML;
         }
     });
 }
 
-// Fonction pour afficher les repas pour un événement donné
-function displayEventMeals(event, eventIndex) {
-    const mealContainer = document.getElementById(`eventMeals_${eventIndex}`);
-    if (mealContainer && event.meal && Array.isArray(event.meal)) {
-        // Vider le conteneur avant d'ajouter les repas
-        mealContainer.innerHTML = "";
 
-        // Parcourir les repas et créer les divs
-        event.meal.forEach((meal, mealIndex) => {
-            const mealHTML = `
-                <div class="mealItem_container" event-id="${eventIndex}" meal-id="${mealIndex}">
-                    <div class="mealItem">
-                        <h3 class="mealTitle">${meal.mealDate}    ${meal.mealType}</h3>
-                        <button class="deleteMealButton" event-id="${eventIndex}" meal-id="${mealIndex}">supprimer repas</button>
-                    </div>
-                    <div class="meal_menu" id="eventMealMenu_${eventIndex}_${mealIndex}"></div>
-                </div>
-            `;
-            mealContainer.innerHTML += mealHTML;
 
-            // Générer le contenu du menu pour ce repas
-            const mealMenuContainer = document.getElementById(`eventMealMenu_${eventIndex}_${mealIndex}`);
-            generateMealMenu(meal, mealMenuContainer);
-        });
-    }
-}
 
 
 
@@ -222,42 +277,40 @@ document.addEventListener("click", (event) => {
     }
 });
 
-// Fonction pour ouvrir le modal pour ajouter un repas
+const mealTypes = [
+    "Petit-Déjeuner",
+    "Brunch",
+    "Déjeuner",
+    "Goûter",
+    "Diner",
+    "Soirée",
+];
+
+const categoryMenus = {
+    "Petit-Déjeuner": ["Dessert", "Céréales", "Boisson", "Boulangerie"],
+    Brunch: ["Entrée", "Tapas", "Plat", "Dessert", "Céréales", "Boisson", "Boulangerie"],
+    Déjeuner: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
+    Goûter: ["Dessert", "Céréales", "Boisson", "Boulangerie"],
+    Diner: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
+    Soirée: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
+};
+
+
 function openMealModal(eventIndex) {
-    const mealTypes = [
-        "Petit-Déjeuner",
-        "Brunch",
-        "Déjeuner",
-        "Goûter",
-        "Diner",
-        "Soirée",
-    ];
-
-    const categoryMenus = {
-        "Petit-Déjeuner": ["Dessert", "Céréales", "Boisson", "Boulangerie"],
-        Brunch: ["Entrée", "Tapas", "Plat", "Dessert", "Céréales", "Boisson", "Boulangerie"],
-        Déjeuner: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
-        Goûter: ["Dessert", "Céréales", "Boisson", "Boulangerie"],
-        Diner: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
-        Soirée: ["Apéritif", "Entrée", "Tapas", "Plat", "Dessert", "Boisson", "Boulangerie"],
-    };
-
     const today = new Date().toISOString().split("T")[0];
 
-
-    // Créer le modal dynamiquement
     const modal = document.createElement("div");
     modal.className = "modal-overlay";
     modal.innerHTML = `
         <div class="modal">
-            <h3 class="modal_Title">Ajouter un repas</h3>
+            <h2 class="modal_Title">Ajouter un repas</h2>
             <div class="input_meal">
                 <div class="input_mealDate">
-                    <h4 class="modal_SubTitle">Date du repas</h4>
+                    <h7 class="modal_SubTitle">Date du repas</h7>
                     <input type="date" id="mealDateInput" value="${today}" required />
                 </div>
                 <div class="input_mealType">
-                    <h4 class="modal_SubTitle">Type de repas</h4>
+                    <h7 class="modal_SubTitle">Type de repas</h7>
                     <select id="mealTypeInput" required>
                         <option value="" selected disabled>Sélectionnez...</option>
                         ${mealTypes.map((type, index) => `<option value="${index}">${type}</option>`).join("")}
@@ -265,7 +318,7 @@ function openMealModal(eventIndex) {
                 </div>
             </div>
             <div class="input_menu">
-                <h4 class="modal_SubTitle">Menu avec ...</h4>
+                <h3 class="modal_SubTitle">Menu avec ...</h3>
                 <div id="menuCategories" class="input_menuCategories"></div>
             </div>
             <div class="modal_buttons">
@@ -276,34 +329,200 @@ function openMealModal(eventIndex) {
     `;
     document.body.appendChild(modal);
 
-    // Ajouter les événements
     const mealTypeInput = document.getElementById("mealTypeInput");
     const menuCategories = document.getElementById("menuCategories");
+    const modalTitle = document.querySelector(".modal_Title");
 
-    // Met à jour les cases à cocher pour les catégories en fonction du type de repas sélectionné
+    function updateModalTitle() {
+        const selectedTypeIndex = parseInt(mealTypeInput.value, 10);
+        const selectedType = selectedTypeIndex >= 0 ? mealTypes[selectedTypeIndex] : null;
+        modalTitle.textContent = selectedType
+            ? `Ajouter ${selectedType}`
+            : "Ajouter un repas";
+    }
+
     function updateCategories() {
-        const selectedType = mealTypes[mealTypeInput.value];
+        const selectedTypeIndex = parseInt(mealTypeInput.value, 10);
+        const selectedType = mealTypes[selectedTypeIndex];
         const categories = categoryMenus[selectedType] || [];
+
+        // Mettre à jour le contenu de menuCategories
         menuCategories.innerHTML = categories
             .map(
                 (category, index) => `
-                <div class="input_menuCategorie">
+                <div class="input_menuCategorie" value="${category}" data-index="${index}">
                     <label>
-                        <input type="checkbox" value="${category}" data-index="${index}" />
-                        ${category}
+                        <input type="checkbox" class="categoryCheckbox" data-index="${index}" />
+                        <h4>${category}</h4>
                     </label>
+                    <div class="menuCategorie_inputs" style="display: none;">
+                        <div class="menuCategorie_recipesInputs">
+                            <div class="menuCategorie_recipeInput"></div>
+                        </div>
+                        <div class="menuCategorie_ingredientsInputs">
+                            <div class="menuCategorie_ingredientInput"></div>
+                        </div>
+                    </div>
+                    <div class="menuCategorie_inputsButtons" style="display: none;">
+                        <button class="menuCategorie_recipeInput_button">Ajouter une recette</button>
+                        <button class="menuCategorie_ingredientInput_button">Ajouter un ingrédient</button>
+                    </div>
                 </div>`
             )
             .join("");
+
+        // Ajouter un gestionnaire d'événements pour les checkboxes
+        document.querySelectorAll(".categoryCheckbox").forEach((checkbox) => {
+            checkbox.addEventListener("change", (event) => {
+                const parent = event.target.closest(".input_menuCategorie");
+                const inputs = parent.querySelector(".menuCategorie_inputs");
+                const buttons = parent.querySelector(".menuCategorie_inputsButtons");
+
+                // Afficher ou masquer les sections en fonction de l'état de la checkbox
+                if (event.target.checked) {
+                    inputs.style.display = "block";
+                    buttons.style.display = "flex";
+                } else {
+                    inputs.style.display = "none";
+                    buttons.style.display = "none";
+                }
+            });
+        });
     }
 
-    // Initialisation des catégories
     updateCategories();
-    mealTypeInput.addEventListener("change", updateCategories);
+    updateModalTitle();
+    mealTypeInput.addEventListener("change", () => {
+        updateCategories();
+        updateModalTitle();
+    });
 
     document.getElementById("validateMeal").addEventListener("click", () => validateMeal(eventIndex));
     document.getElementById("closeMealModal").addEventListener("click", closeMealModal);
 }
+
+
+function openRecipeModal(category, menuCategorieRecipeInput) {
+    // Créer un modal en plein écran
+    const modal = document.createElement("div");
+    modal.className = "modal-fullscreen";
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2 class="modal_Title">Ajouter ${category}</h2>
+            <button class="modal-close-button">×</button>
+            <div id="recettes-list" class="recettes-list"></div>
+        </div>
+    `;
+
+    // Ajouter le modal au body
+    document.body.appendChild(modal);
+
+    // Charger le fichier /dist/recettes.html et filtrer les recettes
+    fetch("/dist/recettes.html")
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Erreur lors du chargement des recettes.");
+        }
+        return response.text();
+    })
+    .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const recettes = doc.querySelectorAll("a[data-ref-categorie]");
+
+        // Filtrer les recettes par catégorie
+        const filteredRecettes = Array.from(recettes).filter((recette) => {
+            const categories = recette
+                .getAttribute("data-ref-categorie")
+                .split(",")
+                .map((cat) => decodeURIComponent(cat.trim())); // Décoder les catégories
+            return categories.includes(category); // Vérifier si la catégorie correspond
+        });
+
+        // Ajouter les recettes filtrées au modal
+        const recettesList = document.getElementById("recettes-list");
+        if (filteredRecettes.length === 0) {
+            recettesList.innerHTML = `<p>Aucune recette trouvée pour la catégorie "${category}".</p>`;
+        } else {
+            filteredRecettes.forEach((recette) => {
+                const recipeClone = recette.cloneNode(true);
+
+                // Bloquer le clic par défaut
+                recipeClone.addEventListener("click", (event) => {
+                    event.preventDefault();
+
+                    const recipeId = recette.getAttribute("id");
+                    const recipeTitle = recette.getAttribute(
+                        "data-ref-titre"
+                    );
+
+                    // Vérifier si la recette est déjà ajoutée
+                    if (
+                        menuCategorieRecipeInput.querySelector(
+                            `#${CSS.escape(recipeId)}`
+                        )
+                    ) {
+                        alert(
+                            `La recette "${recipeTitle}" est déjà ajoutée.`
+                        );
+                        return;
+                    }
+
+                    // Ajouter une nouvelle div pour la recette
+                    const recipeDiv = document.createElement("div");
+                    recipeDiv.className = "recipeInput";
+                    recipeDiv.id = recipeId;
+                    recipeDiv.innerHTML = `
+                        <p>${recipeTitle}</p>
+                        <button class="remove_recipeInput">×</button>
+                    `;
+
+                    // Ajouter la recette à la section correspondante
+                    menuCategorieRecipeInput.appendChild(recipeDiv);
+
+                    // Gérer la suppression de la recette
+                    recipeDiv
+                        .querySelector(".remove_recipeInput")
+                        .addEventListener("click", () => {
+                            recipeDiv.remove();
+                        });
+                });
+
+                recettesList.appendChild(recipeClone);
+            });
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+        const recettesList = document.getElementById("recettes-list");
+        recettesList.innerHTML = `<p>Erreur lors du chargement des recettes. Veuillez réessayer plus tard.</p>`;
+    });
+
+    // Fermer le modal lorsqu'on clique sur le bouton de fermeture
+    modal.querySelector(".modal-close-button").addEventListener("click", () => {
+        modal.remove();
+    });
+}
+
+// Gestionnaire pour ouvrir le modal des recettes
+document.addEventListener("click", (event) => {
+    const recipeButton = event.target.closest(".menuCategorie_recipeInput_button");
+    if (recipeButton) {
+        const categoryElement = recipeButton.closest(".input_menuCategorie");
+        const category = categoryElement ? categoryElement.getAttribute("value") : null;
+        const menuCategorieRecipeInput = categoryElement.querySelector(
+            ".menuCategorie_recipesInputs .menuCategorie_recipeInput"
+        );
+
+        if (category) {
+            openRecipeModal(category, menuCategorieRecipeInput);
+        } else {
+            console.error("Impossible de déterminer la catégorie.");
+        }
+    }
+});
+
+
 
 // Fonction pour fermer le modal
 function closeMealModal() {
@@ -315,23 +534,38 @@ function closeMealModal() {
 function validateMeal(eventIndex) {
     const mealDateInput = document.getElementById("mealDateInput");
     const mealTypeInput = document.getElementById("mealTypeInput");
-    const selectedCategories = [...document.querySelectorAll("#menuCategories input:checked")];
+    const selectedCategories = [...document.querySelectorAll("#menuCategories .input_menuCategorie")];
 
     const mealDate = mealDateInput ? mealDateInput.value : "";
     const mealTypeIndex = mealTypeInput ? parseInt(mealTypeInput.value, 10) : null;
-    const mealType = mealTypeIndex !== null ? mealTypeInput.options[mealTypeIndex].text : "";
+    const mealType = mealTypeIndex !== null ? mealTypes[mealTypeIndex] : "";
 
     if (!mealDate || mealTypeIndex === null || isNaN(mealTypeIndex)) {
         alert("Veuillez entrer une date et sélectionner un type de repas.");
         return;
     }
 
-    const menu = selectedCategories.map((checkbox) => ({
-        categoryMenu: checkbox.value,
-        activCategory: true,
-        recipes: [],
-        ingredients: [],
-    }));
+    const menu = selectedCategories.map((categoryElement) => {
+        const categoryName = categoryElement.getAttribute("value");
+        const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
+
+        // Récupérer les recettes associées à cette catégorie
+        const recipeInputs = [
+            ...categoryElement.querySelectorAll(".recipeInput"),
+        ];
+
+        const recipes = recipeInputs.map((recipeDiv) => ({
+            recipeId: recipeDiv.id, // ID de la recette
+            recipeName: recipeDiv.querySelector("p").textContent, // Nom de la recette
+        }));
+
+        return {
+            categoryMenu: categoryName,
+            activCategory: isActive,
+            recipes: recipes,
+            ingredients: [], // Laisse vide pour l'instant
+        };
+    });
 
     // Récupérer l'utilisateur actuel
     const user = netlifyIdentity.currentUser();
@@ -359,7 +593,10 @@ function validateMeal(eventIndex) {
                 },
             })
                 .then((updatedUser) => {
-                    console.log("Repas ajouté avec succès :", updatedUser.user_metadata.events[eventIndex].meal);
+                    console.log(
+                        "Repas ajouté avec succès :",
+                        updatedUser.user_metadata.events[eventIndex].meal
+                    );
                     closeMealModal(); // Fermer le modal après validation
                     displayUserEvents(); // Actualiser la liste des événements et repas
                 })
@@ -373,6 +610,8 @@ function validateMeal(eventIndex) {
         alert("Utilisateur non connecté. Veuillez vous connecter pour ajouter un repas.");
     }
 }
+
+
 
 
 
