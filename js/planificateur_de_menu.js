@@ -9,7 +9,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // Charger et afficher les événements existants
     displayUserEvents();
+
+    const globalPortionsInput = document.getElementById("portion-input");
+
+    if (globalPortionsInput) {
+        // Événements "input" et "change" pour synchronisation en temps réel
+        globalPortionsInput.addEventListener("input", synchronizeGlobalPortions);
+        globalPortionsInput.addEventListener("change", synchronizeGlobalPortions);
+    }
+
+    // Attacher l'événement sur le document pour capturer les éléments dynamiques
+    document.addEventListener("mouseenter", (event) => {
+        if (!(event.target instanceof Element)) return;
+
+        const button = event.target.closest(".remove_recipeInput");
+        if (button) {
+            const recipeContainer = button.closest(".recipeInput")?.querySelector(".recipe");
+            if (recipeContainer) {
+                recipeContainer.classList.add("shake-animation");
+
+                // Supprimer la classe à la fin de l'animation
+                recipeContainer.addEventListener("animationend", () => {
+                    recipeContainer.classList.remove("shake-animation");
+                }, { once: true }); // `once: true` garantit que cet écouteur est appelé une seule fois
+            }
+        }
+    }, true);
 });
+
+
 
 // Fonction pour créer et afficher le modal
 function openEventModal() {
@@ -107,7 +135,6 @@ function displayUserEvents() {
                         </div>
                         <div class="event_ovelayContainer">
                             <div class="event_meals" id="eventMeals_${eventIndex}">
-                                <!-- Les repas seront insérés ici -->
                             </div>
                             <button class="addMeal" event-id="${eventIndex}">ajouter un repas</button>
                         </div>
@@ -122,6 +149,15 @@ function displayUserEvents() {
     } else {
         console.warn("Utilisateur non connecté. Impossible de charger les événements.");
     }
+}
+
+function formatDateToFrench(dateString) {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+    }).format(date);
 }
 
 // Fonction pour afficher les repas pour un événement donné, groupés par date
@@ -154,7 +190,7 @@ function displayEventMeals(event, eventIndex) {
             // Créer un conteneur pour les repas de cette date
             let dateHTML = `
                 <div class="mealItems_byDate">
-                    <h3 class="mealDate">${mealDate}</h3>
+                    <h3 class="mealDate">${formatDateToFrench(mealDate)}</h3>
                     <div class="mealItems-container">
             `;
 
@@ -163,8 +199,13 @@ function displayEventMeals(event, eventIndex) {
                 const mealHTML = `
                     <div class="mealItem_container" event-id="${eventIndex}" meal-id="${globalMealIndex}">
                         <div class="mealItem">
-                            <h3 class="mealTitle">${meal.mealType}</h3>
-                            <button class="deleteMealButton" event-id="${eventIndex}" meal-id="${globalMealIndex}">supprimer repas</button>
+                            <div class="meal">
+                                <h3 class="mealTitle">${meal.mealType}</h3>
+                                <h3 class="mealPortion">${meal.mealPortion} personnes</h3>
+                            </div>
+                            <button class="modifyMealButton" event-id="${eventIndex}" meal-id="${globalMealIndex}">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="#696969"></path> </g></svg>
+                            </button>
                         </div>
                         <div class="meal_menu" id="eventMealMenu_${eventIndex}_${globalMealIndex}"></div>
                     </div>
@@ -191,6 +232,8 @@ function displayEventMeals(event, eventIndex) {
         });
     }
 }
+
+
 
 
 
@@ -226,7 +269,7 @@ function generateMealMenu(meal, mealMenuContainer) {
                     console.log(`Ajout de la recette : ${recipe.recipeName} (ID: ${recipe.recipeId})`);
                     categoryHTML += `
                         <div class="recipeItem" id="${recipe.recipeId}">
-                            <p class="recipeTitle">${recipe.recipeName}</p>
+                            <p class="recipeTitle">${recipe.recipeName}</p><p class="recipePortion"> ${recipe.recipePortion} portions</p>
                         </div>
                     `;
                 });
@@ -263,39 +306,7 @@ function generateMealMenu(meal, mealMenuContainer) {
 
 
 
-// Ajouter un gestionnaire pour supprimer les événements
-document.addEventListener("click", (event) => {
-    const deleteButton = event.target.closest(".deleteEventButton");
-    if (deleteButton) {
-        deleteUserEvent(deleteButton);
-    }
-});
 
-// Fonction pour supprimer un événement
-function deleteUserEvent(button) {
-    const eventId = parseInt(button.getAttribute("event-id"), 10);
-    const user = netlifyIdentity.currentUser();
-
-    if (!user || isNaN(eventId)) {
-        console.error("Impossible de supprimer l'événement.");
-        return;
-    }
-
-    // Supprimer l'événement de la liste
-    const updatedEvents = user.user_metadata.events.filter((_, index) => index !== eventId);
-
-    // Mettre à jour les métadonnées utilisateur
-    user.update({
-        data: {
-            events: updatedEvents,
-        },
-    }).then(() => {
-        console.log("Événement supprimé avec succès.");
-        displayUserEvents(); // Recharger la liste des événements
-    }).catch((error) => {
-        console.error("Erreur lors de la suppression de l'événement :", error);
-    });
-}
 
 
 
@@ -305,6 +316,15 @@ document.addEventListener("click", (event) => {
     if (addMealButton) {
         const eventIndex = parseInt(addMealButton.getAttribute("event-id"), 10);
         openMealModal(eventIndex);
+    }
+});
+// Gestionnaire global pour les boutons "Modifier le repas"
+document.addEventListener("click", (event) => {
+    const modifyMealButton = event.target.closest(".modifyMealButton");
+    if (modifyMealButton) {
+        const eventIndex = parseInt(modifyMealButton.getAttribute("event-id"), 10);
+        const mealIndex = parseInt(modifyMealButton.getAttribute("meal-id"), 10);
+        openMealModal(eventIndex, mealIndex); // Ouvrir le modal avec les métadonnées existantes
     }
 });
 
@@ -346,25 +366,59 @@ const categoryMenus = {
 };
 
 
-function openMealModal(eventIndex) {
+function openMealModal(eventIndex, mealIndex = null) {
+    const user = netlifyIdentity.currentUser();
+    const events = user?.user_metadata.events || [];
+    const event = events[eventIndex];
+    const meal = mealIndex !== null ? event.meal[mealIndex] : null;
+
     const today = new Date().toISOString().split("T")[0];
+    const mealTypeIndex = meal ? mealTypes.indexOf(meal.mealType) : null;
+    const mealPortion = meal?.mealPortion || 6;
 
     const modal = document.createElement("div");
     modal.className = "modal-overlay";
     modal.innerHTML = `
         <div class="modal">
-            <h2 class="modal_Title">Ajouter un repas</h2>
+            <h2 class="modal_Title">${meal ? "Modifier un repas" : "Ajouter un repas"}</h2>
             <div class="input_meal">
                 <div class="input_mealDate">
                     <h7 class="modal_SubTitle">Date du repas</h7>
-                    <input type="date" id="mealDateInput" value="${today}" required />
+                    <input type="date" id="mealDateInput" value="${meal?.mealDate || today}" required />
                 </div>
                 <div class="input_mealType">
                     <h7 class="modal_SubTitle">Type de repas</h7>
                     <select id="mealTypeInput" required>
-                        <option value="" selected disabled>Sélectionnez...</option>
-                        ${mealTypes.map((type, index) => `<option value="${index}">${type}</option>`).join("")}
+                        <option value="" disabled ${meal ? "" : "selected"}>Sélectionnez...</option>
+                        ${mealTypes
+                            .map(
+                                (type, index) =>
+                                    `<option value="${index}" ${
+                                        index === mealTypeIndex ? "selected" : ""
+                                    }>${type}</option>`
+                            )
+                            .join("")}
                     </select>
+                </div>
+                <div class="input_mealPortions">
+                    <h7 class="modal_SubTitle">Portions</h7> 
+                    <div class="portion-control">
+                        <div class="portion-control__decrement minus">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </div>
+                        <div class="portion-control__value_container">
+                            <input type="text" inputmode="decimal" id="portion-input" class="portion-control__value_number" value="${mealPortion}">
+                            <span class="portion-control__unit">portions</span>
+                        </div>
+                        <div class="portion-control__increment plus">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="input_menu">
@@ -372,7 +426,12 @@ function openMealModal(eventIndex) {
                 <div id="menuCategories" class="input_menuCategories"></div>
             </div>
             <div class="modal_buttons">
-                <button class="secondary-button" id="validateMeal">Valider</button>
+                <button class="primary-button" id="validateMeal">${meal ? "Modifier" : "Ajouter"}</button>
+                ${
+                    meal
+                        ? '<button class="primary-button danger-button" id="deleteMeal">Supprimer</button>'
+                        : ""
+                }
                 <button class="secondary-button" id="closeMealModal">Annuler</button>
             </div>
         </div>
@@ -383,52 +442,86 @@ function openMealModal(eventIndex) {
     const menuCategories = document.getElementById("menuCategories");
     const modalTitle = document.querySelector(".modal_Title");
 
+    // Mise à jour dynamique du titre
     function updateModalTitle() {
         const selectedTypeIndex = parseInt(mealTypeInput.value, 10);
         const selectedType = selectedTypeIndex >= 0 ? mealTypes[selectedTypeIndex] : null;
-        modalTitle.textContent = selectedType
-            ? `Ajouter ${selectedType}`
-            : "Ajouter un repas";
+        modalTitle.textContent = meal
+            ? `Modifier ${selectedType || "un repas"}`
+            : `Ajouter ${selectedType || "un repas"}`;
     }
 
-    function updateCategories() {
+    function updateCategories(meal) {
         const selectedTypeIndex = parseInt(mealTypeInput.value, 10);
         const selectedType = mealTypes[selectedTypeIndex];
         const categories = categoryMenus[selectedType] || [];
-
-        // Mettre à jour le contenu de menuCategories
+    
         menuCategories.innerHTML = categories
-            .map(
-                (category, index) => `
+            .map((category, index) => {
+                const isActive = meal?.menu.some((menuItem) => menuItem.categoryMenu === category && menuItem.activCategory);
+                const recipesHTML = meal
+                    ? meal.menu
+                          .filter((menuItem) => menuItem.categoryMenu === category)
+                          .flatMap((menuItem) =>
+                              menuItem.recipes.map(
+                                  (recipe) => `
+                                <div class="recipeInput" id="${recipe.recipeId}">
+                                    <div class="recipe">
+                                        <p>${recipe.recipeName}</p>
+                                        <div class="portion-control">
+                                            <div class="portion-control__decrement minus">
+                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                    <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="portion-control__value_container">
+                                                <input type="text" value="${recipe.recipePortion}" class="portion-control__value_number" />
+                                                <span class="portion-control__unit">portions</span>
+                                            </div>
+                                            <div class="portion-control__increment plus">
+                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                    <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                    <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="remove_recipeInput">×</button>
+                                </div>
+                            `
+                              )
+                          )
+                          .join("")
+                    : "";
+    
+                return `
                 <div class="input_menuCategorie" value="${category}" data-index="${index}">
                     <label>
-                        <input type="checkbox" class="categoryCheckbox" data-index="${index}" />
+                        <input type="checkbox" class="categoryCheckbox" data-index="${index}" ${isActive ? "checked" : ""} />
                         <h4>${category}</h4>
                     </label>
-                    <div class="menuCategorie_inputs" style="display: none;">
+                    <div class="menuCategorie_inputs" style="${isActive ? "display: block;" : "display: none;"}">
                         <div class="menuCategorie_recipesInputs">
-                            <div class="menuCategorie_recipeInput"></div>
-                        </div>
-                        <div class="menuCategorie_ingredientsInputs">
-                            <div class="menuCategorie_ingredientInput"></div>
+                            <div class="menuCategorie_recipeInput">
+                                ${recipesHTML}
+                            </div>
                         </div>
                     </div>
-                    <div class="menuCategorie_inputsButtons" style="display: none;">
-                        <button class="menuCategorie_recipeInput_button">Ajouter une recette</button>
-                        <button class="menuCategorie_ingredientInput_button">Ajouter un ingrédient</button>
+                    <div class="menuCategorie_inputsButtons" style="${isActive ? "display: flex;" : "display: none;"}">
+                        <button class="menuCategorie_recipeInput_button">Ajouter recette</button>
+                        <button class="menuCategorie_ingredientInput_button">Ajouter ingrédient</button>
                     </div>
-                </div>`
-            )
+                </div>`;
+            })
             .join("");
-
-        // Ajouter un gestionnaire d'événements pour les checkboxes
+    
+        // Gestion des changements d'état des catégories
         document.querySelectorAll(".categoryCheckbox").forEach((checkbox) => {
             checkbox.addEventListener("change", (event) => {
                 const parent = event.target.closest(".input_menuCategorie");
                 const inputs = parent.querySelector(".menuCategorie_inputs");
                 const buttons = parent.querySelector(".menuCategorie_inputsButtons");
-
-                // Afficher ou masquer les sections en fonction de l'état de la checkbox
+    
                 if (event.target.checked) {
                     inputs.style.display = "block";
                     buttons.style.display = "flex";
@@ -440,18 +533,100 @@ function openMealModal(eventIndex) {
         });
     }
 
-    updateCategories();
+    updateCategories(meal);
     updateModalTitle();
     mealTypeInput.addEventListener("change", () => {
-        updateCategories();
+        updateCategories(meal);
         updateModalTitle();
     });
 
-    document.getElementById("validateMeal").addEventListener("click", () => validateMeal(eventIndex));
+    document.getElementById("validateMeal").addEventListener("click", () => {
+        if (meal) {
+            updateMeal(eventIndex, mealIndex);
+        } else {
+            validateMeal(eventIndex);
+        }
+    });
+
+    if (meal) {
+        document.getElementById("deleteMeal").addEventListener("click", () => {
+            deleteMeal(eventIndex, mealIndex);
+        });
+    }
+
     document.getElementById("closeMealModal").addEventListener("click", closeMealModal);
 }
 
 
+
+
+
+function updateMeal(eventIndex, mealIndex) {
+    const user = netlifyIdentity.currentUser();
+    const events = user?.user_metadata.events || [];
+    const event = events[eventIndex];
+    const meal = event.meal[mealIndex];
+
+    const mealDateInput = document.getElementById("mealDateInput");
+    const mealTypeInput = document.getElementById("mealTypeInput");
+    const globalPortionInput = document.querySelector(".input_mealPortions #portion-input");
+
+    meal.mealDate = mealDateInput.value;
+    meal.mealType = mealTypes[parseInt(mealTypeInput.value, 10)];
+    meal.mealPortion = parseInt(globalPortionInput.value, 10);
+
+    // Mettre à jour les catégories et recettes
+    const selectedCategories = [...document.querySelectorAll("#menuCategories .input_menuCategorie")];
+    meal.menu = selectedCategories.map((categoryElement) => {
+        const categoryName = categoryElement.getAttribute("value");
+        const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
+
+        const recipes = [...categoryElement.querySelectorAll(".recipeInput")].map((recipeDiv) => ({
+            recipeId: recipeDiv.id,
+            recipeName: recipeDiv.querySelector("p").textContent,
+            recipePortion: parseInt(recipeDiv.querySelector("input").value, 10),
+        }));
+
+        return {
+            categoryMenu: categoryName,
+            activCategory: isActive,
+            recipes: recipes,
+        };
+    });
+
+    user.update({
+        data: {
+            events: events,
+        },
+    })
+        .then((updatedUser) => {
+            console.log("Repas mis à jour avec succès :", updatedUser.user_metadata.events[eventIndex].meal[mealIndex]);
+            closeMealModal();
+            displayUserEvents();
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la mise à jour du repas :", error);
+        });
+}
+
+// Fonction pour supprimer un repas
+function deleteMeal(eventIndex, mealIndex) {
+    const user = netlifyIdentity.currentUser();
+    const events = user?.user_metadata.events || [];
+    if (events[eventIndex]?.meal) {
+        events[eventIndex].meal.splice(mealIndex, 1);
+        user.update({ data: { events } })
+            .then(() => {
+                console.log("Repas supprimé avec succès.");
+                closeMealModal();
+                displayUserEvents();
+            })
+            .catch((error) => console.error("Erreur lors de la suppression :", error));
+    }
+}
+
+
+// Fonction pour ouvrir le modal des recettes
 function openRecipeModal(category, menuCategorieRecipeInput) {
     // Créer un modal en plein écran
     const modal = document.createElement("div");
@@ -502,19 +677,11 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
                         event.preventDefault();
 
                         const recipeId = recette.getAttribute("id");
-                        const recipeTitle = recette.getAttribute(
-                            "data-ref-titre"
-                        );
+                        const recipeTitle = recette.getAttribute("data-ref-titre");
 
                         // Vérifier si la recette est déjà ajoutée
-                        if (
-                            menuCategorieRecipeInput.querySelector(
-                                `#${CSS.escape(recipeId)}`
-                            )
-                        ) {
-                            alert(
-                                `La recette "${recipeTitle}" est déjà ajoutée.`
-                            );
+                        if (menuCategorieRecipeInput.querySelector(`#${CSS.escape(recipeId)}`)) {
+                            alert(`La recette "${recipeTitle}" est déjà ajoutée.`);
                             return;
                         }
 
@@ -522,8 +689,34 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
                         const recipeDiv = document.createElement("div");
                         recipeDiv.className = "recipeInput";
                         recipeDiv.id = recipeId;
+
+                        // Récupérer la valeur actuelle du champ des portions globales
+                        const globalPortionsInput = document.getElementById("portion-input");
+                        const globalPortionsValue = globalPortionsInput ? globalPortionsInput.value : "1";
+
                         recipeDiv.innerHTML = `
-                            <p class="recipeTitle">${recipeTitle}</p>
+                            <div class="recipe">
+                                <p class="recipeTitle">${recipeTitle}</p>
+                                <div class="portion-control">
+                                    <div class="portion-control__decrement minus" >
+                                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                            <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="portion-control__value_container">
+                                        <div class="portion-control__value">
+                                            <input type="text" inputmode="decimal" class="portion-control__value_number" value="${globalPortionsValue}">
+                                            <span class="portion-control__unit">portions</span>
+                                        </div>
+                                    </div>
+                                    <div class="portion-control__increment plus" >
+                                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                            <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                            <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="remove_recipeInput">×</button>
                         `;
 
@@ -597,11 +790,13 @@ function closeMealModal() {
 function validateMeal(eventIndex) {
     const mealDateInput = document.getElementById("mealDateInput");
     const mealTypeInput = document.getElementById("mealTypeInput");
+    const globalPortionInput = document.querySelector(".input_mealPortions #portion-input"); // Récupérer l'input dans 'input_mealPortions'
     const selectedCategories = [...document.querySelectorAll("#menuCategories .input_menuCategorie")];
 
     const mealDate = mealDateInput ? mealDateInput.value : "";
     const mealTypeIndex = mealTypeInput ? parseInt(mealTypeInput.value, 10) : null;
     const mealType = mealTypeIndex !== null ? mealTypes[mealTypeIndex] : "";
+    const mealPortion = globalPortionInput ? parseInt(globalPortionInput.value, 10) || 1 : 1; // Par défaut, 1 portion
 
     if (!mealDate || mealTypeIndex === null || isNaN(mealTypeIndex)) {
         alert("Veuillez entrer une date et sélectionner un type de repas.");
@@ -613,14 +808,20 @@ function validateMeal(eventIndex) {
         const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
 
         // Récupérer les recettes associées à cette catégorie
-        const recipeInputs = [
-            ...categoryElement.querySelectorAll(".recipeInput"),
-        ];
+        const recipeInputs = [...categoryElement.querySelectorAll(".recipeInput")];
 
-        const recipes = recipeInputs.map((recipeDiv) => ({
-            recipeId: recipeDiv.id, // ID de la recette
-            recipeName: recipeDiv.querySelector("p").textContent, // Nom de la recette
-        }));
+        const recipes = recipeInputs.map((recipeDiv) => {
+            const recipeId = recipeDiv.id; // ID de la recette
+            const recipeName = recipeDiv.querySelector("p").textContent; // Nom de la recette
+            const recipePortionInput = recipeDiv.querySelector(".portion-control__value_number");
+            const recipePortion = recipePortionInput ? parseInt(recipePortionInput.value, 10) || 1 : 1; // Portion spécifique à la recette
+
+            return {
+                recipeId: recipeId,
+                recipeName: recipeName,
+                recipePortion: recipePortion, // Ajouter la portion spécifique de la recette
+            };
+        });
 
         return {
             categoryMenu: categoryName,
@@ -643,6 +844,7 @@ function validateMeal(eventIndex) {
             const newMeal = {
                 mealDate: mealDate,
                 mealType: mealType,
+                mealPortion: mealPortion, // Ajouter les portions globales
                 menu: menu,
             };
 
@@ -678,51 +880,74 @@ function validateMeal(eventIndex) {
 
 
 
-function deleteMeal(eventIndex, mealIndex) {
-    const user = netlifyIdentity.currentUser();
 
-    if (!user) {
-        console.error("Utilisateur non connecté. Impossible de supprimer le repas.");
-        return;
-    }
+// Fonction pour mettre à jour les portions via boutons incrémentation/décrémentation
+function updatePortions(button, increment) {
+    // Trouver le conteneur parent pour cibler l'input associé
+    const portionControl = button.closest('.portion-control');
+    if (portionControl) {
+        const portionInput = portionControl.querySelector('.portion-control__value_number');
+        if (portionInput) {
+            // Convertir la valeur actuelle en nombre
+            let currentValue = parseInt(portionInput.value, 10) || 0;
 
-    // Récupérer les événements de l'utilisateur
-    const events = user.user_metadata.events || [];
-    const targetEvent = events[eventIndex];
+            // Ajouter ou soustraire selon l'incrément
+            currentValue += increment;
 
-    if (targetEvent && targetEvent.meal && Array.isArray(targetEvent.meal)) {
-        // Supprimer le repas du tableau
-        targetEvent.meal.splice(mealIndex, 1);
+            // Empêcher des valeurs négatives
+            if (currentValue < 1) currentValue = 1;
 
-        // Mettre à jour les métadonnées utilisateur
-        user.update({
-            data: {
-                events: events,
-            },
-        })
-            .then(() => {
-                console.log(`Repas supprimé avec succès pour l'événement ${eventIndex}.`);
-                displayUserEvents(); // Recharger les événements et repas
-            })
-            .catch((error) => {
-                console.error("Erreur lors de la suppression du repas :", error);
-            });
-    } else {
-        console.error("Repas ou événement introuvable.");
+            // Mettre à jour la valeur de l'input
+            portionInput.value = currentValue;
+
+            // Si c'est l'input global, synchroniser toutes les recettes
+            if (portionInput.id === "portion-input") {
+                synchronizeGlobalPortions();
+            }
+        }
     }
 }
 
+// Gestionnaire global pour les boutons d'incrémentation/décrémentation
+document.addEventListener('click', (event) => {
+    // Bouton de décrémentation
+    if (event.target.closest('.minus')) {
+        const button = event.target.closest('.minus');
+        updatePortions(button, -1);
+    }
 
-document.addEventListener("click", (event) => {
-    const deleteMealButton = event.target.closest(".deleteMealButton");
-    if (deleteMealButton) {
-        const eventIndex = parseInt(deleteMealButton.getAttribute("event-id"), 10);
-        const mealIndex = parseInt(deleteMealButton.getAttribute("meal-id"), 10);
-
-        if (!isNaN(eventIndex) && !isNaN(mealIndex)) {
-            deleteMeal(eventIndex, mealIndex);
-        } else {
-            console.error("Les indices d'événement ou de repas ne sont pas valides.");
-        }
+    // Bouton d'incrémentation
+    if (event.target.closest('.plus')) {
+        const button = event.target.closest('.plus');
+        updatePortions(button, 1);
     }
 });
+
+// Fonction pour synchroniser les portions globales avec toutes les recettes existantes
+function synchronizeGlobalPortions() {
+    // Récupérer la valeur actuelle de l'input global
+    const globalPortionsInput = document.getElementById("portion-input");
+    const globalPortionsValue = globalPortionsInput ? parseInt(globalPortionsInput.value, 10) || 1 : 1;
+
+    // Sélectionner tous les inputs de portions des recettes
+    const recipePortionInputs = document.querySelectorAll(".recipeInput .portion-control__value_number");
+
+    // Mettre à jour chaque input de portion de recette avec la valeur globale
+    recipePortionInputs.forEach((input) => {
+        input.value = globalPortionsValue;
+    });
+}
+
+
+function attachRemoveRecipeHandlers() {
+    // Sélectionner tous les boutons "remove_recipeInput"
+    document.querySelectorAll(".remove_recipeInput").forEach((button) => {
+        button.addEventListener("click", (event) => {
+            // Trouver le conteneur parent de la recette et le supprimer
+            const recipeInput = button.closest(".recipeInput");
+            if (recipeInput) {
+                recipeInput.remove();
+            }
+        });
+    });
+}

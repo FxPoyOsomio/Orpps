@@ -30,15 +30,17 @@
 .modal {
     background: #fff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 90%; /* Largeur par défaut sur mobile */
-    max-width: 300px; /* Largeur maximale pour les écrans plus larges */
+    width: 90%; 
+    max-width: 700px; /* Largeur maximale pour les écrans plus larges */
+    max-height: 90vh;
     z-index: 10000; /* Assure que le contenu du modal est au-dessus de l'overlay */
     display: flex;
     flex-direction: column;
     align-content: flex-start;
+    overflow-y: auto;
 }
 .modal_Title {
     text-align: left;
@@ -51,20 +53,25 @@
     border-radius: 5px;
     font-size: 16px;
 }
-
-.secondary-button {
-    background-color: #cb6863;
-    color: #fff;
+.primary-button , .secondary-button {
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
+    border: 1px solid #cb6863;
+    border-radius: 50px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
+}
+.primary-button {
+    background-color: #cb6863;
+    color: #fff;    
+}
+.secondary-button {
+    background-color: transparent;
+    color: #cb6863;
+}
+.primary-button:hover , .secondary-button:hover {
+    transform: scale(1.2);
 }
 
-.secondary-button:hover {
-    background-color: #a34c4c;
-}
 
 .close-button {
     background: none;
@@ -138,17 +145,32 @@
     gap: 15px;
     background-color: #fBFBFB;
     border-radius: 20px;
-    width: calc(100% - 30px);
-    padding: 15px;
+    width: 380px;
+    padding: 15px 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 .mealItem{
     display: flex;
     width: 100%;
     justify-content: space-between;
 }
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .mealTitle{
-    margin: 10px 0;
+    margin: 0;
+    margin-top: 10px ;
     color: #696969;
+}
+.mealPortion {
+    margin: 0;
+    margin-bottom: 10px ;
+    color: #1b1b1b;
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: 0.1cap;
 }
 .addMeal {
     background-color: transparent;
@@ -216,22 +238,39 @@
     width: 100%;
     margin-bottom: 15px;
 }
-.input_mealDate {
+.input_mealDate, .input_mealType, .input_mealPortions {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-.input_mealType {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.input_mealDate input {
+    padding: 5px 10px;
+    font-weight: 300;
+    font-size: 0.9rem;
+    font-family: 'Montserrat';
+    color: #1B1B1B; 
+    border: 1px solid rgba(63, 55, 53, .23);
+    border-radius: 10px;   
+    width: 175px;
+    height: 30px;
 }
+.input_mealType select {
+    padding: 5px 10px;
+    font-weight: 300;
+    font-size: 0.9rem;
+    font-family: 'Montserrat';
+    color: #1B1B1B; 
+    border: 1px solid rgba(63, 55, 53, .23);
+    border-radius: 10px;   
+    width: 197px;
+    height: 42px;
+}
+
 .input_menu {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 15px;
-    
+    margin-bottom: 15px;    
 }
 .input_menuCategories {
     display: flex;
@@ -239,9 +278,21 @@
     gap: 10px;
     width: 100%;
 }
+.input_menuCategorie h4 {
+    color: #696969;
+}
+.input_menuCategorie:has(.categoryCheckbox:checked) {
+    border: 1px dashed rgba(63, 55, 53, 0.23);
+    border-radius: 10px; 
+    padding: 10px 10px;
+}
+.input_menuCategorie:has(.categoryCheckbox:checked) h4 {
+    color: #1b1b1b;
+}
 .input_menuCategorie {
     display: flex;
     flex-direction: column;
+    padding: 0 11px; 
 }
 .input_menuCategorie label {
     display: flex;
@@ -254,12 +305,31 @@
 .menuCategorie_inputsButtons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 15px;
     width: 100%;
-    margin: 10px 0;
+    margin: 15px 0;
+}
+.menuCategorie_recipeInput_button , .menuCategorie_ingredientInput_button {
+    background-color: transparent;
+    border-radius: 50px;
+    border: 1px solid rgba(63, 55, 53, 0.23);
+    padding: 10px 20px;
+    color: #696969;
+    font-family: "Montserrat";
+    font-size: 0.8rem;
+    font-weight: 300;
+    transition: transform cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;;
+}
+.menuCategorie_recipeInput_button:hover, .menuCategorie_ingredientInput_button:hover {
+    transform: scale(1.1);
 }
 .modal_buttons {
     padding: 15px 0 30px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
 }
 
 
@@ -270,21 +340,31 @@
 }
 
 
-.deleteMealButton {
+.modifyMealButton {
     background-color: transparent;
     color: #696969;
     border: 1px dashed #696969;
     padding: 5px 10px;
+    width: 37px;
+    height: 37px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 20px;
     cursor: pointer;
     font-size: 0.8rem;
-    transition: transform 0.3s ease;
+    transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
+}
+.modifyMealButton path {
+    transform: fill cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
 }
 
-.deleteMealButton:hover {
-    transform: scale(1.1);
-    color: #cb6863;
+.modifyMealButton:hover {
+    transform: scale(1.2);
     border: 1px dashed #cb6863;
+}
+.modifyMealButton:hover path {
+    fill: #cb6863;
 }
 
 
@@ -354,47 +434,251 @@
     cursor: pointer;
 }
 
-
+.menuCategorie_recipeInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
 .recipeInput {
     display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
-    background: #f9f9f9;
-    border: 1px dashed #ddd;
-    border-radius: 50px;
-    padding: 5px 10px;
-    margin: 5px 0;
 }
 
 .recipeInput p {
     margin: 0;
-    font-size: 14px;
+    font-weight: 300;
+    font-size: 0.9rem;
+    font-family: 'Montserrat Alternates';
+    color: #1B1B1B; 
     flex-grow: 1;
     text-align: left;
 }
 
 .remove_recipeInput {
     color: #696969;
-    width: 24px;
-    height: 24px;
     border: none;
     background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.5rem;
+    padding: 10px;
+    transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
 }
 
 .remove_recipeInput:hover {
     color: #cb6863;
+    transform: scale(1.6);
 }
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+.shake-animation {
+    animation: shake 0.5s ease;
+}
+
 
 .meal_menu {
     margin-bottom: 15px;
 }
+.recipe {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 25px;
+    row-gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    width: fit-content;
+}
+.menuCategorie_recipes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 15px;
+    padding-bottom: 15px;
+}
+.recipeItem {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    column-gap: 15px;
+}
 .recipeTitle {
+    margin: 0;
+}
+.recipePortion {
+    margin: 0;
+    font-size: 1rem;
+    font-style: italic;
+}
+.recipe .portion-control {
+    height: 22px;
+    color: #1B1B1B;
+    border-radius: 50px;
+    min-width: unset;
+    max-width: unset;
+}
+.recipe .portion-control__decrement, .recipe .portion-control__increment {
+    height: 12px;
+    width: 12px;
+    padding: 5px;
+}
+.recipe .portion-control__unit, .recipe #portion-input, .recipe .portion-control__value_number {
+    color: #1B1B1B;
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+
+
+.portion-bring-conteneur {
+    display: flex;
+    align-items: center; /* Centre verticalement les enfants */
+    justify-content: center; /* Aligne le contenu à  droite */
+}
+
+.portion-control {
+    display: flex;
+    align-items: center; /* Centre verticalement les enfants */
+    justify-content: space-between;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid rgba(63, 55, 53, .23);
+    border-radius: 8px;
+    overflow: hidden; /* Cache tout débordement */
+    color: #CB6863;
+    font-family: 'Open Sans', sans-serif;
+    user-select: none;
+}
+
+/* Boutons */
+.portion-control__decrement, .portion-control__increment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    overflow: hidden; /* Empêche le débordement */
+}
+
+.portion-control__decrement {
+    border-right: 1px solid rgba(63, 55, 53, .23);
+}
+
+.portion-control__increment {
+    border-left: 1px solid rgba(63, 55, 53, .23);
+}
+
+/* Style pour l'icône SVG */
+.icon {
+    width: 24px; /* Largeur de l'icône */
+    height: 24px; /* Hauteur de l'icône */
+    transition: transform 0.2s ease; /* Transition pour l'agrandissement */
+}
+
+
+
+/* Agrandissement & couleur au survol */
+.portion-control__decrement:hover .icon,
+.portion-control__increment:hover .icon {
+    transform: scale(1.2); /* Agrandissement lors du survol */
+}
+
+/* Pour garder la couleur au clic */
+.portion-control__decrement:hover .icon-fill,
+.portion-control__increment:hover .icon-fill {
+    stroke: #CB6863; /* Changement de couleur au survol */
+}
+
+/* Conteneur pour la valeur */
+.portion-control__value_container {
+    display: flex;
+    align-items: center; /* Centre verticalement la valeur */
+    justify-content: flex-end; /* Aligne le contenu à droite */
+    gap: 5px;
+    margin-inline: 10px;
+}
+.portion-control__value {
+    display: flex;
+}
+
+.portion-control__value_number {
+    min-width: 1ch; /* Assure une largeur minimale pour une meilleure lisibilité */
+    max-width: 2ch; /* Limite la largeur pour éviter un dépassement excessif */
+    text-align: center; /* Centre le texte */
+    padding: 0 5px; /* Ajoute un peu d'espacement autour du texte */
+    border: none;
+    background-color: transparent;
+    font-weight: 700; 
+    font-size: 1em;
+    font-family: 'Caviar Dreams', sans-serif;    
+    color: #CB6863;
+    line-height: normal;
+    box-sizing: content-box; /* Assure que la largeur inclut uniquement le contenu */
+    overflow: hidden; /* Empêche les débordements */
+    white-space: nowrap; /* Empêche les retours à la ligne */
+}
+
+
+/* Champ d'entrée */
+#portion-input {
+    background-color: transparent;
+    font-weight: 300;
+    font-size: 0.9rem;
+    font-family: 'Montserrat';
+    color: #CB6863; ;
+}
+
+/* Unité de portion */
+.portion-control__unit {
+    font-weight: 300;
+    font-size: 0.9rem;
+    font-family: 'Montserrat'; 
+    color: #CB6863;
+    padding-left: 8px;
+}
+
+/* Réinitialisation des styles pour tous les inputs */
+.portion-control input {
+    -webkit-appearance: none; /* Supprime les styles par défaut sur Safari et Chrome */
+    -moz-appearance: none;    /* Supprime les styles par défaut sur Firefox */
+    appearance: none;         /* Supprime les styles par défaut sur les navigateurs modernes */
+    padding: 0;               /* Supprime le padding */
+    margin: 0;                /* Supprime la marge */
+    border: none;             /* Supprime la bordure par défaut */
+    background: none;         /* Supprime le fond par défaut */
+    font: inherit;            /* Hérite des propriétés de police du parent */
+}
+
+/* Styles spécifiques pour les inputs de type texte */
+input[type="text"] {
+    -webkit-appearance: textfield; /* Active le style textfield pour Safari et Chrome */
+    -moz-appearance: textfield;    /* Active le style textfield pour Firefox */
+    appearance: textfield;         /* Active le style textfield pour les navigateurs modernes */
+}
+
+/* Masquer les flèches pour les inputs de type number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
     margin: 0;
 }
 
 
+/* desactiver le zoom de la page sur mobile lorsqu'on clic sur un input */
+html {
+    touch-action: manipulation;
+}
