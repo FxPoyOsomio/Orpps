@@ -1,0 +1,33 @@
+.ingrédients-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0px;
+}
+
+.card-ingredient-image {
+    text-align: center;
+    padding: 10px;
+    max-width: 100%; /* Assure que l'image ne dépasse pas la largeur de son conteneur */
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-ingredient-image img {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+}
+
+.ingredients-details {
+    display: flex;                /* Utilise Flexbox pour le layout */
+    flex-direction: column;       /* Aligne les enfants en colonne */
+    align-items: center;          /* Centre horizontalement le contenu */
+    text-align: center;           /* Centre le texte à l'intérieur */
+    font-weight: 300;
+}

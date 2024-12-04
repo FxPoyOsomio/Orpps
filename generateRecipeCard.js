@@ -81,7 +81,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
     const urlRecette = `/dist/recettes/${slug}.html`;
     const recipeDuration = recipe.fields['Temps recette'] || '';
     const difficultiesLevel = recipe.fields['Difficulté recette'] || '';
-    const pricingLevel = recipe.fields['Prix recette'] || '';
+    const pricingLevel = recipe.fields['Prix recette / portions (FORMATÉ)'] || '';
     const relativeImagePath = path.join('/assets/images/img_recette', `${slug}.jpg`);
 
     // Encoder chaque catégorie et sous-catégorie avec `encodeURIComponent` 
@@ -102,6 +102,10 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
     const instructions = sanitizeText(recipe.fields['Instruction'] || '');
     const description = sanitizeText(recipe.fields['Description recette'] || '');
 
+    const pricing = recipe.fields['Prix recette / portions'] || '';
+    const calorie = recipe.fields['Energie [ kcal / portion ]'] || '';
+    const timing = recipe.fields['Temps recette'] || '';
+
     console.log('Generated HTML:', `
         <a href="${urlRecette}" 
             class="recette-item" 
@@ -111,6 +115,9 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-description="${description}"
             data-ref-categorie="${categories}" 
             data-ref-subcategorie="${subCategories}" 
+            data-ref-timing="${timing}"
+            data-ref-pricing="${pricing}"
+            data-ref-calorie="${calorie}"
             data-ref-ingredients="${ingredients}" 
             data-ref-instructions="${instructions}">
         </a>
@@ -209,26 +216,18 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
                         </div>
                         <div class="top-info">
                             <div class="top-info__img">
-                                <svg id="Calque_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52.29 64">
+                                <svg id="Calque_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55.29 67">
                                     <defs>
                                         <style>
-                                            .cls-1 {
-                                                fill: #cb6863;
-                                            }
+                                        .cls-1 {
+                                            fill: #cd6a65;
+                                        }
                                         </style>
                                     </defs>
-                                    <g id="Calque_1-2" data-name="Calque_1">
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g>
-                                                <path class="cls-1"
-                                                    d="M26.14,64c-14.42,0-26.14-11.73-26.14-26.14v-12.9h4.69v12.9c0,11.83,9.62,21.45,21.45,21.45s21.45-9.62,21.45-21.45v-12.9h4.69v12.9c0,14.42-11.73,26.14-26.14,26.14Z" />
-                                                <rect class="cls-1" x="12.96" y="21.34" width="19.87" height="3.5" />
-                                                <rect class="cls-1" x="12.83" y="27.44" width="20" height="3.5" />
-                                                <path class="cls-1"
-                                                    d="M26.14,42.29c-5.01,0-9.09-4.08-9.09-9.09v-14.11c0-5.01,4.08-9.09,9.09-9.09s9.09,4.08,9.09,9.09h-4.69c0-2.42-1.97-4.39-4.39-4.39s-4.39,1.97-4.39,4.39v14.11c0,2.42,1.97,4.39,4.39,4.39s4.39-1.97,4.39-4.39h4.69c0,5.01-4.08,9.09-9.09,9.09Z" />
-                                                <path class="cls-1"
-                                                    d="M26.14,52.29C11.73,52.29,0,40.56,0,26.14S11.73,0,26.14,0s26.14,11.73,26.14,26.14-11.73,26.14-26.14,26.14ZM26.14,4.69C14.32,4.69,4.69,14.32,4.69,26.14s9.62,21.45,21.45,21.45,21.45-9.62,21.45-21.45S37.97,4.69,26.14,4.69Z" />
-                                            </g>
+                                    <g id="Calque_2-2" data-name="Calque_2">
+                                        <g>
+                                        <path class="cls-1" d="M19.8,23.87v-.99c0-2.54.9-4.7,2.7-6.5s3.96-2.7,6.5-2.7,4.95,1.14,7.21,3.42l-2.41,2.41c-1.6-1.59-3.2-2.38-4.79-2.38s-2.96.56-4.09,1.68-1.69,2.48-1.69,4.06v.99h10.04l-.68,3.04h-9.36v.91h9.41l-.66,3.03-8.74-.05c0,1.6.56,2.96,1.69,4.08s2.49,1.68,4.09,1.68,2.96-.57,4.08-1.7c.7-.7,1.26-1.72,1.67-3.06h3.48c-.58,2.43-1.49,4.26-2.72,5.51-1.79,1.79-3.96,2.69-6.51,2.69s-4.7-.9-6.5-2.7-2.7-3.96-2.7-6.5v.05h-2.74l.66-3.03h2.07v-.91h-2.11l.66-3.04h1.44Z"/>
+                                        <path class="cls-1" d="M54.39,32.62c.32-1.68.5-3.41.5-5.18C54.88,12.31,42.57,0,27.44,0S0,12.31,0,27.44c0,2.4.31,4.73.9,6.96-.32,1.67-.49,3.39-.49,5.16,0,15.13,12.31,27.44,27.44,27.44s27.44-12.31,27.44-27.44c0-2.4-.32-4.72-.9-6.94ZM27.44,4c12.93,0,23.44,10.52,23.44,23.44s-10.52,23.44-23.44,23.44S4,40.37,4,27.44,14.52,4,27.44,4ZM27.85,63c-11.88,0-21.71-8.88-23.23-20.35,4.93,7.37,13.32,12.23,22.83,12.23,10.16,0,19.05-5.56,23.79-13.79-.79,12.21-10.98,21.91-23.39,21.91Z"/>
                                         </g>
                                     </g>
                                 </svg>
