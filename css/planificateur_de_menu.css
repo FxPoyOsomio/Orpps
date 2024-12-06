@@ -45,6 +45,14 @@
 .modal_Title {
     text-align: left;
 }
+#eventNameInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
 .input-field {
     width: 100%;
     padding: 10px;
@@ -106,6 +114,28 @@
     align-items: center;
     width: 100%;
 }
+.event_buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding-left: 10px;
+}
+.modifyEventButton {
+    background-color: transparent;
+    color: #696969;
+    border: 1px dashed #696969;
+    padding: 5px 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
+}
+
 
 .event_ovelayContainer {
     display: flex;
@@ -681,4 +711,9 @@ input[type="number"]::-webkit-outer-spin-button {
 /* desactiver le zoom de la page sur mobile lorsqu'on clic sur un input */
 html {
     touch-action: manipulation;
+}
+
+
+#addEvent {
+    width: 100%;
 }

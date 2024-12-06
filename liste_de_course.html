@@ -6,7 +6,7 @@
     <title>Orpps - Liste de course</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos_orpps/Orpps_favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/recette-details.css">
+    <!-- <link rel="stylesheet" href="/css/recette-details.css"> -->
     <link rel="stylesheet" href="/css/liste_de_course.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
@@ -18,6 +18,7 @@
     <main class="container">
 
         <h1>Ma liste de course</h1>
+        
         <div class="ingredient_list"></div>
 
 
@@ -25,5 +26,121 @@
     <div id="footer"></div>
     <script src="/js/script.js" type="module"></script>
     <script src="/js/liste_de_courses.js" type="module"></script>
+    <script>
+         document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(() => {
+
+                
+
+                // Conversion initiale des valeurs des inputs en utilisant des virgules pour l'affichage
+                document.querySelectorAll(".highlight-quantity input").forEach(input => {
+                    if (input.value.includes('.')) {
+                        input.value = convertPointToComma(input.value);
+                    }
+                });
+
+
+                
+                // Appliquer l'ajustement de style initial pour tous les ingrédients
+                initializeIngredientStyles();
+                initializeIngredientStyles(); // Deuxième appel pour Safari
+            }, 50); // Délai de 50 ms pour laisser Safari traiter le DOM
+        });
+     
+
+
+
+        function adjustInputWidth(input) {
+            input.style.width = ((input.value.length + 1) * 0.5) + "em";
+            input.style.textAlign = "center";
+            input.style.border = "none";
+        }
+
+        function initializeIngredientStyles() {
+    // Extraire tous les ingrédients de la page
+    const originalIngredients = Array.from(document.querySelectorAll(".card-ingredient")).map(card => {
+        return {
+            dataRefId: card.getAttribute("data-ref-id"), // Utilise l'attribut `data-ref-id` comme identifiant unique
+            quantite: parseFloat(card.querySelector(".highlight-quantity input")?.value || 0), // Quantité initiale
+        };
+    });
+
+    // Parcourir tous les ingrédients et ajuster les styles initialement
+    originalIngredients.forEach(ingredient => {
+        const ingredientElements = document.querySelectorAll(`[data-ref-id="${ingredient.dataRefId}"]`);
+        if (ingredientElements.length > 0) {
+            ingredientElements.forEach(ingredientSpan => {
+                const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
+                const quantitySpan = ingredientSpan.querySelector(".highlight-quantity span");
+
+                if (quantityInput) {
+                    adjustInputWidth(quantityInput); // Ajuster la largeur initiale du champ input
+                    quantityInput.style.backgroundColor = "transparent";
+                    quantityInput.style.border = "none";
+                    quantityInput.style.textAlign = "center";
+                }
+
+                // Vérifiez le contenu du `span` et ajustez en conséquence
+                if (quantitySpan) {
+                    const textContent = quantitySpan.textContent.trim();
+                    if (textContent === "pièce") {
+                        quantitySpan.style.display = "none"; // Cachez le span
+                    } else if (!textContent.endsWith(" de")) {
+                        quantitySpan.textContent += " de"; // Ajoutez " de " uniquement si ce n'est pas déjà présent
+                    }
+                }
+            });
+        }
+    });
+
+    // Ajustement des styles d'encadrement et focus pour chaque ingrédient
+    document.querySelectorAll(".card-ingredient").forEach(card => {
+        const input = card.querySelector(".highlight-quantity input");
+        if (input) {
+            input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
+
+            // Gestion des styles d'encadrement et focus
+            card.addEventListener("mouseover", function () {
+                input.style.border = "1px solid #ccc";
+                input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
+            });
+            card.addEventListener("mouseout", function () {
+                input.style.border = "1px solid transparent";
+                input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
+            });
+            card.addEventListener("click", function () {
+                input.focus();
+                input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
+            });
+
+            input.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    this.blur();
+                }
+            });
+
+            // Ajustement de la largeur du champ input en fonction du texte
+            input.addEventListener("input", function () {
+                adjustInputWidth(this);
+            });
+            // Ajustement initial
+            adjustInputWidth(input);
+        }
+    });
+}
+
+
+
+
+
+
+        // Fonction de conversion du point en virgule pour l'affichage
+        function convertPointToComma(value) {
+            if (typeof value === 'number') {
+                value = value.toString();
+            }
+            return value.replace('.', ',');
+        }
+    </script>
 </body>
 </html>

@@ -52,11 +52,20 @@ async function generateIngredientsHTML() {
         const category = fields["Catégorie"] || "Non spécifié";
         const categoryOrder = fields["Ordre d'affichage Catégorie"] || "Non spécifié";
         const rayon = fields["Rayon"] || "Non spécifié";
-        const sousRayon = fields["Sous rayon"] || "Non spécifié";
+        const sousRayons = fields["Sous rayon"] || ["Non spécifié"]; // Tableau de sous-rayons
         const pricing = fields["Prix / Unité"] || "0";
         const name = fields["Nom ingrédient"] || "Ingrédient inconnu";
         const unit = fields["Unité [CONVERSION]"] || "unité";
-        const img = fields["url_Img"] || "https://fxpoyosomio.github.io/Orpps/assets/images/no_image.jpg"; 
+        const img = fields["url_Img"] || "https://fxpoyosomio.github.io/Orpps/assets/images/no_image.jpg";
+
+        // Générer les divs pour chaque sous-rayon
+        const sousRayonHTML = sousRayons
+            .map((sousRayon) => `
+                <div class="sousRayon-container">
+                    <h7>${sousRayon}</h7>
+                </div>
+            `)
+            .join("");
 
         return `
         <div class="card-ingredient" 
@@ -65,13 +74,14 @@ async function generateIngredientsHTML() {
             data-ref-category="${category}"
             data-ref-category_order="${categoryOrder}"
             data-ref-rayon="${rayon}"
-            data-ref-sousRayon="${sousRayon}" 
+            data-ref-sousRayon="${sousRayons}"
             data-ref-pricing="${pricing}"
             >
-            <div class="sousRayon-containe">
-                    <h7>${sousRayon}</h7>
-            </div>
+        
             <div class="card-ingredient-image">
+                <div class="sousRayon-containers">
+                    ${sousRayonHTML}
+                </div>
                 <img src="${img}" alt="${name}">
             </div>
             <span class="ingredients-details" id="ingredients">
@@ -93,6 +103,8 @@ async function generateIngredientsHTML() {
     fs.writeFileSync("./dist/ingredients.html", ingredientCards, "utf-8");
     console.log("Le fichier /dist/ingredients.html a été généré avec succès !");
 }
+
+
 
 // Exécuter le script
 generateIngredientsHTML();

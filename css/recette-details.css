@@ -517,7 +517,7 @@ html {
 }
 
 .highlight {
-    background-color: #F6E2DF; /* ou une autre couleur de votre choix */
+    background-color: #F6E2DF; 
     transition: background-color 0.3s ease;
 }
 

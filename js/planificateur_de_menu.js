@@ -39,24 +39,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// Fonction pour créer et afficher le modal
-function openEventModal() {
+// Fonction pour ouvrir le modal des événements (ajouter ou modifier)
+function openEventModal(eventIndex = null) {
+    const user = netlifyIdentity.currentUser();
+    const events = user?.user_metadata.events || [];
+    const event = eventIndex !== null ? events[eventIndex] : null;
+
     // Créer le modal dynamiquement
     const modal = document.createElement("div");
     modal.className = "modal-overlay";
     modal.innerHTML = `
         <div class="modal">
-            <h4>Nom du nouvel évènement</h4>
-            <input type="text" id="eventNameInput" placeholder="Nom de l'évènement" required />
-            <button class="secondary-button" id="validateEvent">Valider</button>
-            <button class="secondary-button" id="closeModal">Annuler</button>
+            <h4>${event ? "Modifier un évènement" : "Nouvel évènement"}</h4>
+            <input type="text" id="eventNameInput" placeholder="Nom de l'évènement" value="${event?.name || ""}" required />
+            <div class="modal_buttons">
+                ${
+                    event
+                        ? '<button class="primary-button danger-button" id="deleteEvent">Supprimer</button>'
+                        : ""
+                }
+                ${
+                    event
+                        ? '<button class="secondary-button danger-button" id="validateEvent">Modifier</button>'
+                        : '<button class="primary-button" id="validateEvent">Ajouter</button>'
+                }
+                <button class="secondary-button" id="closeModal">Annuler</button>
+            </div>
         </div>
     `;
     document.body.appendChild(modal);
 
     // Ajouter les événements au modal
-    document.getElementById("validateEvent").addEventListener("click", validateEvent);
+    document.getElementById("validateEvent").addEventListener("click", () => {
+        if (event) {
+            updateEvent(eventIndex); // Modifier l'événement
+        } else {
+            validateEvent(); // Ajouter un nouvel événement
+        }
+    });
+
+    if (event) {
+        document.getElementById("deleteEvent").addEventListener("click", () => {
+            deleteEvent(eventIndex); // Supprimer l'événement
+        });
+    }
+
     document.getElementById("closeModal").addEventListener("click", closeEventModal);
+}
+
+
+// Fonction pour mettre à jour un événement existant
+function updateEvent(eventIndex) {
+    const eventNameInput = document.getElementById("eventNameInput");
+    const eventName = eventNameInput ? eventNameInput.value.trim() : "";
+
+    if (!eventName) {
+        alert("Veuillez entrer un nom pour l'évènement.");
+        return;
+    }
+
+    const user = netlifyIdentity.currentUser();
+    if (user) {
+        const events = user.user_metadata.events || [];
+        const event = events[eventIndex];
+        if (event) {
+            event.name = eventName;
+            event.last_modified = new Date().toISOString();
+
+            user.update({ data: { events } })
+                .then((updatedUser) => {
+                    console.log("Événement modifié avec succès :", updatedUser.user_metadata.events[eventIndex]);
+                    closeEventModal();
+                    displayUserEvents(); // Actualiser l'affichage des événements
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de la modification de l'événement :", error);
+                });
+        }
+    }
+}
+
+// Fonction pour supprimer un événement
+function deleteEvent(eventIndex) {
+    const user = netlifyIdentity.currentUser();
+    if (user) {
+        const events = user.user_metadata.events || [];
+        if (events[eventIndex]) {
+            events.splice(eventIndex, 1); // Supprimer l'événement
+
+            user.update({ data: { events } })
+                .then((updatedUser) => {
+                    console.log("Événement supprimé avec succès :", updatedUser.user_metadata.events);
+                    closeEventModal();
+                    displayUserEvents(); // Actualiser l'affichage des événements
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de la suppression de l'événement :", error);
+                });
+        }
+    }
 }
 
 // Fonction pour fermer le modal
@@ -94,16 +175,27 @@ function validateEvent() {
             data: {
                 events: updatedEvents,
             },
-        }).then((updatedUser) => {
-            console.log("Événement ajouté avec succès :", updatedUser.user_metadata.events);
+        })
+        .then(() => {
+            console.log("Événement ajouté avec succès.");
+            
+            // Recharger les données utilisateur pour garantir leur actualisation
+            return netlifyIdentity.refresh();
+        })
+        .then((updatedUser) => {
+            console.log("Utilisateur actualisé :", updatedUser);
             closeEventModal(); // Fermer le modal après validation
-        }).catch((error) => {
+            displayUserEvents(); // Actualiser l'affichage des événements avec les nouvelles données
+        })
+        .catch((error) => {
             console.error("Erreur lors de l'ajout de l'événement :", error);
         });
     } else {
         alert("Utilisateur non connecté. Veuillez vous connecter pour ajouter un évènement.");
     }
 }
+
+
 
 
 // Fonction pour afficher les événements existants avec les repas associés
@@ -130,8 +222,32 @@ function displayUserEvents() {
                                     <div class="titre-section-border"></div>
                                 </div>
                             </div>
-                            
-
+                            <div class="event_buttons">
+                                <button class="modifyEventButton" event-id="${eventIndex}">
+                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="#696969"></path> </g></svg>
+                                </button>
+                                <primary-button text="" class="addEvent_IngredientList_Button" event-id="${eventIndex}" href="/liste_de_course.html">
+                                    <svg width="64px" height="64px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" class="si-glyph si-glyph-basket-plus" fill="#000000">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <title>625</title>
+                                            <defs> </defs>
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <g transform="translate(0.000000, 1.000000)" fill="#ffffff">
+                                                    <path
+                                                        d="M9.927,11.918 C9.887,11.833 9.86,11.741 9.86,11.639 L9.86,7.483 C9.86,7.145 10.146,6.907 10.448,6.907 L10.469,6.907 C10.77,6.907 11.063,7.145 11.063,7.483 L11.063,10.943 L11.965,10.943 L11.965,8.982 L13.258,8.982 L13.422,5.976 L14.188,5.976 C14.588,5.976 14.913,4.756 14.913,4.756 C14.913,4.386 14.589,4.084 14.188,4.084 L12.26,4.084 L11.225,0.447 C11.074,0.13 10.699,0.00199999998 10.387,0.161 L10.315,0.197 C10.005,0.357 9.876,0.743 10.027,1.06 L10.768,4.083 L4.114,4.083 L4.882,1.064 C5.036,0.75 4.909,0.362 4.601,0.199 L4.531,0.163 C4.22,0.000999999981 3.843,0.125 3.689,0.44 L2.616,4.083 L0.726,4.083 C0.326,4.083 0.000999999931,4.385 0.000999999931,4.755 C0.000999999931,4.755 0.325,5.975 0.726,5.975 L1.362,5.975 L1.811,12.652 C1.811,12.652 1.863,13.961 3.924,13.961 L9.928,13.961 L9.928,11.918 L9.927,11.918 Z M11.969,5 L13.031,5 L13.031,6.062 L11.969,6.062 L11.969,5 L11.969,5 Z M3.094,6.031 L1.912,6.031 L1.912,4.906 L3.094,4.906 L3.094,6.031 L3.094,6.031 Z M5.006,11.742 C5.006,12.092 4.755,12.375 4.447,12.375 L4.424,12.375 C4.113,12.375 3.863,12.092 3.863,11.742 L3.863,7.413 C3.863,7.063 4.113,6.781 4.424,6.781 L4.447,6.781 C4.755,6.781 5.006,7.063 5.006,7.413 L5.006,11.742 L5.006,11.742 Z M8.004,11.547 C8.004,11.881 7.774,12.152 7.49,12.152 L7.469,12.152 C7.185,12.152 6.955,11.881 6.955,11.547 L6.955,7.448 C6.955,7.114 7.184,6.844 7.469,6.844 L7.49,6.844 C7.773,6.844 8.004,7.115 8.004,7.448 L8.004,11.547 L8.004,11.547 Z"
+                                                        class="si-glyph-fill"> </path>
+                                                    <path
+                                                        d="M16,12.012 L13.992,12.012 L13.992,10.106 L13.055,10.106 L13.055,12.012 L11.052,12.012 L11.052,12.906 L13.055,12.906 L13.055,14.938 L13.992,14.938 L13.992,12.906 L16,12.906 L16,12.012 Z"
+                                                        class="si-glyph-fill"> </path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </primary-button>
+                            </div>
                         </div>
                         <div class="event_ovelayContainer">
                             <div class="event_meals" id="eventMeals_${eventIndex}">
@@ -266,10 +382,21 @@ function generateMealMenu(meal, mealMenuContainer) {
             // Ajouter les recettes de cette catégorie
             if (category.recipes && Array.isArray(category.recipes)) {
                 category.recipes.forEach((recipe) => {
-                    console.log(`Ajout de la recette : ${recipe.recipeName} (ID: ${recipe.recipeId})`);
+                    const ingredientsData = recipe.ingredients
+                        ? JSON.stringify(recipe.ingredients.map((ingredient) => ({
+                              "record-id": ingredient.recordId,
+                              qté: ingredient.quantity,
+                          })))
+                        : null;
+
+                    const portionBase = recipe.portionBase || 1; // Défaut à 1 si non défini
+
                     categoryHTML += `
-                        <div class="recipeItem" id="${recipe.recipeId}">
-                            <p class="recipeTitle">${recipe.recipeName}</p><p class="recipePortion"> ${recipe.recipePortion} portions</p>
+                        <div class="recipeItem" id="${recipe.recipeId}" 
+                            ${ingredientsData ? `data-ref-ingrédient-RecordId-Qt='${ingredientsData}'` : ""}
+                            data-ref-portion-base="${portionBase}">
+                            <p class="recipeTitle">${recipe.recipeName}</p>
+                            <p class="recipePortion"> ${recipe.recipePortion} portions</p>
                         </div>
                     `;
                 });
@@ -310,12 +437,26 @@ function generateMealMenu(meal, mealMenuContainer) {
 
 
 
-// Ajouter un gestionnaire pour le bouton "Nouveau repas"
+
+// Ajouter un gestionnaire pour le bouton "Nouveau repas" & nouveau event
 document.addEventListener("click", (event) => {
+
     const addMealButton = event.target.closest(".addMeal");
     if (addMealButton) {
         const eventIndex = parseInt(addMealButton.getAttribute("event-id"), 10);
         openMealModal(eventIndex);
+    }
+
+    const modifyEventButton = event.target.closest(".modifyEventButton");
+    if (modifyEventButton) {
+        const eventIndex = parseInt(modifyEventButton.getAttribute("event-id"), 10);
+        openEventModal(eventIndex); // Ouvrir le modal pour modifier l'événement
+    }
+
+    const button = event.target.closest(".addEvent_IngredientList_Button");
+    if (button) {
+        const eventIndex = parseInt(button.getAttribute("event-id"), 10);
+        addIngredientsToShoppingList(eventIndex);
     }
 });
 // Gestionnaire global pour les boutons "Modifier le repas"
@@ -463,33 +604,45 @@ function openMealModal(eventIndex, mealIndex = null) {
                     ? meal.menu
                           .filter((menuItem) => menuItem.categoryMenu === category)
                           .flatMap((menuItem) =>
-                              menuItem.recipes.map(
-                                  (recipe) => `
-                                <div class="recipeInput" id="${recipe.recipeId}">
-                                    <div class="recipe">
-                                        <p>${recipe.recipeName}</p>
-                                        <div class="portion-control">
-                                            <div class="portion-control__decrement minus">
-                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                                    <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
-                                                </svg>
-                                            </div>
-                                            <div class="portion-control__value_container">
-                                                <input type="text" value="${recipe.recipePortion}" class="portion-control__value_number" />
-                                                <span class="portion-control__unit">portions</span>
-                                            </div>
-                                            <div class="portion-control__increment plus">
-                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                                    <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
-                                                    <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
-                                                </svg>
+                              menuItem.recipes.map((recipe) => {
+                                  const ingredientsData = recipe.ingredients
+                                      ? JSON.stringify(recipe.ingredients.map((ingredient) => ({
+                                            "record-id": ingredient.recordId,
+                                            qté: ingredient.quantity,
+                                        })))
+                                      : null;
+    
+                                  // Récupération de la portion base
+                                  const portionBase = recipe.portionBase || 1;
+    
+                                  return `
+                                    <div class="recipeInput" id="${recipe.recipeId}" 
+                                        ${ingredientsData ? `data-ref-ingrédient-RecordId-Qt='${ingredientsData}'` : ""}
+                                        data-ref-portion-base="${portionBase}">
+                                        <div class="recipe">
+                                            <p>${recipe.recipeName}</p>
+                                            <div class="portion-control">
+                                                <div class="portion-control__decrement minus">
+                                                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                                        <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="portion-control__value_container">
+                                                    <input type="text" inputmode="decimal" class="portion-control__value_number" value="${recipe.recipePortion}" />
+                                                    <span class="portion-control__unit">portions</span>
+                                                </div>
+                                                <div class="portion-control__increment plus">
+                                                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                                        <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                        <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
+                                                    </svg>
+                                                </div>
                                             </div>
                                         </div>
+                                        <button class="remove_recipeInput">×</button>
                                     </div>
-                                    <button class="remove_recipeInput">×</button>
-                                </div>
-                            `
-                              )
+                                `;
+                              })
                           )
                           .join("")
                     : "";
@@ -532,6 +685,7 @@ function openMealModal(eventIndex, mealIndex = null) {
             });
         });
     }
+    
 
     updateCategories(meal);
     updateModalTitle();
@@ -561,6 +715,7 @@ function openMealModal(eventIndex, mealIndex = null) {
 
 
 
+
 function updateMeal(eventIndex, mealIndex) {
     const user = netlifyIdentity.currentUser();
     const events = user?.user_metadata.events || [];
@@ -581,11 +736,38 @@ function updateMeal(eventIndex, mealIndex) {
         const categoryName = categoryElement.getAttribute("value");
         const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
 
-        const recipes = [...categoryElement.querySelectorAll(".recipeInput")].map((recipeDiv) => ({
-            recipeId: recipeDiv.id,
-            recipeName: recipeDiv.querySelector("p").textContent,
-            recipePortion: parseInt(recipeDiv.querySelector("input").value, 10),
-        }));
+        const recipes = [...categoryElement.querySelectorAll(".recipeInput")].map((recipeDiv) => {
+            const recipeId = recipeDiv.id;
+            const recipeName = recipeDiv.querySelector("p").textContent;
+            const recipePortion = parseInt(recipeDiv.querySelector("input").value, 10);
+            
+            // Récupérer `data-ref-portion-base`
+            const portionBaseAttr = recipeDiv.getAttribute("data-ref-portion-base");
+            const portionBase = portionBaseAttr ? parseFloat(portionBaseAttr) : 1;
+
+            // Récupérer les ingrédients
+            let recipeIngredients = [];
+            const ingredientData = recipeDiv.getAttribute("data-ref-ingrédient-RecordId-Qt");
+            if (ingredientData) {
+                try {
+                    const decodedData = JSON.parse(ingredientData);
+                    recipeIngredients = decodedData.map((ingredient) => ({
+                        recordId: ingredient["record-id"],
+                        quantity: ingredient["qté"],
+                    }));
+                } catch (error) {
+                    console.error(`Erreur de parsing JSON pour les ingrédients de la recette ${recipeId} :`, error);
+                }
+            }
+
+            return {
+                recipeId: recipeId,
+                recipeName: recipeName,
+                recipePortion: recipePortion,
+                portionBase: portionBase, // Inclure la portion de base
+                ingredients: recipeIngredients,
+            };
+        });
 
         return {
             categoryMenu: categoryName,
@@ -609,6 +791,7 @@ function updateMeal(eventIndex, mealIndex) {
         });
 }
 
+
 // Fonction pour supprimer un repas
 function deleteMeal(eventIndex, mealIndex) {
     const user = netlifyIdentity.currentUser();
@@ -620,6 +803,7 @@ function deleteMeal(eventIndex, mealIndex) {
                 console.log("Repas supprimé avec succès.");
                 closeMealModal();
                 displayUserEvents();
+
             })
             .catch((error) => console.error("Erreur lors de la suppression :", error));
     }
@@ -690,6 +874,22 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
                         recipeDiv.className = "recipeInput";
                         recipeDiv.id = recipeId;
 
+                        // Ajouter data-ref-ingrédient-RecordId-Qt
+                        const ingredientData = recette.getAttribute("data-ref-ingrédient-RecordId-Qt");
+                        if (ingredientData) {
+                            recipeDiv.setAttribute("data-ref-ingrédient-RecordId-Qt", ingredientData);
+                        } else {
+                            console.warn(`Aucune donnée d'ingrédient trouvée pour la recette ${recipeId}`);
+                        }
+
+                        // Ajouter data-ref-portion-base
+                        const portionBase = recette.getAttribute("data-ref-portion-base");
+                        if (portionBase) {
+                            recipeDiv.setAttribute("data-ref-portion-base", portionBase);
+                        } else {
+                            console.warn(`Aucune donnée de portion base trouvée pour la recette ${recipeId}`);
+                        }
+
                         // Récupérer la valeur actuelle du champ des portions globales
                         const globalPortionsInput = document.getElementById("portion-input");
                         const globalPortionsValue = globalPortionsInput ? globalPortionsInput.value : "1";
@@ -698,7 +898,7 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
                             <div class="recipe">
                                 <p class="recipeTitle">${recipeTitle}</p>
                                 <div class="portion-control">
-                                    <div class="portion-control__decrement minus" >
+                                    <div class="portion-control__decrement minus">
                                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                             <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
                                         </svg>
@@ -709,7 +909,7 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
                                             <span class="portion-control__unit">portions</span>
                                         </div>
                                     </div>
-                                    <div class="portion-control__increment plus" >
+                                    <div class="portion-control__increment plus">
                                         <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                             <path class="icon-fill" d="M12 3V21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
                                             <path class="icon-fill" d="M3 12H21" stroke="#3f3735" stroke-width="2" stroke-linecap="round"></path>
@@ -751,6 +951,7 @@ function openRecipeModal(category, menuCategorieRecipeInput) {
 }
 
 
+
 // Gestionnaire pour ouvrir le modal des recettes
 document.addEventListener("click", (event) => {
     // Vérifier si le clic vient d'un bouton avec la classe 'menuCategorie_recipeInput_button'
@@ -790,36 +991,100 @@ function closeMealModal() {
 function validateMeal(eventIndex) {
     const mealDateInput = document.getElementById("mealDateInput");
     const mealTypeInput = document.getElementById("mealTypeInput");
-    const globalPortionInput = document.querySelector(".input_mealPortions #portion-input"); // Récupérer l'input dans 'input_mealPortions'
+    const globalPortionInput = document.querySelector(".input_mealPortions #portion-input");
     const selectedCategories = [...document.querySelectorAll("#menuCategories .input_menuCategorie")];
 
     const mealDate = mealDateInput ? mealDateInput.value : "";
     const mealTypeIndex = mealTypeInput ? parseInt(mealTypeInput.value, 10) : null;
     const mealType = mealTypeIndex !== null ? mealTypes[mealTypeIndex] : "";
-    const mealPortion = globalPortionInput ? parseInt(globalPortionInput.value, 10) || 1 : 1; // Par défaut, 1 portion
+    const mealPortion = globalPortionInput ? parseInt(globalPortionInput.value, 10) || 1 : 1;
 
     if (!mealDate || mealTypeIndex === null || isNaN(mealTypeIndex)) {
         alert("Veuillez entrer une date et sélectionner un type de repas.");
         return;
     }
 
-    const menu = selectedCategories.map((categoryElement) => {
-        const categoryName = categoryElement.getAttribute("value");
-        const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
-
-        // Récupérer les recettes associées à cette catégorie
+    // Construction du tableau des recettes
+    const recipes = selectedCategories.flatMap((categoryElement) => {
         const recipeInputs = [...categoryElement.querySelectorAll(".recipeInput")];
 
-        const recipes = recipeInputs.map((recipeDiv) => {
+        return recipeInputs.map((recipeDiv) => {
             const recipeId = recipeDiv.id; // ID de la recette
             const recipeName = recipeDiv.querySelector("p").textContent; // Nom de la recette
             const recipePortionInput = recipeDiv.querySelector(".portion-control__value_number");
-            const recipePortion = recipePortionInput ? parseInt(recipePortionInput.value, 10) || 1 : 1; // Portion spécifique à la recette
+            const recipePortion = recipePortionInput ? parseInt(recipePortionInput.value, 10) || 1 : 1;
+
+            // Récupérer les ingrédients depuis `data-ref-ingrédient-RecordId-Qt`
+            let recipeIngredients = [];
+            const ingredientData = recipeDiv.getAttribute("data-ref-ingrédient-RecordId-Qt");
+            console.log("Attribut data-ref-ingrédient-RecordId-Qt pour la recette :", recipeDiv.id, ingredientData);
+
+            if (ingredientData) {
+                try {
+                    // Décoder et parser les données JSON
+                    const decodedData = JSON.parse(ingredientData);
+                    console.log("Données JSON des ingrédients :", decodedData);
+
+                    recipeIngredients = decodedData.map((ingredient) => ({
+                        recordId: ingredient["record-id"],
+                        quantity: ingredient["qté"],
+                    }));
+                } catch (error) {
+                    console.error(`Erreur de parsing JSON pour les ingrédients de la recette ${recipeId} :`, error);
+                }
+            }
+
+            // Récupérer `data-ref-portion-base`
+            const portionBaseAttr = recipeDiv.getAttribute("data-ref-portion-base");
+            const portionBase = portionBaseAttr ? parseFloat(portionBaseAttr) : 1;
 
             return {
                 recipeId: recipeId,
                 recipeName: recipeName,
-                recipePortion: recipePortion, // Ajouter la portion spécifique de la recette
+                recipePortion: recipePortion,
+                portionBase: portionBase, // Inclure la portion de base
+                ingredients: recipeIngredients, // Ajout des ingrédients extraits et parsés
+            };
+        });
+    });
+
+    console.log("Recettes extraites :", recipes);
+
+    // Ajouter le repas dans le menu
+    const menu = selectedCategories.map((categoryElement) => {
+        const categoryName = categoryElement.getAttribute("value");
+        const isActive = categoryElement.querySelector("input[type='checkbox']").checked;
+
+        const recipes = [...categoryElement.querySelectorAll(".recipeInput")].map((recipeDiv) => {
+            const recipeId = recipeDiv.id;
+            const recipeName = recipeDiv.querySelector("p").textContent;
+            const recipePortion = parseInt(recipeDiv.querySelector("input").value, 10);
+
+            // Récupérer `data-ref-portion-base`
+            const portionBaseAttr = recipeDiv.getAttribute("data-ref-portion-base");
+            const portionBase = portionBaseAttr ? parseFloat(portionBaseAttr) : 1;
+
+            // Récupérer les ingrédients
+            let recipeIngredients = [];
+            const ingredientData = recipeDiv.getAttribute("data-ref-ingrédient-RecordId-Qt");
+            if (ingredientData) {
+                try {
+                    const decodedData = JSON.parse(ingredientData);
+                    recipeIngredients = decodedData.map((ingredient) => ({
+                        recordId: ingredient["record-id"],
+                        quantity: ingredient["qté"],
+                    }));
+                } catch (error) {
+                    console.error(`Erreur de parsing JSON pour les ingrédients de la recette ${recipeId} :`, error);
+                }
+            }
+
+            return {
+                recipeId: recipeId,
+                recipeName: recipeName,
+                recipePortion: recipePortion,
+                portionBase: portionBase, // Inclure la portion de base
+                ingredients: recipeIngredients,
             };
         });
 
@@ -827,9 +1092,10 @@ function validateMeal(eventIndex) {
             categoryMenu: categoryName,
             activCategory: isActive,
             recipes: recipes,
-            ingredients: [], // Laisse vide pour l'instant
         };
     });
+
+    console.log("Menu à sauvegarder :", menu);
 
     // Récupérer l'utilisateur actuel
     const user = netlifyIdentity.currentUser();
@@ -844,7 +1110,7 @@ function validateMeal(eventIndex) {
             const newMeal = {
                 mealDate: mealDate,
                 mealType: mealType,
-                mealPortion: mealPortion, // Ajouter les portions globales
+                mealPortion: mealPortion,
                 menu: menu,
             };
 
@@ -864,6 +1130,7 @@ function validateMeal(eventIndex) {
                     );
                     closeMealModal(); // Fermer le modal après validation
                     displayUserEvents(); // Actualiser la liste des événements et repas
+
                 })
                 .catch((error) => {
                     console.error("Erreur lors de l'ajout du repas :", error);
@@ -875,6 +1142,12 @@ function validateMeal(eventIndex) {
         alert("Utilisateur non connecté. Veuillez vous connecter pour ajouter un repas.");
     }
 }
+
+
+
+
+
+
 
 
 
@@ -939,15 +1212,66 @@ function synchronizeGlobalPortions() {
 }
 
 
-function attachRemoveRecipeHandlers() {
-    // Sélectionner tous les boutons "remove_recipeInput"
-    document.querySelectorAll(".remove_recipeInput").forEach((button) => {
-        button.addEventListener("click", (event) => {
-            // Trouver le conteneur parent de la recette et le supprimer
-            const recipeInput = button.closest(".recipeInput");
-            if (recipeInput) {
-                recipeInput.remove();
-            }
+
+
+
+function addIngredientsToShoppingList(eventIndex) {
+    const user = netlifyIdentity.currentUser();
+    if (!user) {
+        alert("Veuillez vous connecter pour ajouter des ingrédients à la liste de courses.");
+        return;
+    }
+
+    const events = user.user_metadata.events || [];
+    const targetEvent = events[eventIndex];
+
+    if (!targetEvent) {
+        console.error("Événement introuvable.");
+        return;
+    }
+
+    // Récupérer ou initialiser la liste de courses
+    let shoppingList = user.user_metadata.liste_de_courses || [];
+
+    // Parcourir les recettes de l'événement
+    targetEvent.meal?.forEach((meal) => {
+        meal.menu?.forEach((menuCategory) => {
+            menuCategory.recipes?.forEach((recipe) => {
+                recipe.ingredients?.forEach((ingredient) => {
+                    const recordId = ingredient.recordId;
+                    const ingredientQuantity =
+                        (ingredient.quantity * recipe.recipePortion) / recipe.portionBase;
+
+                    // Vérifier si l'ingrédient existe déjà dans la liste de courses
+                    const existingIngredient = shoppingList.find((item) => item.recordId === recordId);
+
+                    if (existingIngredient) {
+                        // Ajouter la quantité à l'ingrédient existant
+                        existingIngredient.quantity += ingredientQuantity;
+                    } else {
+                        // Ajouter un nouvel ingrédient
+                        shoppingList.push({
+                            recordId: recordId,
+                            quantity: ingredientQuantity,
+                        });
+                    }
+                });
+            });
         });
     });
+
+    // Sauvegarder la liste mise à jour dans user_metadata
+    user.update({
+        data: {
+            ...user.user_metadata,
+            liste_de_courses: shoppingList,
+        },
+    })
+        .then((updatedUser) => {
+            console.log("Liste de courses mise à jour avec succès :", updatedUser.user_metadata.liste_de_courses);
+            alert("Les ingrédients ont été ajoutés à votre liste de courses !");
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la mise à jour de la liste de courses :", error);
+        });
 }

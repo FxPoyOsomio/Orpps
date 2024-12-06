@@ -1,8 +1,20 @@
 .ingrédients-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
     gap: 15px;
     margin: 20px 0px;
+}
+.card-ingredient {
+    overflow: hidden;
+    transition: transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
+    position: relative; 
+}
+
+
+
+
+.card-ingredient:hover {
+    transform: scale(1.05);
 }
 
 .card-ingredient-image {
@@ -30,4 +42,88 @@
     align-items: center;          /* Centre horizontalement le contenu */
     text-align: center;           /* Centre le texte à l'intérieur */
     font-weight: 300;
+}
+
+.card-ingredient-image {
+    text-align: center;
+    padding: 10px;
+    max-width: 100%; /* Assure que l'image ne dépasse pas la largeur de son conteneur */
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-ingredient-image img {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+}
+
+.ingredients-details {
+    display: flex;                /* Utilise Flexbox pour le layout */
+    flex-direction: column;       /* Aligne les enfants en colonne */
+    align-items: center;          /* Centre horizontalement le contenu */
+    text-align: center;           /* Centre le texte à l'intérieur */
+    font-weight: 300;
+}
+
+.recette_ingredients-qtunit {
+    display: block; 
+}
+
+.highlight-quantity span , .highlight-quantity input , .ingredients-details span  {
+    font-weight: 300;
+    letter-spacing: 0.03em;
+}
+.ingredients-qtunit .highlight-quantity input {
+    font-weight: 400 !important;
+}
+
+.highlight-quantity span {
+    line-height: none;
+}
+
+.quantite-control__value_number {
+    font-weight: 400;
+    font-size: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1B1B1B;
+    font-style: normal;
+    width: 100%;
+}
+
+
+
+
+
+
+.card-ingredient .sousRayon-containers {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    z-index: 2;
+    margin: 0;
+}
+.sousRayon-container {
+    padding: 2px 5px;
+    border-radius: 4px;
+    outline: 1px solid rgba(63, 55, 53, 0.23);
+    outline-offset: -1px;
+    backdrop-filter: blur(10px);
+    opacity: 0.75;
+    display: flex;
+    justify-content: center;
+}
+.sousRayon-container h7 {
+    font-size: 0.7em;
+    color: #696969;
 }

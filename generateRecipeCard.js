@@ -99,6 +99,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
     ).join('');
 
     const ingredients = sanitizeText(recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '');
+    const portionBase = recipe.fields['Nb. de portion [base]'] || '';
+    const ingrédientRecordIdQt = recipe.fields['data-ref-ingrédient_RecordID_Qt'] || '';
     const instructions = sanitizeText(recipe.fields['Instruction'] || '');
     const description = sanitizeText(recipe.fields['Description recette'] || '');
 
@@ -119,6 +121,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-pricing="${pricing}"
             data-ref-calorie="${calorie}"
             data-ref-ingredients="${ingredients}" 
+            data-ref-portion-base="${portionBase}"
+            data-ref-ingrédient-RecordId-Qt='${ingrédientRecordIdQt}'
             data-ref-instructions="${instructions}">
         </a>
     `);
@@ -134,6 +138,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-categorie="${categories}" 
             data-ref-subcategorie="${subCategories}" 
             data-ref-ingredients="${ingredients}" 
+            data-ref-portion-base="${portionBase}"
+            data-ref-ingrédient-RecordId-Qt='${ingrédientRecordIdQt}'
             data-ref-instructions="${instructions}">
             <add-favorite-button data-recipe-id="${recipe.id}" style="
                     position: absolute;
