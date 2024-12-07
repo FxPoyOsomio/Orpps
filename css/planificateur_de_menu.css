@@ -120,21 +120,7 @@
     flex-wrap: nowrap;
     padding-left: 10px;
 }
-.modifyEventButton {
-    background-color: transparent;
-    color: #696969;
-    border: 1px dashed #696969;
-    padding: 5px 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
-}
+
 
 
 .event_ovelayContainer {
@@ -370,7 +356,7 @@
 }
 
 
-.modifyMealButton {
+.modifyButton {
     background-color: transparent;
     color: #696969;
     border: 1px dashed #696969;
@@ -385,15 +371,15 @@
     font-size: 0.8rem;
     transition: all cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
 }
-.modifyMealButton path {
+.modifyButton path {
     transform: fill cubic-bezier(0.25, 0.1, 0.28, 1.54) 0.32s;
 }
 
-.modifyMealButton:hover {
+.modifyButton:hover {
     transform: scale(1.2);
     border: 1px dashed #cb6863;
 }
-.modifyMealButton:hover path {
+.modifyButton:hover path {
     fill: #cb6863;
 }
 

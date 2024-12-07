@@ -614,10 +614,10 @@ class PrimaryButton extends HTMLElement {
         if (buttonText) {
             const textElement = document.createElement('span');
             textElement.textContent = buttonText;
-            textElement.style.fontFamily = "'Montserrat Alternates"; // Police du texte
-            textElement.style.fontSize = '1.1rem'; // Taille de la police
-            textElement.style.fontWeight = '400'; // Graisse de la police // Utiliser le texte fourni
-            button.appendChild(textElement); // Ajouter le texte au bouton
+            textElement.style.fontFamily = "'Caviar Dreams', sans-serif";
+            textElement.style.fontSize = '1.1em';
+            textElement.style.fontWeight = '700'; 
+            button.appendChild(textElement); 
         }
 
         // Si le bouton ne contient que le SVG
@@ -675,11 +675,14 @@ class PrimaryButton extends HTMLElement {
         });
 
         button.addEventListener('mouseup', () => {
-            // Suppression du changement de taille pour l'état actif
-            // Redirection après un délai de 500 ms
+            // Redirection si et seulement si l'attribut href est défini
             setTimeout(() => {
                 const redirectUrl = this.getAttribute('href'); // Récupérer l'URL depuis l'attribut href
+            if (redirectUrl) {
                 window.location.href = redirectUrl; // Rediriger vers l'URL
+            } else {
+                console.log('Aucune URL de redirection définie pour ce bouton.');
+            }
             }, 300);
         });
 
@@ -796,11 +799,14 @@ class SecondaryButton extends HTMLElement {
             // Redirection après un délai de 500 ms
             setTimeout(() => {
                 const redirectUrl = this.getAttribute('href'); // Récupérer l'URL depuis l'attribut href
-                if (redirectUrl) {
-                    window.location.href = redirectUrl; // Rediriger vers l'URL
-                }
+            if (redirectUrl) {
+                window.location.href = redirectUrl; // Rediriger vers l'URL
+            } else {
+                console.log('Aucune URL de redirection définie pour ce bouton.');
+            }
             }, 300);
         });
+        
     }
 
     connectedCallback() {
@@ -811,9 +817,9 @@ class SecondaryButton extends HTMLElement {
             this.textElement = document.createElement('span');
             this.textElement.textContent = buttonText;
             this.textElement.style.color = '#CB6863';
-            this.textElement.style.fontFamily = "'Montserrat Alternates'";
-            this.textElement.style.fontSize = '1.1rem';
-            this.textElement.style.fontWeight = '400';
+            this.textElement.style.fontFamily = "'Caviar Dreams', sans-serif";
+            this.textElement.style.fontSize = '1.1em';
+            this.textElement.style.fontWeight = '700'; 
             this.button.appendChild(this.textElement);
 
             // Ajuster les styles pour le bouton avec texte

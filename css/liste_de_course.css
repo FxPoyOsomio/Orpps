@@ -1,3 +1,14 @@
+.call-to-action__buttons {
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    row-gap: 15px;
+    max-width: 100%;
+    margin: 20px 15px;
+    justify-content:flex-start ;
+}
+
+
 .ingrédients-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -5,6 +16,7 @@
     margin: 20px 0px;
 }
 .card-ingredient {
+    flex-direction: column;
     overflow: hidden;
     transition: transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
     position: relative; 
@@ -126,4 +138,112 @@
 .sousRayon-container h7 {
     font-size: 0.7em;
     color: #696969;
+}
+
+h4 {
+    margin: 0;
+}
+
+
+.resumesIngredients {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.resumeIngredients {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+
+
+
+
+
+
+/* Styles pour le conteneur Bring! */
+.bring-container {
+    text-align: center; 
+    margin: 0 10px;
+}
+.bring-import-link-light {
+    min-width: unset !important;
+    max-width: unset !important;
+    width: auto !important;
+    height: 40px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    transition: transform 0.2s !important;
+}
+.bring-import-button-light {
+    background-color: #ffffff !important;
+    border: 1px solid #CB6863 !important;
+    box-shadow: none !important;
+    border-radius: 50px !important;
+    box-sizing: unset;
+}
+.bring-import-image-light {
+    margin: 0 10px 0 12px !important;
+}
+.bring-import-text-light {
+    font-family: 'Caviar Dreams', sans-serif !important;
+    color: #CB6863 !important;
+    font-size: 0.95em !important;
+    font-weight: 700 !important;
+    line-height: 1.1em !important;
+    flex-grow: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    vertical-align:middle !important;
+    padding: 0 15px 0 0 !important;
+    
+}
+#bring-import-container a:hover {
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 670px) {
+    .card-ingredient {
+        width: 100%;
+        height: 90px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        overflow: visible;
+    }
+    .card-ingredient-image {
+        width: 75px;
+    }
+    .ingredients-details {
+        display: flex;
+        flex-direction: row;
+        align-items: unset;
+        text-align: unset;
+    }
+    .ingredients-qtunit {
+        display: unset;
+    }
+    .ingrédients-container{
+        grid-template-columns: 1fr;
+    }
+    .ingredients-items{
+        grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+    }
+    .sousRayon-containers{
+        left: 100px !important ;
+    }
 }

@@ -12,20 +12,52 @@
     <script>
         netlifyIdentity.init();
     </script>
+    <script async="async" src="//platform.getbring.com/widgets/import.js"></script>
+
 </head>
 <body>
     <div id="header"></div>
     <main class="container">
 
         <h1>Ma liste de course</h1>
-        
+        <div class="noIngredient">
+            <h4>Il n'y a aucun ingredient dans votre liste de course</h4>
+        </div>
+        <div class="resumesIngredients">
+            <div id="nbIngredient" class="resumeIngredients">
+                <h4 class="quantity"></h4>
+                <h4>ingrédients</h4>
+            </div>
+            <div id="prixIngredient" class="resumeIngredients">
+                <h4 class="quantity"></h4>
+                <h4>€</h4>
+            </div>     
+        </div>
+        <div class="call-to-action__buttons">
+            <div class="portion-bring-conteneur">
+                <div class="bring-container">
+                    <div id="bring-import-container" 
+                        data-bring-import 
+                        data-bring-language="fr" 
+                        data-bring-theme="light" 
+                        data-bring-base-quantity="6" 
+                        data-bring-requested-quantity="6">
+                        <a href="https://www.getbring.com">Bring! Einkaufsliste App pour iPhone et Android</a>
+                    </div>
+                </div>
+            </div>
+            <primary-button text="Vider" id="clearIngredients">
+                <svg width="64px" height="64px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="si-glyph si-glyph-basket-error" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>624</title> <defs> </defs> <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g transform="translate(0.000000, 1.000000)" fill="#ffffff"> <path d="M11.504,12.524 L10.938,11.957 C10.84,12.129 10.677,12.25 10.483,12.25 L10.462,12.25 C10.16,12.25 9.917,11.977 9.917,11.639 L9.917,7.483 C9.917,7.145 10.16,6.872 10.462,6.872 L10.483,6.872 C10.784,6.872 11.029,7.145 11.029,7.483 L11.029,10.024 L12.02,9.033 L13.245,10.26 L13.479,5.918 L14.245,5.918 C14.645,5.918 14.97,4.757 14.97,4.757 C14.97,4.387 14.646,4.085 14.245,4.085 L12.317,4.085 L11.282,0.356 C11.131,0.039 10.756,-0.089 10.444,0.07 L10.373,0.106 C10.062,0.266 9.933,0.652 10.084,0.969 L10.825,4.085 L4.171,4.085 L4.939,1.001 C5.093,0.687 4.966,0.299 4.658,0.136 L4.588,0.1 C4.277,-0.062 3.9,0.062 3.746,0.377 L2.673,4.085 L0.783,4.085 C0.383,4.085 0.058,4.387 0.058,4.757 C0.058,4.757 0.382,5.918 0.783,5.918 L1.419,5.918 L1.868,12.653 C1.868,12.653 1.92,13.962 3.981,13.962 L10.07,13.962 L11.504,12.524 L11.504,12.524 Z M11.938,4.969 L13.032,4.969 L13.032,6.063 L11.938,6.063 L11.938,4.969 L11.938,4.969 Z M3.031,6.031 L1.969,6.031 L1.969,4.969 L3.031,4.969 L3.031,6.031 L3.031,6.031 Z M5.062,11.742 C5.062,12.092 4.811,12.375 4.503,12.375 L4.48,12.375 C4.169,12.375 3.919,12.092 3.919,11.742 L3.919,7.413 C3.919,7.063 4.169,6.781 4.48,6.781 L4.503,6.781 C4.811,6.781 5.062,7.063 5.062,7.413 L5.062,11.742 L5.062,11.742 Z M8.102,11.547 C8.102,11.881 7.842,12.152 7.524,12.152 L7.499,12.152 C7.178,12.152 6.919,11.881 6.919,11.547 L6.919,7.448 C6.919,7.114 7.178,6.844 7.499,6.844 L7.524,6.844 C7.842,6.844 8.102,7.115 8.102,7.448 L8.102,11.547 L8.102,11.547 Z" class="si-glyph-fill"> </path> <path d="M15.969,14.281 L14.17,12.48 L15.95,10.7 L15.283,10.037 L13.504,11.817 L11.734,10.047 L11.027,10.755 L12.796,12.525 L11.052,14.271 L11.716,14.934 L13.461,13.189 L15.261,14.989 L15.969,14.281 Z" class="si-glyph-fill"> </path> </g> </g> </g></svg>
+            </primary-button>
+        </div>
+
         <div class="ingredient_list"></div>
 
 
     </main>
     <div id="footer"></div>
     <script src="/js/script.js" type="module"></script>
-    <script src="/js/liste_de_courses.js" type="module"></script>
+    <script src="/js/liste_de_courses.js" type="module" defer></script>
     <script>
          document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
@@ -57,82 +89,77 @@
         }
 
         function initializeIngredientStyles() {
-    // Extraire tous les ingrédients de la page
-    const originalIngredients = Array.from(document.querySelectorAll(".card-ingredient")).map(card => {
-        return {
-            dataRefId: card.getAttribute("data-ref-id"), // Utilise l'attribut `data-ref-id` comme identifiant unique
-            quantite: parseFloat(card.querySelector(".highlight-quantity input")?.value || 0), // Quantité initiale
-        };
-    });
+        // Extraire tous les ingrédients de la page
+        const originalIngredients = Array.from(document.querySelectorAll(".card-ingredient")).map(card => {
+            return {
+                dataRefId: card.getAttribute("data-ref-id"), // Utilise l'attribut `data-ref-id` comme identifiant unique
+                quantite: parseFloat(card.querySelector(".highlight-quantity input")?.value || 0), // Quantité initiale
+            };
+        });
 
-    // Parcourir tous les ingrédients et ajuster les styles initialement
-    originalIngredients.forEach(ingredient => {
-        const ingredientElements = document.querySelectorAll(`[data-ref-id="${ingredient.dataRefId}"]`);
-        if (ingredientElements.length > 0) {
-            ingredientElements.forEach(ingredientSpan => {
-                const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
-                const quantitySpan = ingredientSpan.querySelector(".highlight-quantity span");
+        // Parcourir tous les ingrédients et ajuster les styles initialement
+        originalIngredients.forEach(ingredient => {
+            const ingredientElements = document.querySelectorAll(`[data-ref-id="${ingredient.dataRefId}"]`);
+            if (ingredientElements.length > 0) {
+                ingredientElements.forEach(ingredientSpan => {
+                    const quantityInput = ingredientSpan.querySelector(".highlight-quantity input");
+                    const quantitySpan = ingredientSpan.querySelector(".highlight-quantity span");
 
-                if (quantityInput) {
-                    adjustInputWidth(quantityInput); // Ajuster la largeur initiale du champ input
-                    quantityInput.style.backgroundColor = "transparent";
-                    quantityInput.style.border = "none";
-                    quantityInput.style.textAlign = "center";
-                }
-
-                // Vérifiez le contenu du `span` et ajustez en conséquence
-                if (quantitySpan) {
-                    const textContent = quantitySpan.textContent.trim();
-                    if (textContent === "pièce") {
-                        quantitySpan.style.display = "none"; // Cachez le span
-                    } else if (!textContent.endsWith(" de")) {
-                        quantitySpan.textContent += " de"; // Ajoutez " de " uniquement si ce n'est pas déjà présent
+                    if (quantityInput) {
+                        adjustInputWidth(quantityInput); // Ajuster la largeur initiale du champ input
+                        quantityInput.style.backgroundColor = "transparent";
+                        quantityInput.style.border = "none";
+                        quantityInput.style.textAlign = "center";
                     }
-                }
-            });
-        }
-    });
 
-    // Ajustement des styles d'encadrement et focus pour chaque ingrédient
-    document.querySelectorAll(".card-ingredient").forEach(card => {
-        const input = card.querySelector(".highlight-quantity input");
-        if (input) {
-            input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
+                    // Vérifiez le contenu du `span` et ajustez en conséquence
+                    if (quantitySpan) {
+                        const textContent = quantitySpan.textContent.trim();
+                        if (textContent === "pièce") {
+                            quantitySpan.style.display = "none"; // Cachez le span
+                        } else if (!textContent.endsWith(" de")) {
+                            quantitySpan.textContent += " de"; // Ajoutez " de " uniquement si ce n'est pas déjà présent
+                        }
+                    }
+                });
+            }
+        });
 
-            // Gestion des styles d'encadrement et focus
-            card.addEventListener("mouseover", function () {
-                input.style.border = "1px solid #ccc";
-                input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
-            });
-            card.addEventListener("mouseout", function () {
-                input.style.border = "1px solid transparent";
-                input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
-            });
-            card.addEventListener("click", function () {
-                input.focus();
-                input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
-            });
+        // Ajustement des styles d'encadrement et focus pour chaque ingrédient
+        document.querySelectorAll(".card-ingredient").forEach(card => {
+            const input = card.querySelector(".highlight-quantity input");
+            if (input) {
+                input.style.backgroundColor = "transparent"; // Rendre le fond transparent par défaut
 
-            input.addEventListener("keydown", function (e) {
-                if (e.key === "Enter") {
-                    this.blur();
-                }
-            });
+                // Gestion des styles d'encadrement et focus
+                card.addEventListener("mouseover", function () {
+                    input.style.border = "1px solid #ccc";
+                    input.style.backgroundColor = "white"; // Afficher le fond blanc lors du survol
+                });
+                card.addEventListener("mouseout", function () {
+                    input.style.border = "1px solid transparent";
+                    input.style.backgroundColor = "transparent"; // Rendre le fond transparent lorsqu'on quitte le survol
+                });
+                card.addEventListener("click", function () {
+                    input.focus();
+                    input.select(); // Sélectionner tout le texte à l'intérieur de l'input pour faciliter la modification
+                });
 
-            // Ajustement de la largeur du champ input en fonction du texte
-            input.addEventListener("input", function () {
-                adjustInputWidth(this);
-            });
-            // Ajustement initial
-            adjustInputWidth(input);
-        }
-    });
-}
+                input.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        this.blur();
+                    }
+                });
 
-
-
-
-
+                // Ajustement de la largeur du champ input en fonction du texte
+                input.addEventListener("input", function () {
+                    adjustInputWidth(this);
+                });
+                // Ajustement initial
+                adjustInputWidth(input);
+            }
+        });
+    }
 
         // Fonction de conversion du point en virgule pour l'affichage
         function convertPointToComma(value) {
@@ -142,5 +169,131 @@
             return value.replace('.', ',');
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkElement = setInterval(function () {
+                const textElement = document.querySelector('.bring-import-text-light');
+                const imageElement = document.querySelector('.bring-import-image-light img');
+
+                if (textElement) {
+                    console.log("Text element found.");
+                    textElement.textContent = 'Bring!';
+                    clearInterval(checkElement);
+                }
+            }, 5); // Vérification toutes les 500 ms
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Événement DOMContentLoaded déclenché pour la page liste de courses.");
+    
+            // Vérifier si l'utilisateur est connecté
+            const user = netlifyIdentity.currentUser();
+            if (!user) {
+                console.warn("Aucun utilisateur connecté. Impossible de mettre à jour les métadonnées.");
+                return;
+            }
+    
+            console.log("Utilisateur actuel :", user);
+            const listeDeCourses = user?.user_metadata?.liste_de_courses || [];
+            console.log("Liste de courses dans les métadonnées utilisateur :", listeDeCourses);
+    
+            // Fonction pour mettre à jour les métadonnées utilisateur
+            function updateIngredientMetadata(recordId, quantity) {
+                const updatedMetadata = { ...user.user_metadata };
+                const updatedShoppingList = updatedMetadata.liste_de_courses.map((ingredient) => {
+                    if (ingredient.recordId === recordId) {
+                        console.log(`[Update Metadata] Mise à jour de l'ingrédient ${recordId} avec la quantité ${quantity}.`);
+                        return { ...ingredient, quantity: parseFloat(quantity) || 0 };
+                    }
+                    return ingredient;
+                });
+    
+                updatedMetadata.liste_de_courses = updatedShoppingList;
+    
+                user.update({ data: updatedMetadata })
+                    .then((updatedUser) => {
+                        console.log(`Mise à jour réussie des métadonnées pour l'ingrédient ${recordId}.`, updatedUser.user_metadata);
+                    })
+                    .catch((error) => {
+                        console.error("Erreur lors de la mise à jour des métadonnées :", error);
+                    });
+            }
+    
+            // Fonction pour ajuster la largeur dynamique des champs input
+            function adjustInputWidth(input) {
+                input.style.width = ((input.value.length + 1) * 0.5) + "em";
+                input.style.textAlign = "center";
+                input.style.border = "none";
+            }
+    
+            // Ajouter des écouteurs sur les inputs des quantités
+            function initializeIngredientListeners() {
+                const ingredientCards = document.querySelectorAll(".card-ingredient");
+    
+                ingredientCards.forEach((card) => {
+                    const recordId = card.getAttribute("data-ref-id");
+                    const input = card.querySelector("input.quantite-control__value_number");
+    
+                    if (input) {
+                        console.log(`[Input Listener] Ajout d'un écouteur pour l'ingrédient ${recordId}.`);
+    
+                        // Ajuster la largeur initiale
+                        adjustInputWidth(input);
+    
+                        // Écouter les modifications de l'input
+                        input.addEventListener("input", function () {
+                            console.log(`[Input] Modification détectée pour l'ingrédient ${recordId}. Nouvelle valeur : ${this.value}`);
+                            adjustInputWidth(this); // Ajuster la largeur de l'input dynamiquement
+                        });
+    
+                        // Mettre à jour les métadonnées utilisateur après perte de focus
+                        input.addEventListener("blur", function () {
+                            const quantity = parseFloat(this.value) || 0;
+                            updateIngredientMetadata(recordId, quantity);
+                        });
+    
+                        // Permettre la mise à jour sur "Entrée"
+                        input.addEventListener("keydown", function (e) {
+                            if (e.key === "Enter") {
+                                this.blur(); // Déclencher l'événement "blur"
+                            }
+                        });
+                    } else {
+                        console.warn(`[Input Listener] Aucun input trouvé pour l'ingrédient ${recordId}.`);
+                    }
+                });
+            }
+    
+            // Initialiser les écouteurs après le chargement complet des ingrédients
+            fetch("/dist/ingredients.html")
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Erreur lors du chargement des ingrédients.");
+                    }
+                    return response.text();
+                })
+                .then((html) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+    
+                    // Ajouter les ingrédients dans le DOM
+                    const ingredientList = document.querySelector(".ingredient_list");
+                    if (ingredientList) {
+                        ingredientList.innerHTML = doc.querySelector(".ingredient_list").innerHTML;
+                        console.log("HTML des ingrédients chargé avec succès.");
+                    } else {
+                        console.warn("Élément .ingredient_list introuvable dans le DOM.");
+                    }
+    
+                    // Initialiser les écouteurs après insertion
+                    initializeIngredientListeners();
+                })
+                .catch((error) => console.error("Erreur lors du chargement des ingrédients :", error));
+        });
+    </script>
+    
+
 </body>
 </html>
