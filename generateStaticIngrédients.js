@@ -79,16 +79,19 @@ async function generateIngredientsHTML() {
             >
         
             <div class="card-ingredient-image">
-                <div class="sousRayon-containers">
+                <div class="sousRayon-containers_grid">
                     ${sousRayonHTML}
                 </div>
                 <img src="${img}" alt="${name}">
             </div>
             <span class="ingredients-details" id="ingredients">
+                <div class="sousRayon-containers_list">
+                    ${sousRayonHTML}
+                </div>
                 <span class="ingredient-detail">
                     <span class="ingredients-qtunit">
                         <span class="highlight-quantity">
-                            <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="0">
+                            <input type="text" inputmode="decimal" id="${id}" class="quantite-control__value_number" value="0">
                             <span> ${unit}</span>
                         </span>
                     </span>

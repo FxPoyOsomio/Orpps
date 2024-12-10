@@ -1,88 +1,145 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Récupérer les métadonnées utilisateur
     const user = netlifyIdentity.currentUser();
     console.log("Utilisateur actuel :", user);
     const listeDeCourses = user?.user_metadata?.liste_de_courses || [];
     console.log("Liste de courses dans les métadonnées utilisateur :", listeDeCourses);
 
-    // Charger les données des ingrédients depuis `ingredients.html`
     fetch("/dist/ingredients.html")
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Erreur lors du chargement des ingrédients.");
+    .then((response) => {
+        if (!response.ok) throw new Error("Erreur lors du chargement des ingrédients.");
+        return response.text();
+    })
+    .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const ingredientCards = doc.querySelectorAll(".card-ingredient");
+
+        // Récupération des données utilisateur
+        const user = netlifyIdentity.currentUser();
+        const listeDeCourses = user?.user_metadata?.liste_de_courses || [];
+
+        // On groupe et on trie d'abord
+        const groupedIngredients = groupAndSortIngredients(ingredientCards);
+
+        const ingredientList = document.querySelector(".ingredient_list");
+        if (ingredientList) {
+            ingredientList.innerHTML = generateCategoryRayonHTML(groupedIngredients);
+            console.log("HTML des ingrédients généré avec succès.");
+        } else {
+            console.warn("Élément .ingredient_list introuvable dans le DOM.");
+        }
+
+        // Maintenant, on récupère les cartes réellement affichées dans la page
+        const displayedIngredientCards = document.querySelectorAll(".ingredient_list .card-ingredient");
+
+        // Attacher les écouteurs sur les éléments effectivement présents dans le DOM
+        displayedIngredientCards.forEach((card) => {
+            const recordId = card.getAttribute("data-ref-id");
+            const matchingIngredient = listeDeCourses.find(item => item.recordId === recordId);
+            const input = card.querySelector("input.quantite-control__value_number");
+
+            if (matchingIngredient && input) {
+                const formattedValue = parseFloat(matchingIngredient.quantity || 0).toFixed(2);
+                input.value = formattedValue;
+                input.setAttribute("value", formattedValue);
+                console.log(`Mise à jour de l'ingrédient ${recordId} (${card.getAttribute("data-ref-name")}) avec la quantité : ${formattedValue}`);
+
+                // Écoute des modifications
+                input.addEventListener("input", () => {
+                    updateIngredientMetadata(recordId, input.value, user);
+                    updateResume(displayedIngredientCards);
+                    toggleNoIngredientsDiv(displayedIngredientCards);
+                });
+            } else if (!matchingIngredient) {
+                // Ingrédient non trouvé dans la liste de courses, on le masque
+                card.setAttribute("data-hidden", "true");
+                card.style.display = "none";
             }
-            return response.text();
-        })
-        .then((html) => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
+        });
 
-            // Sélectionner toutes les cartes d'ingrédients
-            const ingredientCards = doc.querySelectorAll(".card-ingredient");
+        // Masquer les rayons et catégories vides
+        hideEmptyRayonsAndCategories();
 
-            ingredientCards.forEach((card) => {
-                // Réinitialiser l'affichage de toutes les cartes
-                card.style.display = "flex";
+        // Mettre à jour le résumé initial et l'affichage "aucun ingrédient"
+        updateResume(displayedIngredientCards);
+        toggleNoIngredientsDiv(displayedIngredientCards);
+    })
+    .catch((error) => console.error("Erreur lors de l'affichage des ingrédients :", error));
 
-                const recordId = card.getAttribute("data-ref-id");
-                const matchingIngredient = listeDeCourses.find(item => item.recordId === recordId);
 
-                if (matchingIngredient) {
-                    // Mettre à jour les inputs avec les quantités des métadonnées utilisateur
-                    const input = card.querySelector("input.quantite-control__value_number");
-                    if (input) {
-                        const formattedValue = parseFloat(matchingIngredient.quantity || 0).toFixed(2);
-                        input.value = formattedValue;
-                        input.setAttribute("value", formattedValue);
-                        console.log(
-                            `Mise à jour de l'ingrédient ${recordId} (${card.getAttribute("data-ref-name")}) avec la quantité :`,
-                            formattedValue
-                        );
-
-                        // Ajouter un écouteur pour mettre à jour dynamiquement les données et le résumé
-                        input.addEventListener("input", () => {
-                            updateIngredientMetadata(recordId, input.value, user);
-                            updateResume(ingredientCards);
-                            toggleNoIngredientsDiv(ingredientCards); // Vérifier la visibilité
-                        });
-                    }
-                } else {
-                    // Marquer les cartes non trouvées pour masquage ultérieur
-                    card.setAttribute("data-hidden", "true");
+    // Gestion du bouton "Vider"
+    const clearIngredientsButton = document.querySelector("primary-button#clearIngredients");
+    if (clearIngredientsButton) {
+        const buttonElement = clearIngredientsButton.shadowRoot.querySelector("button");
+        if (buttonElement) {
+            buttonElement.addEventListener("click", () => {
+                const user = netlifyIdentity.currentUser();
+                if (!user) {
+                    console.warn("Aucun utilisateur connecté. Impossible de vider la liste des ingrédients.");
+                    return;
                 }
+
+                const updatedMetadata = {
+                    ...user.user_metadata,
+                    liste_de_courses: [],
+                };
+
+                user.update({ data: updatedMetadata })
+                    .then(() => {
+                        console.log("Liste de courses vidée avec succès !");
+                        alert("Tous les ingrédients ont été supprimés de votre liste.");
+
+                        window.location.reload();
+                    })
+                    .catch((error) => {
+                        console.error("Erreur lors de la mise à jour des user-metadata :", error);
+                    });
             });
+        } else {
+            console.warn("Impossible de trouver l'élément <button> dans le shadow DOM du bouton primary-button.");
+        }
+    } else {
+        console.warn("Impossible de trouver le bouton avec l'ID #clearIngredients.");
+    }
 
-            // Regrouper et trier les ingrédients par catégorie et rayon
-            const groupedIngredients = groupAndSortIngredients(ingredientCards);
-
-            // Générer le contenu HTML trié
-            const ingredientList = document.querySelector(".ingredient_list");
-            if (ingredientList) {
-                ingredientList.innerHTML = generateCategoryRayonHTML(groupedIngredients);
-                console.log("HTML des ingrédients généré avec succès.");
-            } else {
-                console.warn("Élément .ingredient_list introuvable dans le DOM.");
-            }
-
-            // Masquer les cartes marquées comme non correspondantes
-            const allCards = document.querySelectorAll(".card-ingredient");
-            allCards.forEach((card) => {
-                if (card.getAttribute("data-hidden") === "true") {
-                    card.style.display = "none";
-                }
-            });
-
-            // Masquer les rayons et catégories vides
-            hideEmptyRayonsAndCategories();
-
-            // Mettre à jour le résumé initial
-            updateResume(ingredientCards);
-
-            // Appeler la fonction toggle pour afficher ou cacher les divs
-            toggleNoIngredientsDiv(ingredientCards);
-        })
-        .catch((error) => console.error("Erreur lors de l'affichage des ingrédients :", error));
 });
+
+
+// Nouvelle fonction pour mettre à jour les métadonnées utilisateur
+function updateIngredientMetadata(recordId, newQuantity, user) {
+    if (!user) {
+        console.warn("Aucun utilisateur connecté, impossible de mettre à jour les métadonnées.");
+        return;
+    }
+
+    const { user_metadata } = user;
+    const liste = user_metadata?.liste_de_courses || [];
+
+    // Mise à jour de la quantité pour le recordId correspondant
+    const updatedListe = liste.map(item => {
+        if (item.recordId === recordId) {
+            return { ...item, quantity: parseFloat(newQuantity) || 0 };
+        }
+        return item;
+    });
+
+    const updatedMetadata = {
+        ...user_metadata,
+        liste_de_courses: updatedListe,
+    };
+
+    user.update({ data: updatedMetadata })
+        .then(() => {
+            console.log(`Quantité de l'ingrédient ${recordId} mise à jour dans les métadonnées : ${newQuantity}`);
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la mise à jour des métadonnées utilisateur :", error);
+        });
+}
+
+// Les autres fonctions (toggleNoIngredientsDiv, updateResume, etc.) restent inchangées
+
 
 
 
@@ -116,7 +173,7 @@ function toggleNoIngredientsDiv(ingredientCards) {
 function addInputListenersToIngredients(ingredientCards, user) {
     ingredientCards.forEach((card, index) => {
         const recordId = card.getAttribute("data-ref-id");
-        const input = card.querySelector("input.quantite-control__value_number");
+        const input = card.querySelector(".quantite-control__value_number");
 
         if (input) {
             console.log(`[Input Listener] Ajout d'un écouteur pour l'ingrédient ${recordId}.`);
@@ -240,50 +297,7 @@ function generateCategoryRayonHTML(groupedIngredients) {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Attendre que le bouton "clearIngredients" soit chargé
-    const clearIngredientsButton = document.querySelector("primary-button#clearIngredients");
 
-    if (clearIngredientsButton) {
-        // Attacher l'événement au bouton interne
-        const buttonElement = clearIngredientsButton.shadowRoot.querySelector("button");
-
-        if (buttonElement) {
-            buttonElement.addEventListener("click", () => {
-                // Récupérer l'utilisateur actuel
-                const user = netlifyIdentity.currentUser();
-
-                if (!user) {
-                    console.warn("Aucun utilisateur connecté. Impossible de vider la liste des ingrédients.");
-                    return;
-                }
-
-                // Vider la liste des ingrédients
-                const updatedMetadata = {
-                    ...user.user_metadata,
-                    liste_de_courses: [], // Mettre à jour pour un tableau vide
-                };
-
-                // Mettre à jour les métadonnées via Netlify Identity
-                user.update({ data: updatedMetadata })
-                    .then(() => {
-                        console.log("Liste de courses vidée avec succès !");
-                        alert("Tous les ingrédients ont été supprimés de votre liste.");
-
-                        // Recharger la page pour refléter les modifications
-                        window.location.reload();
-                    })
-                    .catch((error) => {
-                        console.error("Erreur lors de la mise à jour des user-metadata :", error);
-                    });
-            });
-        } else {
-            console.warn("Impossible de trouver l'élément <button> dans le shadow DOM du bouton primary-button.");
-        }
-    } else {
-        console.warn("Impossible de trouver le bouton avec l'ID #clearIngredients.");
-    }
-});
 
 
 // Fonction pour mettre à jour l'affichage après avoir vidé les ingrédients

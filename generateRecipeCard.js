@@ -95,7 +95,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
 
     // Génération des sous-catégories pour les affichages spécifiques avec encodage standard
     const subCategory = subCategoryNames.map(subCategory =>
-        `<div class="subCategory"><h7>${encodeURIComponent(subCategory.name)}</h7></div>`
+        `<div class="subCategory"><h7>${subCategory.name}</h7></div>`
     ).join('');
 
     const ingredients = sanitizeText(recipe.fields['Cumul de INGRÉDIENTS [Base] (à partir de INGRÉDIENTS [PRÉPARATIONS (RECETTE)])'] || '');
