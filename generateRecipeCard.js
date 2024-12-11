@@ -105,7 +105,7 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
     const description = sanitizeText(recipe.fields['Description recette'] || '');
 
     const pricing = recipe.fields['Prix recette / portions'] || '';
-    const calorie = recipe.fields['Energie [ kcal / portion ]'] || '';
+    const calorie = recipe.fields['Energie [ kcal / portion ] (FORMATÉ)'] || '';
     const timing = recipe.fields['Temps recette'] || '';
 
     console.log('Generated HTML:', `
@@ -137,6 +137,8 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
             data-ref-description="${description}"
             data-ref-categorie="${categories}" 
             data-ref-subcategorie="${subCategories}" 
+            data-ref-pricing="${pricing}"
+            data-ref-calorie="${calorie}"
             data-ref-ingredients="${ingredients}" 
             data-ref-portion-base="${portionBase}"
             data-ref-ingrédient-RecordId-Qt='${ingrédientRecordIdQt}'
@@ -241,6 +243,27 @@ function generateRecipeCardHTML(recipe, categoryNames, subCategoryNames, srcset)
                             <div class="top-info__label">
                                 <h7 id="prixRecette">
                                     ${pricingLevel}
+                                </h7>
+                            </div>
+                        </div>
+                        <div class="top-info">
+                            <div class="top-info__img">
+                                <svg id="Calque_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.3 68">
+                                    <defs>
+                                    <style>
+                                        .cls-1 {
+                                        fill: #cd6a65;
+                                        }
+                                    </style>
+                                    </defs>
+                                    <g id="Calque_2-2" data-name="Calque_2">
+                                    <path class="cls-1" d="M45.65,21.49c-.94-2.48-3.28-3.84-5.83-3.37-2.56.47-4.34,2.65-4.34,5.31,0,2.81-2.29,5.1-5.1,5.1s-5.1-2.29-5.1-5.1c0-14.7,0-20.78-3.62-22.67-1.16-.6-2.57-.87-3.87-.72-4.05.46-6.21,6.04-11.42,19.53C2.09,30.7,0,38.15,0,42.35c0,14.14,11.51,25.65,25.65,25.65s25.65-11.51,25.65-25.65c0-3.95-1.85-10.77-5.65-20.86ZM22.16,63.71l-.63-1.57c-1.88-4.71-1.09-10.1,2.08-14.06.5-.62,1.24-.98,2.03-.98.8,0,1.54.36,2.03.98,3.17,3.96,3.97,9.35,2.08,14.06l-.63,1.57c-1.14.19-2.3.29-3.49.29s-2.35-.1-3.49-.29ZM33.94,62.35c1.8-5.72.65-12.03-3.13-16.76-1.26-1.58-3.14-2.48-5.16-2.48-2.02,0-3.9.9-5.16,2.48-3.78,4.73-4.93,11.04-3.13,16.76-7.84-3.26-13.37-11-13.37-20,0-2.5,1.06-8.24,6.12-21.34,3.34-8.64,6.49-16.81,8.13-16.99.09-.01.18-.02.27-.02.44,0,.92.11,1.3.31,1.47.77,1.47,9.68,1.47,19.12,0,5.02,4.08,9.1,9.1,9.1s9.1-4.08,9.1-9.1c0-1.1.81-1.33,1.06-1.38.37-.07,1.03-.04,1.37.85,4.46,11.83,5.4,17.1,5.4,19.45,0,9.01-5.53,16.74-13.37,20Z"/>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="top-info__label">
+                                <h7 id="prixRecette">
+                                    ${calorie}
                                 </h7>
                             </div>
                         </div>
