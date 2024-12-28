@@ -53,7 +53,7 @@
             "cookTime": "PT1H",
             "totalTime": "PT1H10M",
             "recipeYield": "6",
-            "recipeIngredient": ["Lait de vache demi-écrémé,40cl.","Crème Fleurette (30%),40cl.","Thym,0.25botte","Ail,5gousse","Laurier,2feuille","Pommes de terre - Bintje,1.2kg.","Beurre Salé,10g.","Ail,1gousse","Fleur de sel,","Poivre noir,","Beurre Salé,10g."]
+            "recipeIngredient": ["Lait de vache demi-écrémé,40cl.","Crème Fleurette (30%),40cl.","Thym,0.25botte","Ail,5gousse","Laurier,2feuille","Pommes de terre - Bintje,1200g.","Beurre Salé,10g.","Ail,1gousse","Fleur de sel,","Poivre noir,","Beurre Salé,10g."]
         }
     </script>
 
@@ -450,8 +450,8 @@
                                         
                                         <span class="recette_ingredients-qtunit">
                                             <span class="highlight-quantity">
-                                                <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="1.2">
-                                                <span> kg.</span> 
+                                                <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="1200">
+                                                <span> g.</span> 
                                             </span>
                                         </span> 
                                          de pommes de terre - bintje
@@ -780,8 +780,8 @@
                                 <span id="ingredient-6">
                                     
                                         <span class="highlight-quantity">
-                                            <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="1.2">
-                                            <span> kg.</span> 
+                                            <input type="text" inputmode="decimal" id="quantite-input" class="quantite-control__value_number" value="1200">
+                                            <span> g.</span> 
                                         </span>
                                      
                                      de pommes de terre - bintje
@@ -887,7 +887,7 @@
     <div id="footer"></div>
     <script>
         // Récupération des ingrédients pour la mise à jour
-        const originalIngredients = [{"quantite":40,"unite":"","nom":" de lait de vache demi-écrémé","simplename":["Lait de vache demi-écrémé"],"order":"[1]","ordernb":1,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Lait/Lait animal/Lait%20de%20vache%20demi-%C3%A9cr%C3%A9m%C3%A9.jpg"},{"quantite":40,"unite":"","nom":" de crème fleurette (30%)","simplename":["Crème Fleurette (30%)"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Crème/Cr%C3%A8me%20Fleurette%20(30%25).jpg"},{"quantite":0.25,"unite":"","nom":" de thym","simplename":["Thym"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Herbes aromatiques/Thym.jpg"},{"quantite":5,"unite":"","nom":" d'ail","simplename":["Ail"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes bulbes/Ail.jpg"},{"quantite":2,"unite":"","nom":" de laurier","simplename":["Laurier"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Herbes aromatiques/Laurier.jpg"},{"quantite":1.2,"unite":"","nom":" de pommes de terre - bintje","simplename":["Pommes de terre - Bintje"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes racines/Pommes%20de%20terre%20-%20Bintje.jpg"},{"quantite":10,"unite":"","nom":" de beurre salé","simplename":["Beurre Salé"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Sal%C3%A9.jpg"},{"quantite":1,"unite":"","nom":" d'ail","simplename":["Ail"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes bulbes/Ail.jpg"},{"quantite":"","unite":"","nom":["Fleur de sel"],"simplename":["Fleur de sel"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Fleur%20de%20sel.jpg"},{"quantite":"","unite":"","nom":["Poivre noir"],"simplename":["Poivre noir"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"},{"quantite":10,"unite":"","nom":" de beurre salé","simplename":["Beurre Salé"],"order":"[10]","ordernb":10,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Sal%C3%A9.jpg"}];
+        const originalIngredients = [{"quantite":40,"unite":"","nom":" de lait de vache demi-écrémé","simplename":["Lait de vache demi-écrémé"],"order":"[1]","ordernb":1,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Lait/Lait animal/Lait%20de%20vache%20demi-%C3%A9cr%C3%A9m%C3%A9.jpg"},{"quantite":40,"unite":"","nom":" de crème fleurette (30%)","simplename":["Crème Fleurette (30%)"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Crème/Cr%C3%A8me%20Fleurette%20(30%25).jpg"},{"quantite":0.25,"unite":"","nom":" de thym","simplename":["Thym"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Herbes aromatiques/Thym.jpg"},{"quantite":5,"unite":"","nom":" d'ail","simplename":["Ail"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes bulbes/Ail.jpg"},{"quantite":2,"unite":"","nom":" de laurier","simplename":["Laurier"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Herbes aromatiques/Laurier.jpg"},{"quantite":1200,"unite":"","nom":" de pommes de terre - bintje","simplename":["Pommes de terre - Bintje"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes racines/Pommes%20de%20terre%20-%20Bintje.jpg"},{"quantite":10,"unite":"","nom":" de beurre salé","simplename":["Beurre Salé"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Sal%C3%A9.jpg"},{"quantite":1,"unite":"","nom":" d'ail","simplename":["Ail"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes bulbes/Ail.jpg"},{"quantite":"","unite":"","nom":["Fleur de sel"],"simplename":["Fleur de sel"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Fleur%20de%20sel.jpg"},{"quantite":"","unite":"","nom":["Poivre noir"],"simplename":["Poivre noir"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sel et poivre /Poivre%20noir.jpg"},{"quantite":10,"unite":"","nom":" de beurre salé","simplename":["Beurre Salé"],"order":"[10]","ordernb":10,"img":"/assets/images/img_ingredients/Produits laitiers et Crèmerie/Crèmerie/Beurre/Beurre%20Sal%C3%A9.jpg"}];
 
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
