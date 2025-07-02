@@ -6,7 +6,8 @@
     <title>Orpps - Accueil</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos_orpps/Orpps_favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
-    
+    <link rel="stylesheet" href="/css/recettes.css"> 
+        
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
         netlifyIdentity.init({
@@ -21,9 +22,62 @@
     <main class="container">
         <h1>Bienvenue sur Orpps</h1>
         <p>Explorez nos recettes et gérez votre planification.</p>
+        <div class="categories">
+            <div class="allCategories" id="categories">
+                <div id="allRecipes">
+                    <h6>Toutes les recettes</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">></h6></span>
+                <div class="category" id="Apéritif">
+                    <h6>Apéritif</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>
+                <div class="category" id="Entrée">
+                    <h6>Entrée</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>
+                <div class="category" id="Tapas">
+                    <h6>Tapas</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>
+                <div class="category" id="Plat">
+                    <h6>Plat</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>
+                <div class="category" id="Dessert">
+                    <h6>Dessert</h6>
+                </div>
+                <span style="padding: 0 8px;"><h6 style="color: #CB6863;">•</h6></span>
+                <div class="category" id="Boisson">
+                    <h6>Boisson</h6>
+                </div>
+            </div>
+        </div>
+
+        <div id="recettesSearchBar" class="recettes__search-bar" data-terms="">
+            <div class="recettes__search-content">
+                <div class="recettesSearch-bar__button" id="recettesSearchBarButton" style="margin-right: 10px; cursor: pointer;">
+                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#696969">
+                        <path d="M16.6725 16.6412L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#696969" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <input type="text" id="recettesSearchInput"  placeholder="Recherche" style="border: none; outline: none; flex: 1 1 0%; opacity: 1; transition: opacity 0.4s 0.3s; background-color: transparent;">
+            </div>
+        </div>
+
+        <h1 class="display_categorie__titre">Toutes les recettes</h1>
+
+        <div class="subCategories" id="subCategories"></div>
+
+
+
+
+        <!-- Liste des recettes -->
+        <div id="recettes-list" class="recettes-list"></div>
 
     </main>
     <div id="footer"></div>
     <script src="/js/script.js" type="module"></script>
+    <script src="/js/recettes.js" type="module"></script>
 </body>
 </html>

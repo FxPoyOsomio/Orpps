@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "Projet Netlify pour Orpps",
   "main": "index.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
