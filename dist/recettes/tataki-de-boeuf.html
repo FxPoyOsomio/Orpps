@@ -53,7 +53,7 @@
             "cookTime": "PT4M",
             "totalTime": "PT12H15M",
             "recipeYield": "6",
-            "recipeIngredient": ["Poire de boeuf,450g.","Huile d'olive,1c.a.s.","Gingembre,20g.","Citron vert (Lime),1","Saké,2cl.","Sauce soja salée,15cl.","Miel de montagne,20g.","Sésame doré,15g.","Sauce aigre-douce,20g.","Sauce huitre,5g."]
+            "recipeIngredient": ["Poire de boeuf,450g.","Huile d'olive,1c.a.s.","Gingembre,20g.","Citron vert (Lime),1","Saké,2cl.","Sauce soja salée,15cl.","Miel de montagne,20g.","Sésame doré,15g.","Sauce aigre-douce,20g.","Sauce huitre,5g.","Ail,3gousse"]
         }
     </script>
 
@@ -194,7 +194,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7 id="prixRecette">
-                            2,25 € / portion
+                            2,33 € / portion
                         </h7>
                     </div>
                 </div>
@@ -215,7 +215,7 @@
                     </div>
                     <div class="top-info__label">
                         <h7 id="calorieRecette">
-                            157 kcal / portion
+                            162 kcal / portion
                         </h7>
                     </div>
                 </div>
@@ -877,7 +877,7 @@
     <div id="footer"></div>
     <script>
         // Récupération des ingrédients pour la mise à jour
-        const originalIngredients = [{"quantite":450,"unite":"","nom":" de poire de boeuf","simplename":["Poire de boeuf"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Viandes et Poissons/Boucherie/Boeuf/Poire%20de%20boeuf.jpg"},{"quantite":1,"unite":"","nom":" de huile d'olive","simplename":["Huile d'olive"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Huile%20d'olive.jpg"},{"quantite":20,"unite":"","nom":" de gingembre","simplename":["Gingembre"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes racines/Gingembre.jpg"},{"quantite":1,"unite":"","nom":"citron vert (lime)","simplename":["Citron vert (Lime)"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20vert%20(Lime).jpg"},{"quantite":2,"unite":"","nom":" de saké","simplename":["Saké"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Boissons/Boissons alcoolisées/Apéritif et spiritueux/Sak%C3%A9.jpg"},{"quantite":15,"unite":"","nom":" de sauce soja salée","simplename":["Sauce soja salée"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20soja%20sal%C3%A9e.jpg"},{"quantite":20,"unite":"","nom":" de miel de montagne","simplename":["Miel de montagne"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"},{"quantite":15,"unite":"","nom":" de sésame doré","simplename":["Sésame doré"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/S%C3%A9same%20dor%C3%A9.jpg"},{"quantite":20,"unite":"","nom":" de sauce aigre-douce","simplename":["Sauce aigre-douce"],"order":"[10]","ordernb":10,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20aigre-douce.jpg"},{"quantite":5,"unite":"","nom":" de sauce huitre","simplename":["Sauce huitre"],"order":"[11]","ordernb":11,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20huitre.jpg"}];
+        const originalIngredients = [{"quantite":450,"unite":"","nom":" de poire de boeuf","simplename":["Poire de boeuf"],"order":"[5]","ordernb":5,"img":"/assets/images/img_ingredients/Viandes et Poissons/Boucherie/Boeuf/Poire%20de%20boeuf.jpg"},{"quantite":1,"unite":"","nom":" de huile d'olive","simplename":["Huile d'olive"],"order":"[4]","ordernb":4,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Huile et vinaigre/Huile%20d'olive.jpg"},{"quantite":20,"unite":"","nom":" de gingembre","simplename":["Gingembre"],"order":"[2]","ordernb":2,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes racines/Gingembre.jpg"},{"quantite":1,"unite":"","nom":"citron vert (lime)","simplename":["Citron vert (Lime)"],"order":"[3]","ordernb":3,"img":"/assets/images/img_ingredients/Fruits et Légumes/Fruits/Fruit à pépins, Agrumes/Citron%20vert%20(Lime).jpg"},{"quantite":2,"unite":"","nom":" de saké","simplename":["Saké"],"order":"[6]","ordernb":6,"img":"/assets/images/img_ingredients/Boissons/Boissons alcoolisées/Apéritif et spiritueux/Sak%C3%A9.jpg"},{"quantite":15,"unite":"","nom":" de sauce soja salée","simplename":["Sauce soja salée"],"order":"[7]","ordernb":7,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20soja%20sal%C3%A9e.jpg"},{"quantite":20,"unite":"","nom":" de miel de montagne","simplename":["Miel de montagne"],"order":"[8]","ordernb":8,"img":"/assets/images/img_ingredients/Épicerie/Épicerie sucrée/Confiture, miel, pâte à tartiner/Miel%20de%20montagne.jpg"},{"quantite":15,"unite":"","nom":" de sésame doré","simplename":["Sésame doré"],"order":"[9]","ordernb":9,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Épice/S%C3%A9same%20dor%C3%A9.jpg"},{"quantite":20,"unite":"","nom":" de sauce aigre-douce","simplename":["Sauce aigre-douce"],"order":"[10]","ordernb":10,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20aigre-douce.jpg"},{"quantite":5,"unite":"","nom":" de sauce huitre","simplename":["Sauce huitre"],"order":"[11]","ordernb":11,"img":"/assets/images/img_ingredients/Épicerie/Épicerie salée/Sauce froide/Sauce%20huitre.jpg"},{"quantite":3,"unite":"","nom":" d'ail","simplename":["Ail"],"order":"[1]","ordernb":1,"img":"/assets/images/img_ingredients/Fruits et Légumes/Légumes/Légumes bulbes/Ail.jpg"}];
 
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
